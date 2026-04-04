@@ -67,6 +67,8 @@
 
         input, textarea { padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 13px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
+        /* Убираем желтый фон автозаполнения в Chrome */
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus { -webkit-text-fill-color: white; -webkit-box-shadow: 0 0 0px 1000px #0f0f11 inset; transition: background-color 5000s ease-in-out 0s; }
 
         /* TABS */
         .tabs-wrap { background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 500; width: 100%;}
@@ -124,12 +126,12 @@
         .b-media img, .b-media video { max-width: 100%; max-height: 450px; object-fit: contain; opacity: 0; transition: 0.5s; }
         .b-media .loaded { opacity: 1; }
 
-        /* SHORTS (TikTok) */
+        /* SHORTS (ОПТИМИЗИРОВАННАЯ ШИРИНА) */
         .shorts-feed { height: calc(100vh - 120px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -20px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
-        .short-ui { display: flex; gap: 20px; height: 100%; width: 100%; max-width: 450px; justify-content: center; position: relative; }
-        .short-video { flex: 1; height: 100%; background: #050506; border-radius: 16px; position: relative; border: 1px solid #222; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+        .short-ui { display: flex; gap: 20px; height: 100%; width: 100%; max-width: 550px; justify-content: center; position: relative; }
+        .short-video { flex: 1; height: 100%; max-width: 460px; background: #050506; border-radius: 16px; position: relative; border: 1px solid #222; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
         .short-video video { width: 100%; height: 100%; object-fit: cover; }
         .short-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 50px 15px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: white; pointer-events: none; z-index: 5;}
         .short-sidebar { display: flex; flex-direction: column; justify-content: flex-end; gap: 15px; padding-bottom: 20px; width: 55px; }
@@ -147,7 +149,7 @@
         .pv-layout { display: flex; gap: 25px; flex-wrap: wrap; align-items: flex-start;}
         .pv-main { flex: 3; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
         .pv-side { flex: 1; min-width: 280px; background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);}
-        .pv-media-box { background: #050506; border-radius: var(--radius); overflow: hidden; border: 1px solid #222; display: flex; justify-content: center; align-items: center; min-height: 40vh; max-height: 85vh; width: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.7);}
+        .pv-media-box { background: #050506; border-radius: var(--radius); overflow: hidden; border: 1px solid #222; display: flex; justify-content: center; align-items: center; min-height: 50vh; max-height: 85vh; width: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.7);}
         .pv-media-box img, .pv-media-box video { width: 100%; height: 100%; max-height: 85vh; object-fit: contain; }
         
         .hashtag { color: #60a5fa; cursor: pointer; font-weight: 700; margin-right: 6px; font-size: 12px; display: inline-block; padding: 4px 8px; background: rgba(96,165,250,0.1); border-radius: 6px; margin-bottom: 6px; transition: 0.2s;}
@@ -167,12 +169,12 @@
             
             .short-wrap { padding: 0; }
             .short-ui { max-width: 100%; height: 100%; gap: 0; }
-            .short-video { width: 100%; border-radius: 0; border: none; }
-            .short-sidebar { position: absolute; right: 10px; bottom: 80px; z-index: 100; padding: 0; }
-            .s-btn { background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-            .short-info-overlay { padding-right: 70px; padding-bottom: 25px; pointer-events: auto;}
+            .short-video { width: 100%; max-width: none; border-radius: 0; border: none; }
+            .short-sidebar { position: absolute; right: 10px; bottom: 90px; z-index: 100; padding: 0; }
+            .s-btn { background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 48px; height: 48px; }
+            .short-info-overlay { padding-right: 80px; padding-bottom: 25px; pointer-events: auto;}
             
-            .profile-header { flex-direction: column; text-align: center; padding: 20px;}
+            .profile-header { flex-direction: column; text-align: center; padding: 25px;}
             .pv-layout { flex-direction: column; }
             .pv-side { position: static; }
         }
@@ -186,8 +188,8 @@
 <div id="authModal" class="modal-overlay">
     <div class="modal">
         <h2 style="text-align:center; margin:0; font-size:22px;" data-i18n="authTitle">fembooru</h2>
-        <input type="text" id="authName" placeholder="Никнейм">
-        <input type="password" id="authPass" placeholder="Пароль">
+        <input type="text" id="authName" placeholder="Никнейм" autocomplete="username">
+        <input type="password" id="authPass" placeholder="Пароль" autocomplete="current-password">
         <button class="btn-main" onclick="window.submitAuth()" data-i18n="btnEnter">Продолжить</button>
         <button onclick="window.closeModal('authModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Отмена</button>
     </div>
@@ -198,7 +200,7 @@
         <h2 style="margin:0; font-size:20px;" data-i18n="profSettings">Настройки</h2>
         <p style="font-size:12px; color:var(--muted); margin:0" data-i18n="profAva">Аватарка:</p>
         <input type="file" id="editAvaFile" accept="image/*">
-        <textarea id="editBio" placeholder="..." rows="3"></textarea>
+        <textarea id="editBio" placeholder="..." rows="3" autocomplete="off" spellcheck="false" role="presentation"></textarea>
         <button class="btn-main" onclick="window.saveProfile()" data-i18n="btnSave">Сохранить</button>
         <button onclick="window.closeModal('editProfileModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Закрыть</button>
     </div>
@@ -229,7 +231,7 @@
             </div>
         </div>
 
-        <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="filterTitle">Лента</h3>
+        <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;" data-i18n="filterTitle">Лента</h3>
         <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:25px;">
             <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:13px;"><input type="radio" name="rating" value="all" checked onchange="window.renderCurrentTab()"> <span data-i18n="fAll">Всё подряд</span></label>
             <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:13px;"><input type="radio" name="rating" value="sfw" onchange="window.renderCurrentTab()"> <span data-i18n="fSfw">Безопасно</span></label>
@@ -238,7 +240,7 @@
         
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="searchTitle">Поиск тегов</h3>
         <div class="search-wrap">
-            <input type="text" id="search" placeholder="..." style="width:100%">
+            <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="off" spellcheck="false" role="presentation">
             <div class="hints-box" id="hints"></div>
         </div>
     </aside>
@@ -255,13 +257,13 @@
             </nav>
 
             <div id="tab-content-gallery" class="tab-content active">
-                <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+                <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,0.3);">
                     <div style="display:flex; flex-direction:column; gap:12px;">
                         <input type="file" id="fGal" accept="image/*,video/*" multiple>
-                        <textarea id="txtGal" placeholder="Описание (если нужно)..." rows="2" style="resize:vertical;"></textarea>
+                        <textarea id="txtGal" placeholder="Описание (если нужно)..." rows="2" style="resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
                         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:130px">
-                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:130px;">
+                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:130px" autocomplete="off" spellcheck="false" role="presentation">
+                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:130px;" autocomplete="off" spellcheck="false" role="presentation">
                             <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
                             <button class="btn-main" onclick="window.upload('gallery')" data-i18n="btnPost">Запостить</button>
                         </div>
@@ -272,7 +274,7 @@
 
             <div id="tab-content-board" class="tab-content">
                 <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border);">
-                    <textarea id="txtB" placeholder="Что нового?" rows="3" style="width:100%; margin-bottom:12px; resize:vertical;"></textarea>
+                    <textarea id="txtB" placeholder="О чем ты думаешь?" rows="3" style="width:100%; margin-bottom:12px; resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
                     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                         <input type="file" id="fBoard" accept="image/*,video/*" style="flex:1; min-width:150px;">
                         <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
@@ -288,10 +290,10 @@
             </div>
 
             <div id="tab-content-shorts" class="tab-content" style="padding:0">
-                <div id="upShorts" style="display:none; padding:20px; background:var(--card); border-bottom:1px solid var(--border);">
+                <div id="upShorts" style="display:none; padding:15px; background:var(--card); border-bottom:1px solid var(--border);">
                     <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; max-width:700px; margin:0 auto;">
                         <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:150px;">
-                        <input type="text" id="txtS" placeholder="Описание..." style="flex:2; min-width:150px;">
+                        <input type="text" id="txtS" placeholder="Описание..." style="flex:2; min-width:150px;" autocomplete="off" spellcheck="false" role="presentation">
                         <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
                         <button class="btn-main" onclick="window.upload('shorts')" data-i18n="btnUpload">Залить</button>
                     </div>
@@ -307,7 +309,7 @@
                 <div style="flex:1">
                     <h2 id="pName" style="margin:0; font-size:26px; font-weight:900;">User</h2>
                     <p id="pBio" style="margin:10px 0; color:var(--muted); font-size:14px; white-space:pre-wrap; line-height:1.5;"></p>
-                    <button id="pEditBtn" class="btn-action" style="padding:8px 16px; display:none; font-size:12px; max-width:200px;" onclick="window.openModal('editProfileModal')" data-i18n="btnEditProf">Настроить</button>
+                    <button id="pEditBtn" class="btn-action" style="padding:6px 12px; display:none; font-size:11px; max-width:200px;" onclick="window.openModal('editProfileModal')" data-i18n="btnEditProf">Настроить</button>
                 </div>
             </div>
             <div class="app-tabs" style="background:transparent; margin-bottom:20px; max-width:400px; margin-left:0; border:none;">
@@ -335,12 +337,12 @@
     const IMGBB = "120a27bcbb28d3ffd9f03bc4b32bb54f";
 
     const app = initializeApp(config); const db = getDatabase(app); const auth = getAuth(app);
-    window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, interests: JSON.parse(localStorage.getItem('fb_ints')||'{}'), lang: 'ru' };
+    window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, interests: JSON.parse(localStorage.getItem('f_ints')||'{}'), lang: 'ru' };
 
     const dict = {
-        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Запостить", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Моё", tabRep: "Репосты", simPosts: "✦ Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватар:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
-        en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit", tabMy: "Uploads", tabRep: "Reposts", simPosts: "✦ Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search", authTitle: "Login", btnEnter: "Go", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "Empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete" },
-        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Запостити", btnUpload: "Залити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Моє", tabRep: "Репости", simPosts: "✦ Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Все підряд", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Вперед", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватар:", btnSave: "Зберегти", empty: "Тут порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
+        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Запостить", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Моё", tabRep: "Репосты", simPosts: "Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватар:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
+        en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit", tabMy: "Uploads", tabRep: "Reposts", simPosts: "Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search", authTitle: "Login", btnEnter: "Continue", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "Empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete" },
+        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Запостити", btnUpload: "Залити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Моє", tabRep: "Репости", simPosts: "Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Все підряд", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Вперед", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватар:", btnSave: "Зберегти", empty: "Тут порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
     };
     window.t = (k) => dict[AppState.lang]?.[k] || k;
 
@@ -403,18 +405,20 @@
         window.renderCurrentTab();
     });
 
-    // ZERO-BYTE LAZY LOADING
+    // ZERO-BYTE LAZY LOADING WITH EXTENDED RADAR
     const lazyObs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             const media = e.target.querySelector('img, video');
             if (e.isIntersecting) {
-                if (media && media.dataset.src) { media.src = media.dataset.src; media.removeAttribute('data-src'); media.classList.add('loaded'); }
-                if (media && media.tagName==='VIDEO' && e.target.classList.contains('short-wrap')) media.play().catch(()=>{});
+                if (media && media.getAttribute('data-src')) { media.src = media.getAttribute('data-src'); media.removeAttribute('data-src'); media.classList.add('loaded'); }
+                if (media && media.tagName==='VIDEO') {
+                    if (e.target.classList.contains('short-wrap') || e.target.closest('.short-wrap')) media.play().catch(()=>{});
+                }
             } else {
-                if (media && media.tagName==='VIDEO' && e.target.classList.contains('short-wrap')) media.pause();
+                if (media && media.tagName==='VIDEO' && (e.target.classList.contains('short-wrap') || e.target.closest('.short-wrap'))) media.pause();
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1, rootMargin: "400px 0px" });
 
     // СИСТЕМА РЕКОМЕНДАЦИЙ (Семантика + Теги)
     const RecomEngine = {
@@ -465,7 +469,8 @@
         if(!input.files.length && type !== 'board') return;
         document.getElementById('loader').style.display='flex';
         const files = input.files.length ? input.files : [null];
-        for(let f of files) {
+        for(let i = 0; i < files.length; i++) {
+            let f = files[i];
             try {
                 let url = f ? (f.type.startsWith('image/') ? await upImg(f) : await upVid(f)) : null;
                 const nsfw = document.getElementById('n'+(type==='gallery'?'Gal':type==='board'?'Board':'Shorts'))?.checked || false;
@@ -538,7 +543,7 @@
 
     function renderGrid(arr, target) {
         const el = document.getElementById(target); el.innerHTML = '';
-        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:16px;font-weight:bold;">${t('emptySearch')}</div>`; return; }
+        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:18px;font-weight:bold;">${t('emptySearch')}</div>`; return; }
         arr.forEach((p, i) => {
             const div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = `${i*0.03}s`;
             div.onclick = () => window.openPost(p.id, target.includes('prof')?p._type||'gallery':'gallery');
@@ -554,7 +559,7 @@
     function renderVideos(rf, q) {
         const el = document.getElementById('ytFeed'); el.innerHTML = '';
         let allVids = [];
-        ['gallery', 'board'].forEach(t => { // Strict exclude shorts
+        ['gallery', 'board'].forEach(t => { // Strict exclusion of 'shorts' for Youtube view
             if(AppState.data[t]) {
                 const vids = AppState.data[t].filter(p => p.isVid && p.url);
                 vids.forEach(v => allVids.push({...v, _type: t}));
@@ -563,7 +568,10 @@
 
         allVids = allVids.filter(p => {
             if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
-            if(q.length) { const sStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase(); return q.every(w => sStr.indexOf(w) !== -1); }
+            if(q.length) {
+                const searchStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase();
+                return q.every(word => searchStr.indexOf(word) !== -1);
+            }
             return true;
         }).sort((a,b) => b.time - a.time);
 
@@ -583,7 +591,9 @@
                     <img src="${ava}" class="yt-avatar">
                     <div class="yt-text">
                         <div class="yt-title">${p.text || (p.t1 ? `#${p.t1}` : 'Видео без названия')}</div>
-                        <div class="yt-meta"><span>${p.author}</span> • <span>❤ ${p.likes?Object.keys(p.likes).length:0}</span></div>
+                        <div class="yt-meta">
+                            <span>${p.author}</span> • <span>❤ ${p.likes?Object.keys(p.likes).length:0}</span>
+                        </div>
                     </div>
                 </div>`;
             el.appendChild(div);
@@ -598,12 +608,12 @@
             const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
             const div = document.createElement('div'); div.className = 'board-post'; div.style.animationDelay = `${i*0.05}s`;
             div.innerHTML = `<div class="b-header" onclick="window.openProfile('${p.uid}')"><img src="${ava}" class="b-avatar"> <div><span style="color:#fff">${p.author}</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">${new Date(p.time).toLocaleString()}</span></div></div>
-                ${p.text?'<div style="font-size:14px; white-space:pre-wrap; line-height:1.5;">'+p.text+'</div>':''} 
+                ${p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.5;">'+p.text+'</div>':''} 
                 ${p.url?`<div class="b-media" onclick="window.openPost('${p.id}','board')">${p.isVid?'<video data-src="'+p.url+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">'}</div>`:''}
-                <div class="action-row" style="margin-top:10px">
+                <div class="action-row" style="margin-top:5px">
                     <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${p.id}','board')">❤ ${p.likes?Object.keys(p.likes).length:0}</button>
-                    <button class="btn-action" onclick="window.repost('${p.id}','board')">🔄</button>
-                    <button class="btn-action" onclick="window.openPost('${p.id}','board')">💬</button>
+                    <button class="btn-action" onclick="window.repost('${p.id}','board')">🔄 Репост</button>
+                    <button class="btn-action" onclick="window.openPost('${p.id}','board')">💬 Открыть</button>
                 </div>`;
             el.appendChild(div);
             if(p.url) lazyObs.observe(div);
@@ -672,11 +682,11 @@
                     <img src="${AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #333;">
                     <div><b style="font-size:16px">${p.author}</b><br><span style="font-size:11px;color:var(--muted)">${new Date(p.time).toLocaleString()}</span></div>
                 </div>
-                ${p.text ? `<p style="font-size:14px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">${p.text}</p>` : ''}
+                ${p.text ? `<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">${p.text}</p>` : ''}
                 <div style="margin-bottom:25px">${tags}</div>
                 <div class="action-row" style="flex-wrap:wrap;">
                     <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${id}','${dbType}')">❤ ${p.likes?Object.keys(p.likes).length:0}</button>
-                    <button class="btn-action" onclick="window.repost('${id}','${dbType}')">🔄</button>
+                    <button class="btn-action" onclick="window.repost('${id}','${dbType}')">🔄 Репост</button>
                     ${AppState.isAdmin||AppState.user?.uid===p.uid?`<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del('${p.id}','${dbType}')">🗑</button>`:''}
                 </div>
             </div>
@@ -693,6 +703,8 @@
     window.like = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r=ref(db, `${realType}/${id}/likes/${AppState.user.uid}`); const s = await get(r); await set(r, s.exists()?null:true); };
     window.repost = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r = ref(db, `users/${AppState.user.uid}/reposts/${id}`); const s = await get(r); await set(r, s.exists()?null:realType); window.showToast('fembooru: репост сохранен!'); };
     window.del = async (id, type) => { if(confirm(t('del') + '?')) { const realType = type==='posts'?'gallery':type; await remove(ref(db, `${realType}/${id}`)); window.goHome(); } };
+    
+    // ТРАНСЛЯТОР
     window.setLang = (l) => { 
         AppState.lang=l; 
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
