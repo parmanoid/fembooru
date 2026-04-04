@@ -72,11 +72,11 @@
         .btn-back { background: #161619; border: 1px solid #27272a; color: #fff; padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; width: max-content; margin-bottom: 25px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
         .btn-back:hover { background: #222226; transform: translateX(-5px); border-color: #3f3f46;}
 
+        /* Убрано агрессивное автозаполнение */
         input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 14px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
-        input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: white; -webkit-box-shadow: 0 0 0px 1000px #0f0f11 inset; transition: background-color 5000s ease-in-out 0s; }
 
-        /* УПОМИНАНИЯ И ХИНТЫ */
+        /* ПОДСКАЗКИ (@ И #) */
         .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 2px 6px; background: rgba(225,29,72,0.1); border-radius: 6px; transition: 0.2s; display: inline-block;}
         .user-mention:hover { background: rgba(225,29,72,0.2); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(225,29,72,0.3);}
         
@@ -85,7 +85,7 @@
         .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
         .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 3px 8px; border-radius: 6px; }
 
-        /* НАВИГАЦИЯ ВЬЮХ */
+        /* НАВИГАЦИЯ */
         .tabs-wrap { background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 500; width: 100%; padding: 10px 0;}
         .app-tabs { display: flex; max-width: 900px; margin: 0 auto; gap: 15px; padding: 0 15px;}
         .app-tab { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); padding: 12px 0; font-size: 13px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.3s; border-radius: var(--radius-sm); text-align: center;}
@@ -145,7 +145,7 @@
         .b-media img, .b-media video { width: auto; height: auto; max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.5s; }
         .b-media .loaded { opacity: 1; }
 
-        /* ШОРТСЫ (БЕЗ ИСКАЖЕНИЙ) */
+        /* ШОРТСЫ */
         .shorts-feed { height: calc(100vh - 130px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -25px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
@@ -162,7 +162,7 @@
         .s-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.15); box-shadow: 0 0 20px rgba(225,29,72,0.4);}
         .s-count { position: absolute; bottom: -22px; font-size: 12px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
 
-        /* ПРОФИЛЬ И ПОСТ */
+        /* ПРОФИЛЬ */
         .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
         .p-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; box-shadow: 0 0 25px rgba(0,0,0,0.6);}
         
@@ -170,6 +170,7 @@
         .profile-tabs-container .app-tab { flex: 0 1 auto; padding: 12px 25px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: rgba(255,255,255,0.03);}
         .profile-tabs-container .app-tab.active { background: rgba(225,29,72,0.1); border-color: var(--accent); }
         
+        /* POST VIEW */
         .pv-layout { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; margin-top: 10px;}
         .pv-main { flex: 3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
         .pv-side { flex: 1; min-width: 320px; background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);}
@@ -221,8 +222,8 @@
 <div id="authModal" class="modal-overlay">
     <div class="modal">
         <h2 style="text-align:center; margin:0; font-size:26px;" data-i18n="authTitle">fembooru</h2>
-        <input type="text" id="authName" placeholder="Никнейм" autocomplete="off" spellcheck="false" role="presentation">
-        <input type="password" id="authPass" placeholder="Пароль" autocomplete="off" spellcheck="false" role="presentation">
+        <input type="text" id="authName" placeholder="Никнейм" autocomplete="username">
+        <input type="password" id="authPass" placeholder="Пароль" autocomplete="current-password">
         <button class="btn-main" onclick="window.submitAuth()" data-i18n="btnEnter">Продолжить</button>
         <button onclick="window.closeModal('authModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Отмена</button>
     </div>
@@ -233,7 +234,7 @@
         <h2 style="margin:0; font-size:22px;" data-i18n="profSettings">Настройки</h2>
         <p style="font-size:12px; color:var(--muted); margin:0" data-i18n="profAva">Аватарка:</p>
         <input type="file" id="editAvaFile" accept="image/*">
-        <textarea id="editBio" placeholder="..." rows="3" autocomplete="off" spellcheck="false" role="presentation"></textarea>
+        <textarea id="editBio" placeholder="..." rows="3" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
         <button class="btn-main" onclick="window.saveProfile()" data-i18n="btnSave">Сохранить</button>
         <button onclick="window.closeModal('editProfileModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Закрыть</button>
     </div>
@@ -279,7 +280,7 @@
         
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="searchTitle">Поиск тегов</h3>
         <div class="search-wrap" id="searchContainer">
-            <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="off" spellcheck="false" role="presentation">
+            <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
         </div>
     </aside>
 
@@ -298,10 +299,10 @@
                 <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 15px 40px rgba(0,0,0,0.4);">
                     <div style="display:flex; flex-direction:column; gap:15px;">
                         <input type="file" id="fGal" accept="image/*,video/*" multiple>
-                        <textarea id="txtGal" placeholder="Описание (если нужно)... @упоминания работают" rows="2" style="resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
+                        <textarea id="txtGal" placeholder="Описание (если нужно)... @упоминания работают" rows="2" style="resize:vertical;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
                         <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
-                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:160px" autocomplete="off" spellcheck="false" role="presentation">
-                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:160px;" autocomplete="off" spellcheck="false" role="presentation">
+                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:160px" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
+                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:160px;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
                             <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
                             <button class="btn-main" onclick="window.upload('gallery')" data-i18n="btnPost">Опубликовать</button>
                         </div>
@@ -312,7 +313,7 @@
 
             <div id="tab-content-board" class="tab-content">
                 <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border);">
-                    <textarea id="txtB" placeholder="О чем ты думаешь? @упоминания" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
+                    <textarea id="txtB" placeholder="О чем ты думаешь? @упоминания" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
                     <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
                         <input type="file" id="fBoard" accept="image/*,video/*" style="flex:1; min-width:200px;">
                         <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
@@ -331,7 +332,7 @@
                 <div id="upShorts" style="display:none; padding:25px; background:var(--card); border-bottom:1px solid var(--border);">
                     <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center; max-width:900px; margin:0 auto;">
                         <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:200px;">
-                        <input type="text" id="txtS" placeholder="Описание к видео... @упоминания" style="flex:2; min-width:200px;" autocomplete="off" spellcheck="false" role="presentation">
+                        <input type="text" id="txtS" placeholder="Описание к видео... @упоминания" style="flex:2; min-width:200px;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
                         <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
                         <button class="btn-main" onclick="window.upload('shorts')" data-i18n="btnUpload">Залить</button>
                     </div>
@@ -389,7 +390,6 @@
     };
     window.t = function(k) { return (dict[AppState.lang] && dict[AppState.lang][k]) ? dict[AppState.lang][k] : k; };
 
-    // УТИЛИТЫ И ОТОБРАЖЕНИЕ
     window.showToast = function(m, e) { var b=document.getElementById('toastBox'), t=document.createElement('div'); t.className='toast '+(e?'error':'')+' show'; t.style.background=e?'var(--accent)':'#27272a'; t.style.padding='12px 20px'; t.style.borderRadius='10px'; t.style.color='#fff'; t.style.fontWeight='bold'; t.style.boxShadow='0 10px 30px rgba(0,0,0,0.5)'; t.style.transition='0.3s'; t.style.fontSize='14px'; t.innerText=m; b.appendChild(t); setTimeout(function() { t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(function(){t.remove()},300)}, 3000); };
     window.openModal = function(id) { document.getElementById(id).style.display='flex'; };
     window.closeModal = function(id) { document.getElementById(id).style.display='none'; };
@@ -406,7 +406,7 @@
 
     function getName(uid) { 
         if(uid && AppState.users[uid] && AppState.users[uid].name) return AppState.users[uid].name;
-        return ''; 
+        return ''; // Вернет пустую строку, чтобы потом подставить p.author из старого поста
     }
     function getAva(uid) { 
         if(uid && AppState.users[uid] && AppState.users[uid].avatar) return AppState.users[uid].avatar;
@@ -434,7 +434,7 @@
         } catch(e) {}
     }
 
-    // МЕНШОНЫ (@) И ТЕГИ (#) - ГЛОБАЛЬНЫЙ ФИКС (ПОЛНЫЙ СПИСОК)
+    // МЕНШОНЫ (@) И ТЕГИ (#) - ГЛОБАЛЬНЫЙ ФИКС
     document.addEventListener('input', function(e) {
         var el = e.target;
         if(el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
@@ -451,16 +451,13 @@
             mBox.style.display = 'none';
             sBox.style.display = 'none';
 
-            // Логика @Упоминаний
             if(lastWord.indexOf('@') === 0) {
                 var searchName = lastWord.substring(1).toLowerCase();
                 var uKeys = Object.keys(AppState.users);
                 var matches = [];
                 for(var i=0; i<uKeys.length; i++) {
                     var u = AppState.users[uKeys[i]];
-                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) {
-                        matches.push(u);
-                    }
+                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) { matches.push(u); }
                 }
                 
                 if(matches.length > 0) {
@@ -483,7 +480,6 @@
                     mBox.style.display = 'block';
                 }
             } 
-            // Логика #Тегов
             else if ((el.id === 'search' || el.id === 't1G' || el.id === 't2G') && lastWord.length > 0) {
                 var tagSearch = lastWord.replace(/#/g, '').toLowerCase();
                 if(tagSearch) {
@@ -542,7 +538,7 @@
         else window.showToast('Пользователь не найден', true);
     };
 
-    // LAZY LOADING 5.0 (ОСВОБОЖДЕНИЕ ПАМЯТИ)
+    // LAZY LOADING 5.0 (ОСВОБОЖДЕНИЕ ПАМЯТИ И РАДАР)
     var lazyObs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
             var medias = e.target.querySelectorAll('img, video');
@@ -752,7 +748,8 @@
         
         if (AppState.currentTab === 'videos') { renderVideos(rf, q); return; }
 
-        var feed = AppState.data[AppState.currentTab] ? AppState.data[AppState.currentTab].filter(function(p) {
+        var stateName = AppState.currentTab;
+        var feed = AppState.data[stateName] ? AppState.data[stateName].filter(function(p) {
             if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
             if(q.length) {
                 var searchStr = ((p.t1||'')+' '+(p.t2||'')+' '+(p.text||'')).toLowerCase();
@@ -761,9 +758,11 @@
             return true;
         }) : [];
 
-        if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed', 'gallery');
-        if(AppState.currentTab==='board') renderBoard(feed);
-        if(AppState.currentTab==='shorts') renderShorts(feed);
+        if(stateName==='gallery') feed.sort(function(a,b) { return RecomEngine.score(b) - RecomEngine.score(a); });
+
+        if(stateName==='gallery') renderGrid(feed, 'galFeed', 'gallery');
+        if(stateName==='board') renderBoard(feed);
+        if(stateName==='shorts') renderShorts(feed);
     };
 
     function renderGrid(arr, target, dbTypeParam) {
@@ -775,6 +774,7 @@
                 var div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = (index*0.03)+'s';
                 var tType = p._type || dbTypeParam || 'gallery';
                 
+                // РАБОЧИЙ КЛИК ПО ПОСТУ
                 div.onclick = function() { window.openPost(p.id, tType); };
                 
                 var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="none" muted loop style="pointer-events:none;"></video>' : '<img data-src="'+p.url+'" loading="lazy" style="pointer-events:none;">';
@@ -782,7 +782,7 @@
                 var authorTag = '<div class="pc-author-badge" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'"><span style="overflow:hidden; text-overflow:ellipsis; max-width:60px; white-space:nowrap;">'+authorName+'</span></div>';
 
                 div.innerHTML = (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') + authorTag +
-                    '<div class="pc-media" style="pointer-events:none;">'+mediaTag+'</div>' +
+                    '<div class="pc-media">'+mediaTag+'</div>' +
                     '<div class="pc-info"><span style="color:#60a5fa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">#'+(p.t1||'post')+'</span><span style="flex-shrink:0;">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>';
                 el.appendChild(div);
                 lazyObs.observe(div);
@@ -935,9 +935,9 @@
         renderGrid(items.sort(function(a,b){return b.time-a.time}), 'profFeed', 'gallery');
     }
 
-    // ПРОСМОТР ПОСТА И КОММЕНТАРИИ
+    // ПРОСМОТР ПОСТА И КОММЕНТАРИИ (ИСПРАВЛЕНА МАРШРУТИЗАЦИЯ)
     window.openPost = function(id, type) {
-        var dbType = (type === 'gallery' || type === 'posts') ? 'posts' : type; 
+        var dbType = (type === 'gallery' || type === 'posts') ? 'gallery' : type; // Интерфейс работает с 'gallery'
         if(!AppState.data[dbType]) return;
         var p = null;
         for(var i=0; i<AppState.data[dbType].length; i++) {
@@ -955,6 +955,8 @@
         var isLiked = p.likes && AppState.user && p.likes[AppState.user.uid];
         var likesCount = p.likes ? Object.keys(p.likes).length : 0;
         var canDel = AppState.isAdmin || (AppState.user && AppState.user.uid === p.uid);
+        
+        var realDbType = dbType === 'gallery' ? 'posts' : dbType; // Для сохранения лайков и комментов
 
         document.getElementById('pvContainer').innerHTML = '<div class="pv-layout">' +
             '<div class="pv-main">' +
@@ -968,20 +970,20 @@
                 (p.text ? '<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">'+window.parseMentions(p.text)+'</p>' : '') +
                 '<div style="margin-bottom:25px">'+tagsHTML+'</div>' +
                 '<div class="action-row" style="flex-wrap:wrap; margin-bottom:25px;">' +
-                    '<button class="btn-action '+(isLiked?'active':'')+'" onclick="window.like(\''+id+'\',\''+dbType+'\')">❤ Лайк ('+likesCount+')</button>' +
+                    '<button class="btn-action '+(isLiked?'active':'')+'" onclick="window.like(\''+id+'\',\''+realDbType+'\')">❤ Лайк ('+likesCount+')</button>' +
                     '<button class="btn-action" onclick="window.repost(\''+id+'\',\''+(type==='posts'?'gallery':type)+'\')">🔄 Репост</button>' +
-                    (canDel ? '<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+dbType+'\')">🗑</button>' : '') +
+                    (canDel ? '<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+realDbType+'\')">🗑</button>' : '') +
                 '</div>' +
                 '<h4 style="margin-bottom:15px; font-size:13px; text-transform:uppercase; color:var(--muted);">'+window.t('comments')+'</h4>' +
                 '<div class="comm-list" id="commList"></div>' +
                 '<div style="display:flex; gap:10px;">' +
-                    '<input type="text" id="cInp" placeholder="@упоминания..." autocomplete="off" spellcheck="false" role="presentation" style="flex:1;">' +
-                    '<button class="btn-main" onclick="window.addComm(\''+id+'\',\''+dbType+'\')">➤</button>' +
+                    '<input type="text" id="cInp" placeholder="@упоминания..." autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation" style="flex:1;">' +
+                    '<button class="btn-main" onclick="window.addComm(\''+id+'\',\''+realDbType+'\')">➤</button>' +
                 '</div>' +
             '</div>' +
         '</div>';
         
-        onValue(ref(db, dbType+'/'+id+'/comments'), function(s) {
+        onValue(ref(db, realDbType+'/'+id+'/comments'), function(s) {
             var list = document.getElementById('commList'); if(!list) return;
             list.innerHTML = '';
             if(!s.exists()) { list.innerHTML = '<div style="color:var(--muted); font-size:13px; text-align:center; padding: 20px;">Пока пусто...</div>'; return; }
@@ -1002,6 +1004,9 @@
             }
             setTimeout(function() { if(!media.src && !media.currentSrc) { media.src = p.url; var b = media.parentElement.querySelector('.src-badge'); if(b){b.className='src-badge cdn'; b.innerText='CDN'; b.style.display='block';} } }, 3500);
         }
+
+        if(dbType === 'gallery') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs', 'gallery');
+        else document.getElementById('aiRecs').innerHTML = '';
     };
 
     window.addComm = function(id, type) {
