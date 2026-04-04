@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>fembooru</title>
     
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default,Array.prototype.includes,String.prototype.includes,Promise,Object.assign,Object.keys"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default,Array.prototype.includes,String.prototype.includes,Promise,Object.assign,Object.keys,Array.prototype.find,Array.prototype.filter"></script>
     
-    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+    <link rel="preconnect" href="https://cdn.fluidplayer.com">
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
-    <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
     
     <style>
         :root {
             --bg: #050506; --card: #0f0f11; --card-h: #161619;
             --accent: #e11d48; --accent-h: #f43f5e;
-            --p2p: #10b981; --cdn: #3f3f46;
             --text: #f4f4f5; --muted: #71717a; --border: #1f1f22;
             --radius: 14px; --radius-sm: 8px;
         }
@@ -29,148 +28,138 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* ШАПКА */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(5, 5, 6, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 1000; height: 60px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(5, 5, 6, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 1000; height: 64px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .top-nav-left { display: flex; align-items: center; gap: 15px; }
-        .nav-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
-        .nav-avatar:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 15px rgba(225,29,72,0.4); }
-        .top-nav h1 { color: var(--accent); font-size: 22px; cursor: pointer; font-weight: 900; letter-spacing: -1px; transition: 0.2s; display: flex; align-items: center; gap: 10px;}
+        .nav-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5);}
+        .nav-avatar:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 20px rgba(225,29,72,0.4); }
+        .top-nav h1 { color: var(--accent); font-size: 24px; cursor: pointer; font-weight: 900; letter-spacing: -1px; transition: 0.2s; margin: 0; display: flex; align-items: center; gap: 12px;}
         .top-nav h1:hover { color: var(--accent-h); }
+        .ai-greeting { font-size: 12px; color: var(--muted); font-weight: 500; font-style: italic; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: none; }
+        @media (min-width: 768px) { .ai-greeting { display: block; animation: fadeIn 1s ease; } }
         
-        .p2p-status-global { font-size: 9px; background: rgba(16, 185, 129, 0.1); color: var(--p2p); border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 8px; border-radius: 12px; letter-spacing: 1px; font-weight: bold; display: flex; align-items: center; gap: 4px;}
-        .p2p-status-global::before { content: ''; width: 6px; height: 6px; background: var(--p2p); border-radius: 50%; box-shadow: 0 0 8px var(--p2p); animation: blink 2s infinite;}
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-        .menu-btn { background: none; border: none; color: white; font-size: 26px; cursor: pointer; display: none; transition: 0.2s; }
+        .menu-btn { background: none; border: none; color: white; font-size: 28px; cursor: pointer; display: none; transition: 0.2s; }
         .menu-btn:active { transform: scale(0.9); }
 
         .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* САЙДБАР */
         .sidebar { width: 280px; background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(10px); padding: 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; z-index: 150; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .lang-switcher { display: flex; gap: 4px; margin-bottom: 25px; background: #121214; padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border);}
-        .lang-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 6px 0; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase;}
+        .lang-switcher { display: flex; gap: 6px; margin-bottom: 25px; background: #121214; padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border);}
+        .lang-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 8px 0; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase;}
+        .lang-btn:hover { color: #fff; }
         .lang-btn.active { background: #27272a; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
         .auth-box { background: rgba(255,255,255,0.02); padding: 15px; border-radius: var(--radius-sm); margin-bottom: 25px; border: 1px solid var(--border); }
         
-        /* КНОПКИ И INPUTS */
-        .btn-main { background: linear-gradient(135deg, var(--accent), #be123c); border: none; font-weight: 800; cursor: pointer; color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px;}
-        .btn-main:hover { background: linear-gradient(135deg, var(--accent-h), var(--accent)); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(225,29,72,0.4); }
+        .btn-main { background: linear-gradient(135deg, var(--accent), #be123c); border: none; font-weight: 800; cursor: pointer; color: #fff; padding: 12px 20px; border-radius: var(--radius-sm); transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 15px rgba(225,29,72,0.2);}
+        .btn-main:hover { background: linear-gradient(135deg, var(--accent-h), var(--accent)); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(225,29,72,0.4); }
+        .btn-main:active { transform: translateY(0) scale(0.98); }
         
-        .btn-action { background: #161619; border: 1px solid #27272a; color: #eee; padding: 10px 15px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 13px; flex: 1;}
-        .btn-action:hover { background: #222226; border-color: #3f3f46; transform: translateY(-2px); }
+        .btn-action { background: #161619; border: 1px solid #27272a; color: #eee; padding: 12px 18px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; flex: 1;}
+        .btn-action:hover { background: #222226; border-color: #3f3f46; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
+        .btn-action:active { transform: scale(0.96); }
         .btn-action.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.1); }
         
-        .btn-back { background: #161619; border: 1px solid #27272a; color: #fff; padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; width: max-content; margin-bottom: 20px; flex-shrink: 0;}
-        .btn-back:hover { background: #222226; transform: translateX(-4px); }
+        .btn-back { background: #161619; border: 1px solid #27272a; color: #fff; padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; width: max-content; margin-bottom: 25px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+        .btn-back:hover { background: #222226; transform: translateX(-5px); border-color: #3f3f46;}
 
-        input, textarea { padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 13px; transition: 0.3s; font-family: inherit; width: 100%;}
+        input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 14px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
         input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: white; -webkit-box-shadow: 0 0 0px 1000px #0f0f11 inset; transition: background-color 5000s ease-in-out 0s; }
 
-        /* УПОМИНАНИЯ (MENTIONS) */
-        .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 0 4px; background: rgba(225,29,72,0.1); border-radius: 4px; transition: 0.2s; }
-        .user-mention:hover { background: rgba(225,29,72,0.2); text-decoration: underline; }
-        #globalMentions { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 15px 40px rgba(0,0,0,0.9); max-height: 200px; overflow-y: auto; display: none; min-width: 200px; }
+        .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 2px 6px; background: rgba(225,29,72,0.1); border-radius: 6px; transition: 0.2s; display: inline-block;}
+        .user-mention:hover { background: rgba(225,29,72,0.2); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(225,29,72,0.3);}
+        
+        .hints-box { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 15px 40px rgba(0,0,0,0.9); max-height: 250px; overflow-y: auto; display: none; animation: fadeIn 0.2s; }
+        .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; color: #eee; transition: 0.2s; gap: 10px;}
+        .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
+        .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 2px 6px; border-radius: 4px; }
 
-        /* ВЬЮХИ И ТАБЫ */
         .tabs-wrap { background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 500; width: 100%;}
-        .app-tabs { display: flex; max-width: 800px; margin: 0 auto; }
-        .app-tab { flex: 1; background: transparent; border: none; color: var(--muted); padding: 16px 0; font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .app-tabs { display: flex; max-width: 900px; margin: 0 auto; }
+        .app-tab { flex: 1; background: transparent; border: none; color: var(--muted); padding: 18px 0; font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
         .app-tab:hover { color: #fff; background: rgba(255,255,255,0.02); }
         .app-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: linear-gradient(to top, rgba(225, 29, 72, 0.08), transparent); }
 
         .content { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; position: relative; scroll-behavior: smooth; }
-        .view-layer { display: none; flex-direction: column; width: 100%; min-height: 100%; animation: fadeUp 0.3s ease; }
+        .view-layer { display: none; flex-direction: column; width: 100%; min-height: 100%; animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-layer.active { display: flex; }
-        .tab-content { display: none; flex-direction: column; padding: 20px; animation: fadeIn 0.3s ease; width: 100%; max-width: 1400px; margin: 0 auto;}
+        .tab-content { display: none; flex-direction: column; padding: 25px; animation: fadeIn 0.3s ease; width: 100%; max-width: 1400px; margin: 0 auto;}
         .tab-content.active { display: flex; }
 
-        /* ПОИСК */
         .search-wrap { position: relative; margin-bottom: 20px; }
-        .hints-box { position: absolute; top: 100%; left: 0; width: 100%; background: #161619; border-radius: var(--radius-sm); z-index: 2000; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.9); border: 1px solid #333; margin-top: 5px; animation: fadeIn 0.2s; }
-        .hint-item { padding: 10px 15px; cursor: pointer; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; color: #eee; transition: 0.2s; }
-        .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
-        .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 2px 6px; border-radius: 4px; }
 
-        /* ИНДИКАТОРЫ P2P */
-        .source-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; z-index: 10; backdrop-filter: blur(4px); transition: 0.3s; display: none;}
-        .source-badge.p2p { background: rgba(16, 185, 129, 0.9); display: block; }
-        .source-badge.cdn { background: rgba(63, 63, 70, 0.9); display: block; }
-
-        /* ГАЛЕРЕЯ */
-        .gallery { display: flex; flex-wrap: wrap; gap: 12px; padding-bottom: 50px; }
+        .gallery { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 50px; }
         .gallery::after { content: ""; flex-grow: 10; }
-        .post-card { flex: 1 1 200px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; height: fit-content; display: flex; flex-direction: column; }
-        .post-card:hover { border-color: #444; transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 2; }
-        .pc-media { width: 100%; height: 240px; background: #050506; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .post-card { flex: 1 1 220px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; height: fit-content; display: flex; flex-direction: column; animation: popIn 0.4s ease forwards; opacity: 0; }
+        .post-card:hover { border-color: #444; transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.7); z-index: 2; }
+        .pc-media { width: 100%; height: 260px; background: #050506; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
         .pc-media img, .pc-media video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s, transform 0.5s; }
         .post-card:hover .pc-media img { transform: scale(1.05); }
         .pc-media .loaded { opacity: 1; }
-        .pc-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; background: var(--card); z-index: 2; border-top: 1px solid var(--border);}
-        .nsfw-badge { position: absolute; top: 8px; left: 8px; background: rgba(225,29,72,0.9); color: white; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 4px; z-index: 5; backdrop-filter: blur(4px); letter-spacing: 0.5px;}
+        .pc-info { padding: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; background: var(--card); z-index: 2; border-top: 1px solid var(--border);}
+        .nsfw-badge { position: absolute; top: 12px; left: 12px; background: rgba(225,29,72,0.95); color: white; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px); letter-spacing: 0.5px;}
 
-        /* YOUTUBE ВИДЕО (СТРОГО ГОРИЗОНТАЛЬНЫЕ) */
-        .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 50px; }
-        .yt-card { background: transparent; cursor: pointer; transition: 0.3s; position: relative;}
-        .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.8);}
+        .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding-bottom: 50px; }
+        .yt-card { background: transparent; cursor: pointer; transition: 0.3s; animation: popIn 0.4s forwards; opacity: 0;}
+        .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.7);}
         .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; border-radius: var(--radius); overflow: hidden; position: relative; border: 1px solid var(--border); transition: 0.3s; }
         .yt-thumb video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
         .yt-thumb .loaded { opacity: 1; }
-        .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 5; pointer-events: none; backdrop-filter: blur(4px); transition: 0.3s;}
+        .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; backdrop-filter: blur(4px); transition: 0.3s;}
         .yt-card:hover .vid-icon-big { background: var(--accent); border-color: transparent; transform: translate(-50%, -50%) scale(1.1);}
-        .yt-info { padding: 12px 0; display: flex; gap: 12px; align-items: flex-start; }
-        .yt-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid #333; }
-        .yt-title { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
-        .yt-meta { font-size: 11px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+        .yt-info { padding: 16px 4px; display: flex; gap: 14px; align-items: flex-start; }
+        .yt-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid #333; }
+        .yt-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;}
+        .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
 
-        /* БОРДА */
-        .board-feed { display: flex; flex-direction: column; gap: 16px; max-width: 700px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
-        .board-post { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: 0.3s; position: relative;}
-        .board-post:hover { border-color: #333; box-shadow: 0 10px 25px rgba(0,0,0,0.6); transform: translateY(-2px);}
-        .b-header { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: bold; cursor: pointer; width: max-content; }
-        .b-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #27272a; border: 1px solid #333;}
-        .b-media { border-radius: 12px; overflow: hidden; border: 1px solid #27272a; background: #050506; max-height: 450px; display: flex; justify-content: center; margin-top: 5px; position: relative;}
-        .b-media img, .b-media video { max-width: 100%; max-height: 450px; object-fit: contain; opacity: 0; transition: 0.5s; }
+        .board-feed { display: flex; flex-direction: column; gap: 20px; max-width: 750px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
+        .board-post { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 15px; transition: 0.3s; animation: fadeUp 0.4s forwards; opacity: 0;}
+        .board-post:hover { border-color: #333; box-shadow: 0 15px 30px rgba(0,0,0,0.4); transform: translateY(-2px);}
+        .b-header { display: flex; align-items: center; gap: 14px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .b-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #27272a; border: 1px solid #333;}
+        .b-media { border-radius: 12px; overflow: hidden; border: 1px solid #27272a; background: #050506; max-height: 500px; display: flex; justify-content: center; margin-top: 5px; }
+        .b-media img, .b-media video { max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.5s; }
         .b-media .loaded { opacity: 1; }
 
-        /* ШОРТСЫ (БЕЗ ИСКАЖЕНИЙ) */
-        .shorts-feed { height: calc(100vh - 120px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -20px; scrollbar-width: none; background: #000; }
+        .shorts-feed { height: calc(100vh - 130px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -25px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
-        .short-ui { display: flex; gap: 20px; height: 100%; width: 100%; max-width: 550px; justify-content: center; position: relative; }
-        .short-video { flex: 1; height: 100%; max-width: 460px; background: transparent; position: relative; display: flex; align-items: center; justify-content: center; }
-        .short-video video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 16px; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
-        .short-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 50px 15px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: white; pointer-events: none; z-index: 5; border-radius: 0 0 16px 16px;}
-        .short-sidebar { display: flex; flex-direction: column; justify-content: flex-end; gap: 15px; padding-bottom: 20px; width: 55px; }
-        .s-btn { width: 50px; height: 50px; border-radius: 50%; background: #161619; border: 1px solid #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; position: relative; transition: 0.3s; }
-        .s-btn:hover { background: #27272a; transform: translateY(-3px); border-color: #555;}
-        .s-count { position: absolute; bottom: -18px; font-size: 10px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
-
-        /* ПРОФИЛЬ И ПОСТ */
-        .profile-header { background: var(--card); border-radius: var(--radius); padding: 30px; display: flex; gap: 25px; align-items: center; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
-        .p-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); background: #27272a; box-shadow: 0 0 20px rgba(0,0,0,0.5);}
+        .short-ui { display: flex; flex-direction: row; gap: 30px; height: 100%; width: 100%; max-width: 600px; justify-content: center; align-items: center; position: relative; }
+        .short-video { flex: 1; height: 100%; max-width: 480px; background: transparent; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid #222;}
+        .short-video video { width: 100%; height: 100%; object-fit: cover; }
+        .short-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 25px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: white; pointer-events: none; z-index: 5;}
         
-        .pv-layout { display: flex; gap: 25px; flex-wrap: wrap; align-items: flex-start;}
-        .pv-main { flex: 3; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
-        .pv-side { flex: 1; min-width: 280px; background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);}
-        .pv-media-box { background: #050506; border-radius: var(--radius); display: flex; justify-content: center; align-items: center; min-height: 50vh; max-height: 85vh; width: 100%; border: 1px solid #222; box-shadow: 0 15px 40px rgba(0,0,0,0.7); position: relative;}
-        .pv-media-box img, .pv-media-box video { width: 100%; height: 100%; max-height: 85vh; object-fit: contain; border-radius: var(--radius);}
+        .short-sidebar { display: flex; flex-direction: column; justify-content: flex-end; gap: 20px; height: 100%; padding-bottom: 30px; width: 60px; }
+        .s-btn { width: 56px; height: 56px; border-radius: 50%; background: #161619; border: 1px solid #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; position: relative; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
+        .s-btn:hover { background: #27272a; transform: translateY(-4px); border-color: #555; box-shadow: 0 15px 30px rgba(0,0,0,0.8);}
+        .s-btn:active { transform: scale(0.9); }
+        .s-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.15); box-shadow: 0 0 20px rgba(225,29,72,0.4);}
+        .s-count { position: absolute; bottom: -22px; font-size: 12px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
+
+        .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
+        .p-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; box-shadow: 0 0 25px rgba(0,0,0,0.6);}
         
-        .hashtag { color: #60a5fa; cursor: pointer; font-weight: 700; margin-right: 6px; font-size: 12px; display: inline-block; padding: 4px 8px; background: rgba(96,165,250,0.1); border-radius: 6px; margin-bottom: 6px; transition: 0.2s;}
-        .hashtag:hover { background: rgba(96,165,250,0.2); transform: translateY(-2px); }
+        .pv-layout { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; margin-top: 10px;}
+        .pv-main { flex: 3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
+        .pv-side { flex: 1; min-width: 320px; background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);}
+        .pv-media-box { background: #050506; border-radius: var(--radius); display: flex; justify-content: center; align-items: center; min-height: 50vh; max-height: 85vh; width: 100%; border: 1px solid #222; box-shadow: 0 20px 60px rgba(0,0,0,0.8);}
+        .pv-media-box img, .pv-media-box video { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: var(--radius);}
+        
+        .hashtag { color: #60a5fa; cursor: pointer; font-weight: 700; margin-right: 8px; font-size: 13px; display: inline-block; padding: 6px 12px; background: rgba(96,165,250,0.1); border-radius: 8px; margin-bottom: 8px; transition: 0.2s;}
+        .hashtag:hover { background: rgba(96,165,250,0.2); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(96,165,250,0.2);}
 
-        .comm-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; padding-right: 5px; }
-        .comm-item { background: #161619; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 13px; border: 1px solid #222; }
+        .comments-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 25px; }
+        .comm-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; padding-right: 8px; }
+        .comm-item { background: #161619; padding: 14px 16px; border-radius: var(--radius-sm); font-size: 14px; border: 1px solid #222; line-height: 1.4;}
 
-        /* МОДАЛКИ */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .modal { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333; box-shadow: 0 25px 50px rgba(0,0,0,0.8); animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .modal { background: var(--card); padding: 40px; border-radius: 24px; width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; border: 1px solid #333; box-shadow: 0 30px 60px rgba(0,0,0,0.9); animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);}
 
         #loader { display: none; position: fixed; inset: 0; background: rgba(5,5,6,0.95); z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { border: 4px solid rgba(255,255,255,0.05); border-top: 4px solid var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
+        .spinner { border: 4px solid rgba(255,255,255,0.05); border-top: 4px solid var(--accent); border-radius: 50%; width: 60px; height: 60px; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
@@ -179,11 +168,13 @@
             .sidebar.open { transform: translateX(0); }
             
             .short-wrap { padding: 0; }
-            .short-ui { max-width: 100%; height: 100%; gap: 0; }
-            .short-video { width: 100%; max-width: none; border-radius: 0; border: none; }
-            .short-sidebar { position: absolute; right: 10px; bottom: 90px; z-index: 100; padding: 0; }
+            .short-ui { max-width: 100%; height: 100%; gap: 0; flex-direction: column; position: relative;}
+            .short-video { width: 100%; max-width: none; border-radius: 0; border: none; height: 100%;}
+            .short-video video { border-radius: 0; border: none; object-fit: cover; }
+            
+            .short-sidebar { position: absolute; right: 12px; bottom: 100px; z-index: 100; padding: 0; height: auto; }
             .s-btn { background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 48px; height: 48px; }
-            .short-info-overlay { padding-right: 80px; padding-bottom: 25px; pointer-events: auto; border-radius: 0;}
+            .short-info-overlay { padding-right: 80px; padding-bottom: 30px; pointer-events: auto; border-radius: 0;}
             
             .profile-header { flex-direction: column; text-align: center; padding: 25px;}
             .pv-layout { flex-direction: column; }
@@ -195,11 +186,12 @@
 
 <div id="loader"><div class="spinner"></div></div>
 <div id="toastBox" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none;"></div>
-<div id="globalMentions" class="hints-box" style="width:auto; min-width:200px; max-width:300px;"></div>
+<div id="globalMentions" class="hints-box" style="width:auto; min-width:220px; max-width:320px;"></div>
+<div id="searchHints" class="hints-box" style="width:100%; max-width:100%; box-sizing:border-box;"></div>
 
 <div id="authModal" class="modal-overlay">
     <div class="modal">
-        <h2 style="text-align:center; margin:0; font-size:24px;" data-i18n="authTitle">fembooru</h2>
+        <h2 style="text-align:center; margin:0; font-size:26px;" data-i18n="authTitle">fembooru</h2>
         <input type="text" id="authName" placeholder="Никнейм" autocomplete="username">
         <input type="password" id="authPass" placeholder="Пароль" autocomplete="current-password">
         <button class="btn-main" onclick="window.submitAuth()" data-i18n="btnEnter">Продолжить</button>
@@ -209,7 +201,7 @@
 
 <div id="editProfileModal" class="modal-overlay">
     <div class="modal">
-        <h2 style="margin:0; font-size:20px;" data-i18n="profSettings">Настройки</h2>
+        <h2 style="margin:0; font-size:22px;" data-i18n="profSettings">Настройки</h2>
         <p style="font-size:12px; color:var(--muted); margin:0" data-i18n="profAva">Аватарка:</p>
         <input type="file" id="editAvaFile" accept="image/*">
         <textarea id="editBio" placeholder="..." rows="3" autocomplete="off" spellcheck="false" role="presentation"></textarea>
@@ -221,13 +213,12 @@
 <header class="top-nav">
     <div class="top-nav-left">
         <img src="https://i.ibb.co/3sW3xQy/default-avatar.png" class="nav-avatar" id="navAvatar" onclick="window.openMyProfile()">
-        <h1><span onclick="window.goHome()">fembooru</span></h1>
-        <div class="p2p-status-global" id="netStatus" style="display:none;">P2P LINK</div>
+        <h1><span onclick="window.goHome()">fembooru</span> <span id="aiFact" class="ai-greeting"></span></h1>
     </div>
     <button class="menu-btn" onclick="window.toggleMenu()">☰</button>
 </header>
 
-<div id="menuOverlay" onclick="window.toggleMenu()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:140; backdrop-filter:blur(4px);"></div>
+<div id="menuOverlay" onclick="window.toggleMenu()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:140; backdrop-filter:blur(5px);"></div>
 
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
@@ -239,22 +230,21 @@
         <div class="auth-box">
             <div id="loggedOutView"><button class="btn-main" style="width:100%" onclick="window.openAuth()" data-i18n="btnLogin">Войти / Рега</button></div>
             <div id="loggedInView" style="display:none">
-                <div id="userNameDisplay" style="font-weight:900; cursor:pointer; color:#fff; font-size:15px; margin-bottom:12px; text-align:center;" onclick="window.openMyProfile()">User</div>
-                <button class="btn-action" onclick="window.doLogout()" style="width:100%; font-size:12px; padding:8px; justify-content:center;" data-i18n="btnLogout">Выйти</button>
+                <div id="userNameDisplay" style="font-weight:900; cursor:pointer; color:#fff; font-size:16px; margin-bottom:15px; text-align:center;" onclick="window.openMyProfile()">User</div>
+                <button class="btn-action" onclick="window.doLogout()" style="width:100%; font-size:12px; padding:10px; justify-content:center;" data-i18n="btnLogout">Выйти</button>
             </div>
         </div>
 
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;" data-i18n="filterTitle">Лента</h3>
-        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:25px;">
-            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:13px;"><input type="radio" name="rating" value="all" checked onchange="window.renderCurrentTab()"> <span data-i18n="fAll">Всё подряд</span></label>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:13px;"><input type="radio" name="rating" value="sfw" onchange="window.renderCurrentTab()"> <span data-i18n="fSfw">Безопасно</span></label>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--accent); font-weight:bold;"><input type="radio" name="rating" value="nsfw" onchange="window.renderCurrentTab()"> NSFW</label>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:30px;">
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px;"><input type="radio" name="rating" value="all" checked onchange="window.renderCurrentTab()"> <span data-i18n="fAll">Всё подряд</span></label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px;"><input type="radio" name="rating" value="sfw" onchange="window.renderCurrentTab()"> <span data-i18n="fSfw">Безопасно</span></label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px; color:var(--accent); font-weight:bold;"><input type="radio" name="rating" value="nsfw" onchange="window.renderCurrentTab()"> NSFW</label>
         </div>
         
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="searchTitle">Поиск тегов</h3>
-        <div class="search-wrap">
+        <div class="search-wrap" id="searchContainer">
             <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="off" spellcheck="false" role="presentation">
-            <div class="hints-box" id="hints"></div>
         </div>
     </aside>
 
@@ -270,15 +260,15 @@
             </nav>
 
             <div id="tab-content-gallery" class="tab-content active">
-                <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-                    <div style="display:flex; flex-direction:column; gap:12px;">
+                <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 15px 40px rgba(0,0,0,0.4);">
+                    <div style="display:flex; flex-direction:column; gap:15px;">
                         <input type="file" id="fGal" accept="image/*,video/*" multiple>
-                        <textarea id="txtGal" placeholder="Описание (если нужно)... @упоминания" rows="2" style="resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:130px" autocomplete="off" spellcheck="false" role="presentation">
-                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:130px;" autocomplete="off" spellcheck="false" role="presentation">
-                            <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
-                            <button class="btn-main" onclick="window.upload('gallery')" data-i18n="btnPost">Запостить</button>
+                        <textarea id="txtGal" placeholder="Описание (якщо потрібно)... @згадки" rows="2" style="resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
+                        <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
+                            <input type="text" id="t1G" placeholder="Основний тег" style="width:160px" autocomplete="off" spellcheck="false" role="presentation">
+                            <input type="text" id="t2G" placeholder="Додаткові теги" style="flex:1; min-width:160px;" autocomplete="off" spellcheck="false" role="presentation">
+                            <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
+                            <button class="btn-main" onclick="window.upload('gallery')" data-i18n="btnPost">Опублікувати</button>
                         </div>
                     </div>
                 </div>
@@ -286,29 +276,29 @@
             </div>
 
             <div id="tab-content-board" class="tab-content">
-                <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border);">
-                    <textarea id="txtB" placeholder="О чем ты думаешь?" rows="3" style="width:100%; margin-bottom:12px; resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
-                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                        <input type="file" id="fBoard" accept="image/*,video/*" style="flex:1; min-width:150px;">
-                        <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
-                        <button class="btn-main" onclick="window.upload('board')" data-i18n="btnPost">Отправить</button>
+                <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border);">
+                    <textarea id="txtB" placeholder="Що нового? @згадки" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;" autocomplete="off" spellcheck="false" role="presentation"></textarea>
+                    <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+                        <input type="file" id="fBoard" accept="image/*,video/*" style="flex:1; min-width:200px;">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
+                        <button class="btn-main" onclick="window.upload('board')" data-i18n="btnPost">Відправити</button>
                     </div>
                 </div>
                 <div class="board-feed" id="boardFeed"></div>
             </div>
 
             <div id="tab-content-videos" class="tab-content">
-                <h2 style="margin-bottom:20px; font-size:20px; font-weight:900;" data-i18n="vidsTitle">Все видео</h2>
+                <h2 style="margin-bottom:25px; font-size:24px; font-weight:900;" data-i18n="vidsTitle">Всі відео</h2>
                 <div class="yt-grid" id="ytFeed"></div>
             </div>
 
             <div id="tab-content-shorts" class="tab-content" style="padding:0">
-                <div id="upShorts" style="display:none; padding:15px; background:var(--card); border-bottom:1px solid var(--border);">
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; max-width:700px; margin:0 auto;">
-                        <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:150px;">
-                        <input type="text" id="txtS" placeholder="Описание... @упоминания" style="flex:2; min-width:150px;" autocomplete="off" spellcheck="false" role="presentation">
-                        <label style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
-                        <button class="btn-main" onclick="window.upload('shorts')" data-i18n="btnUpload">Залить</button>
+                <div id="upShorts" style="display:none; padding:25px; background:var(--card); border-bottom:1px solid var(--border);">
+                    <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center; max-width:900px; margin:0 auto;">
+                        <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:200px;">
+                        <input type="text" id="txtS" placeholder="Опис відео... @згадки" style="flex:2; min-width:200px;" autocomplete="off" spellcheck="false" role="presentation">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
+                        <button class="btn-main" onclick="window.upload('shorts')" data-i18n="btnUpload">Залити</button>
                     </div>
                 </div>
                 <div class="shorts-feed" id="shortsFeed"></div>
@@ -316,27 +306,28 @@
         </div>
 
         <div id="profileMode" class="view-layer" style="max-width: 1000px; margin: 0 auto; padding-top:20px;">
-            <div class="btn-back" onclick="window.goHome()">← <span data-i18n="btnBack">В ленту</span></div>
+            <div class="btn-back" onclick="window.goHome()">← <span data-i18n="btnBack">У стрічку</span></div>
             <div class="profile-header">
                 <img src="" id="pAva" class="p-avatar">
                 <div style="flex:1">
-                    <h2 id="pName" style="margin:0; font-size:28px; font-weight:900;">User</h2>
-                    <p id="pBio" style="margin:12px 0; color:var(--muted); font-size:14px; white-space:pre-wrap; line-height:1.5;"></p>
-                    <button id="pEditBtn" class="btn-action" style="padding:8px 16px; display:none; font-size:12px; max-width:200px; justify-content:center;" onclick="window.openModal('editProfileModal')" data-i18n="btnEditProf">Настроить</button>
+                    <h2 id="pName" style="margin:0; font-size:32px; font-weight:900;">User</h2>
+                    <p id="pBio" style="margin:12px 0; color:var(--muted); font-size:15px; white-space:pre-wrap; line-height:1.6;"></p>
+                    <button id="pEditBtn" class="btn-action" style="padding:8px 16px; display:none; font-size:12px; max-width:200px; justify-content:center;" onclick="window.openModal('editProfileModal')" data-i18n="btnEditProf">Налаштувати</button>
                 </div>
             </div>
             <div class="app-tabs" style="background:transparent; margin-bottom:25px; max-width:400px; margin-left:0; border:none;">
-                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads" data-i18n="tabMy">Загрузки</button>
-                <button class="app-tab" onclick="window.switchProfTab('reposts')" id="pt-reposts" data-i18n="tabRep">Репосты</button>
+                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads" data-i18n="tabMy">Моє</button>
+                <button class="app-tab" onclick="window.switchProfTab('reposts')" id="pt-reposts" data-i18n="tabRep">Репости</button>
             </div>
             <div class="gallery" id="profFeed"></div>
         </div>
 
-        <div id="postMode" class="view-layer" style="max-width: 1200px; margin: 0 auto; padding-top:20px;">
+        <div id="postMode" class="view-layer" style="max-width: 1300px; margin: 0 auto; padding-top:20px;">
             <div class="btn-back" onclick="window.closePost()">← <span data-i18n="btnBack">Назад</span></div>
             <div id="pvContainer"></div>
-            <h3 style="margin-top:40px; font-size:14px; font-weight:900; letter-spacing:1px; display:flex; align-items:center; gap:10px; text-transform:uppercase;" data-i18n="simPosts">✦ Похожие посты</h3>
-            <div class="gallery" id="aiRecs" style="margin-top:15px"></div>
+            
+            <h3 style="margin-top:50px; font-size:15px; font-weight:900; letter-spacing:1px; display:flex; align-items:center; gap:10px; text-transform:uppercase;" data-i18n="simPosts">Схожі пости</h3>
+            <div class="gallery" id="aiRecs" style="margin-top:20px"></div>
         </div>
     </main>
 </div>
@@ -346,251 +337,238 @@
     import { getDatabase, ref, push, onValue, remove, update, get, set } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    const config = { apiKey: "AIzaSyCTNoJDcWPcLh5XUEXBRLqCeFSu0lOuyEI", authDomain: "database-2560e.firebaseapp.com", databaseURL: "https://database-2560e-default-rtdb.europe-west1.firebasedatabase.app", projectId: "database-2560e", storageBucket: "database-2560e.firebasestorage.app", messagingSenderId: "52592277568", appId: "1:52592277568:web:4c49e5f818ee7348abc7a5" };
-    const IMGBB = "120a27bcbb28d3ffd9f03bc4b32bb54f";
+    var config = { apiKey: "AIzaSyCTNoJDcWPcLh5XUEXBRLqCeFSu0lOuyEI", authDomain: "database-2560e.firebaseapp.com", databaseURL: "https://database-2560e-default-rtdb.europe-west1.firebasedatabase.app", projectId: "database-2560e", storageBucket: "database-2560e.firebasestorage.app", messagingSenderId: "52592277568", appId: "1:52592277568:web:4c49e5f818ee7348abc7a5" };
+    var IMGBB = "120a27bcbb28d3ffd9f03bc4b32bb54f";
+    var GEMINI_KEY = "AIzaSyB9IgR3vnbeW0GizY6deDQ2pQrjEiajUqo";
 
-    const app = initializeApp(config); const db = getDatabase(app); const auth = getAuth(app);
+    var app = initializeApp(config); var db = getDatabase(app); var auth = getAuth(app);
     window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, interests: JSON.parse(localStorage.getItem('f_ints')||'{}'), lang: 'ru' };
 
-    // P2P / WebTorrent Setup (Hybrid Model)
-    window.torrentClient = new window.WebTorrent();
-    window.torrentClient.on('torrent', function (torrent) {
-        document.getElementById('netStatus').style.display = 'flex';
-        document.getElementById('netStatus').innerHTML = `P2P LINK (Peers: ${torrent.numPeers})`;
+    var dict = {
+        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Опубликовать", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Моё", tabRep: "Репосты", simPosts: "Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватар:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
+        en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit Profile", tabMy: "Uploads", tabRep: "Reposts", simPosts: "Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search Tags", authTitle: "Login", btnEnter: "Continue", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "It's empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete" },
+        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Опублікувати", btnUpload: "Завантажити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Моє", tabRep: "Репости", simPosts: "Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Все підряд", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Поїхали", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватар:", btnSave: "Зберегти", empty: "Тут поки порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
+    };
+    window.t = function(k) { return dict[AppState.lang] && dict[AppState.lang][k] ? dict[AppState.lang][k] : k; };
+
+    window.showToast = function(m, e) { var b=document.getElementById('toastBox'), t=document.createElement('div'); t.className='toast '+(e?'error':'')+' show'; t.style.background=e?'var(--accent)':'#27272a'; t.style.padding='12px 20px'; t.style.borderRadius='10px'; t.style.color='#fff'; t.style.fontWeight='bold'; t.style.boxShadow='0 10px 30px rgba(0,0,0,0.5)'; t.style.transition='0.3s'; t.style.fontSize='14px'; t.innerText=m; b.appendChild(t); setTimeout(function() { t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(function(){t.remove()},300)}, 3000); };
+    window.openModal = function(id) { document.getElementById(id).style.display='flex'; };
+    window.closeModal = function(id) { document.getElementById(id).style.display='none'; };
+    window.toggleMenu = function() { var s=document.getElementById('sidebar'), o=document.getElementById('menuOverlay'); s.classList.toggle('open'); o.style.display=s.classList.contains('open')?'block':'none'; };
+    
+    window.switchView = function(viewId) {
+        document.querySelectorAll('.view-layer').forEach(function(el) { el.style.display = 'none'; el.classList.remove('active'); });
+        var target = document.getElementById(viewId);
+        target.style.display = 'flex'; setTimeout(function() { target.classList.add('active'); }, 10);
+    };
+
+    function loadAiFact() {
+        var fallbacks = ["Оставайся милым :3", "Лучшее место для постинга", "fembooru loves you"];
+        var el = document.getElementById('aiFact');
+        el.innerText = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        var prompt = "Сгенерируй 1 короткую милую фразу-приветствие для пользователей сайта fembooru. Без кавычек. Максимум 6 слов.";
+        fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_KEY, {
+            method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+        }).then(function(res){ return res.json(); }).then(function(data) {
+            if(data.candidates && data.candidates[0].content.parts[0].text) el.innerText = data.candidates[0].content.parts[0].text.trim();
+        }).catch(function(){});
+    }
+
+    document.addEventListener('input', function(e) {
+        if(e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && e.target.type === 'text' && e.target.id !== 'search')) {
+            window.activeInput = e.target;
+            var val = e.target.value; var pos = e.target.selectionStart;
+            var textBefore = val.slice(0, pos); var words = textBefore.split(/\s+/);
+            var lastWord = words[words.length - 1];
+
+            var mBox = document.getElementById('globalMentions');
+            if(lastWord.indexOf('@') === 0 && lastWord.length > 1) {
+                var searchName = lastWord.slice(1).toLowerCase();
+                var matches = Object.keys(AppState.users).filter(function(uid) {
+                    var u = AppState.users[uid];
+                    return u.name && u.name.toLowerCase().indexOf(searchName) !== -1;
+                }).slice(0, 5);
+                
+                if(matches.length > 0) {
+                    mBox.innerHTML = '';
+                    matches.forEach(function(uid) {
+                        var u = AppState.users[uid];
+                        var div = document.createElement('div'); div.className = 'hint-item';
+                        div.innerHTML = '<img src="'+(u.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png')+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover"> <span style="font-weight:bold; font-size:14px;">'+u.name+'</span>';
+                        div.onmousedown = function(ev) {
+                            ev.preventDefault();
+                            var newText = val.slice(0, pos - lastWord.length) + '@' + u.name + ' ' + val.slice(pos);
+                            window.activeInput.value = newText; mBox.style.display = 'none'; window.activeInput.focus();
+                        };
+                        mBox.appendChild(div);
+                    });
+                    var rect = e.target.getBoundingClientRect();
+                    mBox.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+                    mBox.style.left = rect.left + 'px';
+                    mBox.style.display = 'block';
+                } else { mBox.style.display = 'none'; }
+            } else { mBox.style.display = 'none'; }
+        }
+    });
+    document.addEventListener('click', function(e) { 
+        var mBox = document.getElementById('globalMentions');
+        if(window.activeInput && e.target !== window.activeInput && !mBox.contains(e.target)) mBox.style.display = 'none'; 
     });
 
-    const dict = {
-        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Опубликовать", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Моё", tabRep: "Репосты", simPosts: "✦ Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватар:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
-        en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit Profile", tabMy: "Uploads", tabRep: "Reposts", simPosts: "✦ Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search Tags", authTitle: "Login", btnEnter: "Continue", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "It's empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete" },
-        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Опублікувати", btnUpload: "Завантажити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Моє", tabRep: "Репости", simPosts: "✦ Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Все підряд", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Поїхали", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватар:", btnSave: "Зберегти", empty: "Тут поки порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
+    window.parseMentions = function(text) {
+        if(!text) return '';
+        var safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return safeText.replace(/@([a-zA-Z0-9_а-яА-ЯёЁіїєґІЇЄҐ]+)/g, '<span class="user-mention" onclick="event.stopPropagation(); window.openProfileByName(\'$1\')">@$1</span>');
     };
-    window.t = (k) => dict[AppState.lang]?.[k] || k;
-
-    // УТИЛИТЫ И ОТОБРАЖЕНИЕ
-    window.showToast = (m, e=false) => { const b=document.getElementById('toastBox'), t=document.createElement('div'); t.className=`toast ${e?'error':''} show`; t.style.background=e?'var(--accent)':'#27272a'; t.style.padding='10px 18px'; t.style.borderRadius='8px'; t.style.color='#fff'; t.style.fontWeight='bold'; t.style.boxShadow='0 10px 30px rgba(0,0,0,0.5)'; t.style.transition='0.3s'; t.style.fontSize='13px'; t.innerText=m; b.appendChild(t); setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(()=>t.remove(),300)}, 3000); };
-    window.openModal = (id) => document.getElementById(id).style.display='flex';
-    window.closeModal = (id) => document.getElementById(id).style.display='none';
-    window.toggleMenu = () => { const s=document.getElementById('sidebar'), o=document.getElementById('menuOverlay'); s.classList.toggle('open'); o.style.display=s.classList.contains('open')?'block':'none'; };
     
-    window.switchView = (viewId) => {
-        document.querySelectorAll('.view-layer').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
-        const target = document.getElementById(viewId);
-        target.style.display = 'flex'; setTimeout(() => target.classList.add('active'), 10);
+    window.openProfileByName = function(name) {
+        var target = Object.keys(AppState.users).find(function(uid) { return (AppState.users[uid].name||'').toLowerCase() === name.toLowerCase(); });
+        if(target) window.openProfile(target);
+        else window.showToast('Користувач не знайдений', true);
     };
 
-    // CLIENT-SIDE СЖАТИЕ ИЗОБРАЖЕНИЙ (CANVAS COMPRESSION)
+    var sInput = document.getElementById('search');
+    var sBox = document.getElementById('searchHints');
+    if(!sBox) {
+        sBox = document.createElement('div'); sBox.id = 'searchHints'; sBox.className = 'hints-box';
+        document.getElementById('searchContainer').appendChild(sBox);
+    }
+
+    sInput.addEventListener('input', function() {
+        var val = sInput.value.toLowerCase().replace(/#/g, '').trim();
+        var words = val.split(' ');
+        var lastWord = words[words.length - 1];
+
+        if(!lastWord) { sBox.style.display='none'; window.renderCurrentTab(); return; }
+
+        var matches = Object.keys(AppState.tags).filter(function(t) { return t.indexOf(lastWord) !== -1; });
+        if(matches.length) {
+            sBox.innerHTML = '';
+            matches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).slice(0, 8).forEach(function(tag) {
+                var el = document.createElement('div'); el.className = 'hint-item';
+                el.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
+                el.onclick = function() { words[words.length-1] = tag; sInput.value = words.join(' ') + ' '; sBox.style.display='none'; window.renderCurrentTab(); };
+                sBox.appendChild(el);
+            });
+            sBox.style.display = 'block';
+        } else { sBox.style.display = 'none'; }
+        window.renderCurrentTab();
+    });
+
+    var lazyObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            var media = e.target.querySelector('img, video');
+            if (!media) return;
+            
+            if (e.isIntersecting) {
+                if (!media.dataset.savedSrc && media.getAttribute('data-src')) {
+                    media.dataset.savedSrc = media.getAttribute('data-src');
+                    media.removeAttribute('data-src');
+                }
+                if (media.dataset.savedSrc && media.src !== media.dataset.savedSrc) {
+                    media.src = media.dataset.savedSrc;
+                    media.classList.add('loaded');
+                }
+                if (media.tagName==='VIDEO') {
+                    media.play().catch(function(){});
+                }
+            } else {
+                if (media.tagName==='VIDEO') {
+                    media.pause();
+                    media.removeAttribute('src'); 
+                    media.load(); 
+                }
+            }
+        });
+    }, { threshold: 0.05, rootMargin: "600px 0px" });
+
+    var RecomEngine = {
+        track: function(text) { text.split(' ').filter(Boolean).forEach(function(t) { var tag=t.toLowerCase().replace(/[^a-zа-я0-9іїєґ]/gi,'').trim(); if(tag) AppState.interests[tag]=(AppState.interests[tag]||0)+1; }); localStorage.setItem('f_ints', JSON.stringify(AppState.interests)); },
+        score: function(p) { var s=0; var txt=[p.t1||'', ...(p.t2||'').split(' '), ...(p.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9іїєґ]/gi,'').trim()}); txt.forEach(function(t){ s+=(AppState.interests[t]||0); }); return s + (p.time/Date.now()); },
+        getSimilar: function(post, type) {
+            var curTxt = [post.t1||'', ...(post.t2||'').split(' '), ...(post.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()});
+            return AppState.data[type].filter(function(p) { return p.id !== post.id; }).map(function(p) {
+                var pTxt = [p.t1||'', ...(p.t2||'').split(' '), ...(p.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()});
+                return { post: p, score: pTxt.filter(function(t){ return curTxt.indexOf(t) !== -1; }).length };
+            }).filter(function(i) { return i.score > 0; }).sort(function(a,b) { return b.score - a.score; }).slice(0, 8).map(function(i) { return i.post; });
+        }
+    };
+
+    onAuthStateChanged(auth, function(u) {
+        AppState.user = u; AppState.isAdmin = u && u.email === "test@anon.ru";
+        ['Gal', 'Board', 'Shorts'].forEach(function(i) { if(document.getElementById('up'+i)) document.getElementById('up'+i).style.display = u ? 'block' : 'none'; });
+        document.getElementById('loggedOutView').style.display = u ? 'none' : 'block';
+        document.getElementById('loggedInView').style.display = u ? 'block' : 'none';
+        if(u) {
+            document.getElementById('userNameDisplay').innerText = u.displayName;
+            get(ref(db, 'users/'+u.uid)).then(function(s) { if(s.exists()) document.getElementById('navAvatar').src = s.val().avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png"; });
+        }
+        fetchAll();
+        loadAiFact();
+    });
+
+    window.openAuth = function() { window.openModal('authModal'); };
+    window.submitAuth = function() {
+        var n=document.getElementById('authName').value.trim(), p=document.getElementById('authPass').value, e=n.toLowerCase().replace(/[^a-z0-9]/g,'')+'@anon.ru';
+        if(!n || p.length<6) return window.showToast('Мінімум 6 символів пароль', true);
+        document.getElementById('loader').style.display='flex';
+        signInWithEmailAndPassword(auth, e, p).then(function() {
+            document.getElementById('loader').style.display='none';
+            window.closeModal('authModal');
+        }).catch(function() {
+            createUserWithEmailAndPassword(auth,e,p).then(function(res) {
+                updateProfile(res.user,{displayName:n}).then(function() {
+                    set(ref(db,'users/'+res.user.uid),{name:n,avatar:"https://i.ibb.co/3sW3xQy/default-avatar.png",bio:''}).then(function() {
+                        document.getElementById('loader').style.display='none';
+                        window.closeModal('authModal');
+                    });
+                });
+            }).catch(function() {
+                document.getElementById('loader').style.display='none';
+                window.showToast('Помилка входу', true);
+            });
+        });
+    };
+    window.doLogout = function() { signOut(auth); };
+
     function compressImage(file, quality=0.7, maxWidth=1200) {
-        return new Promise((resolve) => {
+        return new Promise(function(resolve) {
             if (!file || !file.type.match(/image.*/)) return resolve(file);
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
+            var reader = new FileReader(); reader.readAsDataURL(file);
             reader.onload = function(event) {
-                const img = new Image();
-                img.src = event.target.result;
+                var img = new Image(); img.src = event.target.result;
                 img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width, height = img.height;
+                    var canvas = document.createElement('canvas'); var width = img.width, height = img.height;
                     if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob((blob) => { resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() })); }, 'image/jpeg', quality);
+                    canvas.width = width; canvas.height = height; var ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob(function(blob) { resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() })); }, 'image/jpeg', quality);
                 };
             };
         });
     }
 
-    // МЕНШОНЫ (УПОМИНАНИЯ)
-    const mBox = document.getElementById('globalMentions');
-    let activeInput = null;
-    
-    document.body.addEventListener('input', (e) => {
-        if(e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && e.target.type === 'text' && e.target.id !== 'search')) {
-            activeInput = e.target;
-            const val = e.target.value; const pos = e.target.selectionStart;
-            const textBefore = val.slice(0, pos); const words = textBefore.split(/\s+/);
-            const lastWord = words[words.length - 1];
+    async function upImg(file) { var compressed = await compressImage(file); var fd = new FormData(); fd.append('image', compressed); var res = await fetch("https://api.imgbb.com/1/upload?key="+IMGBB, { method: 'POST', body: fd }); var d = await res.json(); return d.success ? d.data.url : null; }
+    async function upVid(file) { var fd = new FormData(); fd.append('reqtype', 'fileupload'); fd.append('fileToUpload', file); var r = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd }); return r.ok ? await r.text() : null; }
 
-            if(lastWord.startsWith('@') && lastWord.length > 1) {
-                const searchName = lastWord.slice(1).toLowerCase();
-                const matches = Object.values(AppState.users).filter(u => u.name && u.name.toLowerCase().includes(searchName)).slice(0, 5);
-                if(matches.length > 0) {
-                    mBox.innerHTML = '';
-                    matches.forEach(u => {
-                        const div = document.createElement('div'); div.className = 'hint-item';
-                        div.innerHTML = `<img src="${u.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:20px;height:20px;border-radius:50%;object-fit:cover"> <span style="font-weight:bold">${u.name}</span>`;
-                        div.onmousedown = (ev) => {
-                            ev.preventDefault(); // prevent blur
-                            const newText = val.slice(0, pos - lastWord.length) + `@${u.name} ` + val.slice(pos);
-                            activeInput.value = newText; mBox.style.display = 'none'; activeInput.focus();
-                        };
-                        mBox.appendChild(div);
-                    });
-                    const rect = activeInput.getBoundingClientRect();
-                    mBox.style.top = (rect.bottom + window.scrollY) + 'px';
-                    mBox.style.left = rect.left + 'px';
-                    mBox.style.display = 'block';
-                } else mBox.style.display = 'none';
-            } else mBox.style.display = 'none';
-        }
-    });
-    document.addEventListener('click', (e) => { if(e.target !== activeInput && !mBox.contains(e.target)) mBox.style.display = 'none'; });
-
-    function parseMentions(text) {
-        if(!text) return '';
-        const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        return safeText.replace(/@([a-zA-Z0-9_а-яА-ЯёЁ]+)/g, `<span class="user-mention" onclick="event.stopPropagation(); window.openProfileByName('$1')">@$1</span>`);
-    }
-    
-    window.openProfileByName = (name) => {
-        const target = Object.keys(AppState.users).find(uid => (AppState.users[uid].name||'').toLowerCase() === name.toLowerCase());
-        if(target) window.openProfile(target);
-        else window.showToast('Пользователь не найден', true);
-    };
-
-    // УМНЫЙ ПОИСК
-    const sInput = document.getElementById('search');
-    const hBox = document.getElementById('hints');
-
-    sInput.addEventListener('input', () => {
-        const val = sInput.value.toLowerCase().replace(/#/g, '').trim();
-        const words = val.split(' ');
-        const lastWord = words[words.length - 1];
-
-        if(!lastWord) { hBox.style.display='none'; window.renderCurrentTab(); return; }
-
-        const matches = Object.keys(AppState.tags).filter(t => t.includes(lastWord));
-        if(matches.length) {
-            hBox.innerHTML = '';
-            matches.sort((a,b) => AppState.tags[b] - AppState.tags[a]).slice(0, 8).forEach(tag => {
-                const el = document.createElement('div'); el.className = 'hint-item';
-                el.innerHTML = `<span style="font-weight:bold;">#${tag}</span> <span class="hint-count">${AppState.tags[tag]}</span>`;
-                el.onclick = () => { words[words.length-1] = tag; sInput.value = words.join(' ') + ' '; hBox.style.display='none'; window.renderCurrentTab(); };
-                hBox.appendChild(el);
-            });
-            hBox.style.display = 'block';
-        } else hBox.style.display = 'none';
-        window.renderCurrentTab();
-    });
-
-    // LAZY LOADING 4.0 (RADAR + HYBRID P2P)
-    const lazyObs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            const media = e.target.querySelector('img, video');
-            if (e.isIntersecting) {
-                if (media && media.tagName==='VIDEO') {
-                    const magnet = media.getAttribute('data-magnet');
-                    const cdnUrl = media.getAttribute('data-src');
-                    
-                    if(magnet && !media.dataset.p2pInit) {
-                        media.dataset.p2pInit = "true";
-                        // P2P Stream Attempt
-                        window.torrentClient.add(magnet, (torrent) => {
-                            const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.webm'));
-                            if (file) {
-                                file.renderTo(media, { autoplay: e.target.closest('.short-wrap') ? true : false });
-                                const badge = media.parentElement.querySelector('.source-badge');
-                                if(badge) { badge.className='source-badge p2p'; badge.innerText='P2P'; }
-                            }
-                        });
-                        // Fallback to CDN if P2P is slow/empty
-                        setTimeout(() => {
-                            if (!media.src && !media.currentSrc) {
-                                media.src = cdnUrl;
-                                const badge = media.parentElement.querySelector('.source-badge');
-                                if(badge) { badge.className='source-badge cdn'; badge.innerText='CDN'; }
-                            }
-                        }, 4000);
-                    } else if (!magnet && cdnUrl) {
-                        media.src = cdnUrl; media.removeAttribute('data-src'); media.classList.add('loaded');
-                    }
-                    if (e.target.closest('.short-wrap')) media.play().catch(()=>{});
-                } else if (media && media.getAttribute('data-src')) {
-                    media.src = media.getAttribute('data-src'); media.removeAttribute('data-src'); media.classList.add('loaded');
-                }
-            } else {
-                if (media && media.tagName==='VIDEO' && e.target.closest('.short-wrap')) media.pause();
-            }
-        });
-    }, { threshold: 0.1, rootMargin: "400px 0px" });
-
-    // СИСТЕМА РЕКОМЕНДАЦИЙ (Семантика + Теги)
-    const RecomEngine = {
-        track: (text) => { text.split(' ').filter(Boolean).forEach(t => { const tag=t.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim(); if(tag) AppState.interests[tag]=(AppState.interests[tag]||0)+1; }); localStorage.setItem('f_ints', JSON.stringify(AppState.interests)); },
-        score: (p) => { let s=0; const txt=[p.t1||'', ...(p.t2||'').split(' '), ...(p.text||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()); txt.forEach(t=>s+=(AppState.interests[t]||0)); return s + (p.time/Date.now()); },
-        getSimilar: (post, type) => {
-            const curTxt = [post.t1||'', ...(post.t2||'').split(' '), ...(post.text||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim());
-            return AppState.data[type].filter(p => p.id !== post.id).map(p => {
-                const pTxt = [p.t1||'', ...(p.t2||'').split(' '), ...(p.text||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim());
-                return { post: p, score: pTxt.filter(t => curTxt.includes(t)).length };
-            }).filter(i => i.score > 0).sort((a,b) => b.score - a.score).slice(0, 8).map(i => i.post);
-        }
-    };
-
-    // АВТОРИЗАЦИЯ
-    onAuthStateChanged(auth, u => {
-        AppState.user = u; AppState.isAdmin = u && u.email === "test@anon.ru";
-        ['Gal', 'Board', 'Shorts'].forEach(i => { if(document.getElementById('up'+i)) document.getElementById('up'+i).style.display = u ? 'block' : 'none'; });
-        document.getElementById('loggedOutView').style.display = u ? 'none' : 'block';
-        document.getElementById('loggedInView').style.display = u ? 'block' : 'none';
-        if(u) {
-            document.getElementById('userNameDisplay').innerText = u.displayName;
-            get(ref(db, 'users/'+u.uid)).then(s => { if(s.exists()) document.getElementById('navAvatar').src = s.val().avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png"; });
-        }
-        fetchAll();
-    });
-
-    window.openAuth = () => window.openModal('authModal');
-    window.submitAuth = async () => {
-        const n=document.getElementById('authName').value.trim(), p=document.getElementById('authPass').value, e=n.toLowerCase().replace(/[^a-z0-9]/g,'')+'@anon.ru';
-        if(!n || p.length<6) return window.showToast('Минимум 6 символов пароль', true);
-        document.getElementById('loader').style.display='flex';
-        try { await signInWithEmailAndPassword(auth, e, p); } catch(err) {
-            try { const res=await createUserWithEmailAndPassword(auth,e,p); await updateProfile(res.user,{displayName:n}); await set(ref(db,'users/'+res.user.uid),{name:n,avatar:"https://i.ibb.co/3sW3xQy/default-avatar.png",bio:''}); } catch(e2) { window.showToast('Ошибка входа', true); }
-        }
-        document.getElementById('loader').style.display='none';
-        window.closeModal('authModal');
-    };
-    window.doLogout = () => signOut(auth);
-
-    // ЗАГРУЗКА (HYBRID P2P + CDN)
-    async function upVid(file) { const fd = new FormData(); fd.append('reqtype', 'fileupload'); fd.append('fileToUpload', file); const r = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd }); return r.ok ? await r.text() : null; }
-
-    window.upload = async (type) => {
-        let dbNode = type; if(type === 'gallery') dbNode = 'posts'; // Legacy route
-        const input = document.getElementById(type==='gallery'?'fGal':type==='board'?'fBoard':'fShorts');
+    window.upload = async function(type) {
+        var dbNode = type; if(type === 'gallery') dbNode = 'posts'; 
+        var input = document.getElementById(type==='gallery'?'fGal':type==='board'?'fBoard':'fShorts');
         if(!input.files.length && type !== 'board') return;
         document.getElementById('loader').style.display='flex';
-        const files = input.files.length ? input.files : [null];
-        
-        for(let i = 0; i < files.length; i++) {
-            let f = files[i];
+        var files = input.files.length ? input.files : [null];
+        for(var i = 0; i < files.length; i++) {
+            var f = files[i];
             try {
-                let url = null;
-                let magnetURI = null;
-                
-                if (f) {
-                    if (f.type.startsWith('image/')) {
-                        url = await upImg(f);
-                    } else if (f.type.includes('video')) {
-                        // Seed locally first to get magnet
-                        await new Promise(res => {
-                            window.torrentClient.seed(f, (torrent) => { magnetURI = torrent.magnetURI; res(); });
-                        });
-                        // Fallback CDN upload
-                        url = await upVid(f);
-                    }
-                }
-                
-                const nsfw = document.getElementById('n'+(type==='gallery'?'Gal':type==='board'?'Board':'Shorts'))?.checked || false;
-                const data = { url, magnet: magnetURI, uid: AppState.user.uid, author: AppState.user.displayName, time: Date.now(), isVid: f?.type.includes('video') || false, nsfw };
+                var url = f ? (f.type.indexOf('image/')===0 ? await upImg(f) : await upVid(f)) : null;
+                var nsfw = document.getElementById('n'+(type==='gallery'?'Gal':type==='board'?'Board':'Shorts'))?.checked || false;
+                var data = { url:url, uid: AppState.user.uid, author: AppState.user.displayName, time: Date.now(), isVid: (f && f.type.indexOf('video')!==-1) || false, nsfw:nsfw };
                 
                 if(type==='gallery') { data.t1 = document.getElementById('t1G').value || ''; data.t2 = document.getElementById('t2G').value || ''; data.text = document.getElementById('txtGal').value || ''; }
                 if(type==='board') data.text = document.getElementById('txtB').value || '';
                 if(type==='shorts') data.text = document.getElementById('txtS').value || '';
                 
                 await push(ref(db, dbNode), data); 
-            } catch(e) { window.showToast('Ошибка загрузки', true); }
+            } catch(e) { window.showToast('Помилка', true); }
         }
         document.getElementById('loader').style.display='none'; input.value='';
         if(document.getElementById('txtGal')) document.getElementById('txtGal').value='';
@@ -598,49 +576,50 @@
         if(document.getElementById('txtS')) document.getElementById('txtS').value='';
     };
 
-    // ИЗВЛЕЧЕНИЕ И РЕНДЕР
     function fetchAll() {
-        onValue(ref(db, 'users'), s => { AppState.users = s.val() || {}; if(AppState.profUid) renderProfFeed(); });
-        ['posts', 'board', 'shorts'].forEach(t => onValue(ref(db, t), s => {
-            const a = []; AppState.tags = {};
-            s.forEach(c => { 
-                const d = c.val(); a.push({id:c.key,...d});
-                if(t==='posts') [d.t1||'', ...(d.t2||'').split(' ')].filter(Boolean).forEach(x => { const tag=x.toLowerCase().trim(); AppState.tags[tag]=(AppState.tags[tag]||0)+1; });
+        onValue(ref(db, 'users'), function(s) { AppState.users = s.val() || {}; if(AppState.profUid) renderProfFeed(); });
+        ['posts', 'board', 'shorts'].forEach(function(t) { 
+            onValue(ref(db, t), function(s) {
+                var a = []; AppState.tags = {};
+                s.forEach(function(c) { 
+                    var d = c.val(); d.id = c.key; a.push(d);
+                    if(t==='posts') { [d.t1||'', ...(d.t2||'').split(' ')].filter(Boolean).forEach(function(x) { var tag=x.toLowerCase().trim(); AppState.tags[tag]=(AppState.tags[tag]||0)+1; }); }
+                });
+                AppState.data[t==='posts'?'gallery':t] = a.reverse(); 
+                window.renderCurrentTab();
             });
-            AppState.data[t==='posts'?'gallery':t] = a.reverse(); 
-            window.renderCurrentTab();
-        }));
+        });
     }
 
-    window.switchTab = (t) => {
+    window.switchTab = function(t) {
         window.switchView('mainView');
         AppState.currentTab = t; AppState.profUid = null; AppState.currentPostId = null;
-        document.querySelectorAll('.app-tab').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-'+t)?.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => {
+        document.querySelectorAll('.app-tab').forEach(function(b) { b.classList.remove('active'); });
+        var targetTab = document.getElementById('tab-'+t); if(targetTab) targetTab.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(function(c) {
             c.style.display = 'none'; c.classList.remove('active');
-            if(c.id === 'tab-content-'+t) { c.style.display = 'flex'; setTimeout(()=>c.classList.add('active'),10); }
+            if(c.id === 'tab-content-'+t) { c.style.display = 'flex'; setTimeout(function(){c.classList.add('active');},10); }
         });
         window.renderCurrentTab();
     };
 
-    window.renderCurrentTab = () => {
+    window.renderCurrentTab = function() {
         if(AppState.profUid || AppState.currentPostId) return;
-        const rf = document.querySelector('input[name="rating"]:checked').value;
-        const q = sInput.value.toLowerCase().replace(/#/g, '').trim().split(' ').filter(Boolean);
+        var rf = document.querySelector('input[name="rating"]:checked').value;
+        var q = sInput.value.toLowerCase().replace(/#/g, '').trim().split(' ').filter(Boolean);
         
         if (AppState.currentTab === 'videos') { renderVideos(rf, q); return; }
 
-        let feed = AppState.data[AppState.currentTab]?.filter(p => {
+        var feed = AppState.data[AppState.currentTab]?.filter(function(p) {
             if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
             if(q.length) {
-                const searchStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase();
-                return q.every(word => searchStr.includes(word));
+                var searchStr = ((p.t1||'')+' '+(p.t2||'')+' '+(p.text||'')).toLowerCase();
+                return q.every(function(word) { return searchStr.indexOf(word) !== -1; });
             }
             return true;
         }) || [];
 
-        if(AppState.currentTab==='gallery') feed.sort((a,b) => RecomEngine.score(b) - RecomEngine.score(a));
+        if(AppState.currentTab==='gallery') feed.sort(function(a,b) { return RecomEngine.score(b) - RecomEngine.score(a); });
 
         if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed');
         if(AppState.currentTab==='board') renderBoard(feed);
@@ -648,211 +627,237 @@
     };
 
     function renderGrid(arr, target) {
-        const el = document.getElementById(target); el.innerHTML = '';
-        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:16px;font-weight:bold;">${t('emptySearch')}</div>`; return; }
-        arr.forEach((p, i) => {
-            const div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = `${i*0.03}s`;
-            div.onclick = () => window.openPost(p.id, target.includes('prof')?p._type||'gallery':'gallery');
-            const mediaTag = p.isVid ? `<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><div class="source-badge"></div><video data-src="${p.url}#t=0.1" data-magnet="${p.magnet||''}" preload="none" muted loop></video>` : `<img data-src="${p.url}" loading="lazy">`;
-            div.innerHTML = `${p.nsfw?'<div class="nsfw-badge">NSFW</div>':''}
-                <div class="pc-media">${mediaTag}</div>
-                <div class="pc-info"><span style="color:#60a5fa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">#${p.t1||'post'}</span><span style="flex-shrink:0;">❤ ${p.likes?Object.keys(p.likes).length:0}</span></div>`;
+        var el = document.getElementById(target); el.innerHTML = '';
+        if(!arr.length) { el.innerHTML = '<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:18px;font-weight:bold;">'+t('emptySearch')+'</div>'; return; }
+        arr.forEach(function(p, i) {
+            var div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = (i*0.03)+'s';
+            div.onclick = function() { window.openPost(p.id, target.indexOf('prof')!==-1?(p._type||'gallery'):'gallery'); };
+            var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="none" muted loop></video>' : '<img data-src="'+p.url+'" loading="lazy">';
+            div.innerHTML = (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') +
+                '<div class="pc-media">'+mediaTag+'</div>' +
+                '<div class="pc-info"><span style="color:#60a5fa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">#'+(p.t1||'post')+'</span><span style="flex-shrink:0;">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>';
             el.appendChild(div);
             lazyObs.observe(div);
         });
     }
 
     function renderVideos(rf, q) {
-        const el = document.getElementById('ytFeed'); el.innerHTML = '';
-        let allVids = [];
-        ['gallery', 'board'].forEach(t => { // Strict exclusion of 'shorts' for Youtube view
+        var el = document.getElementById('ytFeed'); el.innerHTML = '';
+        var allVids = [];
+        ['gallery', 'board'].forEach(function(t) { 
             if(AppState.data[t]) {
-                const vids = AppState.data[t].filter(p => p.isVid && p.url);
-                vids.forEach(v => allVids.push({...v, _type: t}));
+                var vids = AppState.data[t].filter(function(p){ return p.isVid && p.url; });
+                vids.forEach(function(v){ var obj=Object.assign({}, v); obj._type=t; allVids.push(obj); });
             }
         });
 
-        allVids = allVids.filter(p => {
+        allVids = allVids.filter(function(p) {
             if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
-            if(q.length) { const searchStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase(); return q.every(word => searchStr.includes(word)); }
+            if(q.length) { var sStr = ((p.t1||'')+' '+(p.t2||'')+' '+(p.text||'')).toLowerCase(); return q.every(function(w){ return sStr.indexOf(w) !== -1;}); }
             return true;
-        }).sort((a,b) => b.time - a.time);
+        }).sort(function(a,b) { return b.time - a.time; });
 
-        if(!allVids.length) { el.innerHTML = `<div style="text-align:center;width:100%;grid-column:1/-1;padding:50px;color:var(--muted)">${t('empty')}</div>`; return; }
+        if(!allVids.length) { el.innerHTML = '<div style="text-align:center;width:100%;grid-column:1/-1;padding:50px;color:var(--muted)">'+t('empty')+'</div>'; return; }
 
-        allVids.forEach((p, i) => {
-            const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
-            const div = document.createElement('div'); div.className = 'yt-card'; div.style.animationDelay = `${i*0.05}s`;
-            div.onclick = () => window.openPost(p.id, p._type);
-            div.innerHTML = `
-                <div class="yt-thumb">
-                    ${p.nsfw?'<div class="nsfw-badge">NSFW</div>':''}
-                    <div class="vid-icon-big">▶</div>
-                    <div class="source-badge"></div>
-                    <video data-src="${p.url}#t=0.1" data-magnet="${p.magnet||''}" preload="none" muted onmouseover="this.play()" onmouseout="this.pause()"></video>
-                </div>
-                <div class="yt-info">
-                    <img src="${ava}" class="yt-avatar" onclick="event.stopPropagation(); window.openProfile('${p.uid}')">
-                    <div class="yt-text">
-                        <div class="yt-title">${p.text || (p.t1 ? `#${p.t1}` : 'Видео без названия')}</div>
-                        <div class="yt-meta"><span onclick="event.stopPropagation(); window.openProfile('${p.uid}')" style="cursor:pointer">${p.author}</span> • <span>❤ ${p.likes?Object.keys(p.likes).length:0}</span></div>
-                    </div>
-                </div>`;
+        allVids.forEach(function(p, i) {
+            var ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
+            var div = document.createElement('div'); div.className = 'yt-card'; div.style.animationDelay = (i*0.05)+'s';
+            div.onclick = function() { window.openPost(p.id, p._type); };
+            div.innerHTML = '<div class="yt-thumb">' +
+                    (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') +
+                    '<div class="vid-icon-big">▶</div>' +
+                    '<video data-src="'+p.url+'#t=0.1" preload="none" muted onmouseover="this.play()" onmouseout="this.pause()"></video>' +
+                '</div>' +
+                '<div class="yt-info">' +
+                    '<img src="'+ava+'" class="yt-avatar" onclick="event.stopPropagation(); window.openProfile(\''+p.uid+'\')">' +
+                    '<div class="yt-text">' +
+                        '<div class="yt-title">'+(p.text || (p.t1 ? '#'+p.t1 : 'Відео'))+'</div>' +
+                        '<div class="yt-meta"><span onclick="event.stopPropagation(); window.openProfile(\''+p.uid+'\')" style="cursor:pointer">'+p.author+'</span> • <span>❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>' +
+                    '</div>' +
+                '</div>';
             el.appendChild(div);
             lazyObs.observe(div);
         });
     }
 
     function renderBoard(arr) {
-        const el = document.getElementById('boardFeed'); el.innerHTML = '';
-        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:50px;color:var(--muted)">${t('empty')}</div>`; return; }
-        arr.forEach((p, i) => {
-            const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
-            const div = document.createElement('div'); div.className = 'board-post'; div.style.animationDelay = `${i*0.05}s`;
-            div.innerHTML = `<div class="b-header" onclick="event.stopPropagation(); window.openProfile('${p.uid}')"><img src="${ava}" class="b-avatar"> <div><span style="color:#fff">${p.author}</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">${new Date(p.time).toLocaleString()}</span></div></div>
-                ${p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.5;">'+parseMentions(p.text)+'</div>':''} 
-                ${p.url?`<div class="b-media" onclick="window.openPost('${p.id}','board')">${p.isVid?'<div class="source-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">'}</div>`:''}
-                <div class="action-row" style="margin-top:5px">
-                    <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${p.id}','board')">❤ ${p.likes?Object.keys(p.likes).length:0}</button>
-                    <button class="btn-action" onclick="window.repost('${p.id}','board')">🔄</button>
-                    <button class="btn-action" onclick="window.openPost('${p.id}','board')">💬 Открыть</button>
-                </div>`;
+        var el = document.getElementById('boardFeed'); el.innerHTML = '';
+        if(!arr.length) { el.innerHTML = '<div style="text-align:center;width:100%;padding:50px;color:var(--muted)">'+t('empty')+'</div>'; return; }
+        arr.forEach(function(p, i) {
+            var ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
+            var div = document.createElement('div'); div.className = 'board-post'; div.style.animationDelay = (i*0.05)+'s';
+            div.innerHTML = '<div class="b-header" onclick="event.stopPropagation(); window.openProfile(\''+p.uid+'\')"><img src="'+ava+'" class="b-avatar"> <div><span style="color:#fff">'+p.author+'</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">'+new Date(p.time).toLocaleString()+'</span></div></div>' +
+                (p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.6;">'+window.parseMentions(p.text)+'</div>':'') + 
+                (p.url?'<div class="b-media" onclick="window.openPost(\''+p.id+'\',\'board\')">'+(p.isVid?'<video data-src="'+p.url+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">')+'</div>':'') +
+                '<div class="action-row" style="margin-top:10px">' +
+                    '<button class="btn-action '+(p.likes&&p.likes[AppState.user?.uid]?'active':'')+'" onclick="window.like(\''+p.id+'\',\'board\')">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</button>' +
+                    '<button class="btn-action" onclick="window.repost(\''+p.id+'\',\'board\')">🔄 Репост</button>' +
+                    '<button class="btn-action" onclick="window.openPost(\''+p.id+'\',\'board\')">💬</button>' +
+                '</div>';
             el.appendChild(div);
             if(p.url) lazyObs.observe(div);
         });
     }
 
     function renderShorts(arr) {
-        const el = document.getElementById('shortsFeed'); el.innerHTML = '';
+        var el = document.getElementById('shortsFeed'); el.innerHTML = '';
         if(!arr.length) return;
-        arr.forEach(p => {
-            const div = document.createElement('div'); div.className = 'short-wrap';
-            div.innerHTML = `<div class="short-ui"><div class="short-video"><div class="source-badge"></div><video data-src="${p.url}" data-magnet="${p.magnet||''}" preload="none" loop playsinline></video>
-                <div class="short-info-overlay"><b onclick="event.stopPropagation(); window.openProfile('${p.uid}')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="${AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover">@${p.author}</b><p style="margin:0;font-size:14px;line-height:1.4;">${parseMentions(p.text||'')}</p></div></div>
-                <div class="short-sidebar">
-                    <button class="s-btn ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${p.id}','shorts')">❤<span class="s-count">${p.likes?Object.keys(p.likes).length:0}</span></button>
-                    <button class="s-btn" onclick="window.repost('${p.id}','shorts')">🔄</button>
-                    <button class="s-btn" onclick="window.openPost('${p.id}','shorts')">💬</button>
-                    ${AppState.isAdmin||AppState.user?.uid===p.uid?`<button class="s-btn" style="color:var(--accent)" onclick="window.del('${p.id}','shorts')">🗑</button>`:''}
-                </div></div>`;
+        arr.forEach(function(p) {
+            var div = document.createElement('div'); div.className = 'short-wrap';
+            var uAvatar = AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png';
+            div.innerHTML = '<div class="short-ui"><div class="short-video"><video data-src="'+p.url+'" preload="none" loop playsinline></video>' +
+                '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.openProfile(\''+p.uid+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><img src="'+uAvatar+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+p.author+'</b><p style="margin:0;font-size:15px;line-height:1.5;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
+                '<div class="short-sidebar">' +
+                    '<button class="s-btn '+(p.likes&&p.likes[AppState.user?.uid]?'active':'')+'" onclick="window.like(\''+p.id+'\',\'shorts\')">❤<span class="s-count">'+(p.likes?Object.keys(p.likes).length:0)+'</span></button>' +
+                    '<button class="s-btn" onclick="window.repost(\''+p.id+'\',\'shorts\')">🔄</button>' +
+                    '<button class="s-btn" onclick="window.openPost(\''+p.id+'\',\'shorts\')">💬</button>' +
+                    (AppState.isAdmin||(AppState.user&&AppState.user.uid===p.uid)?'<button class="s-btn" style="color:var(--accent)" onclick="window.del(\''+p.id+'\',\'shorts\')">🗑</button>':'') +
+                '</div></div>';
             el.appendChild(div);
             lazyObs.observe(div);
         });
     }
 
-    // ПРОФИЛЬ
-    window.openProfile = async (uid) => {
-        try {
-            AppState.profUid = uid; window.switchView('profileMode');
-            const d = (await get(ref(db, 'users/'+uid))).val()||{};
-            document.getElementById('pAva').src=d.avatar||"https://i.ibb.co/3sW3xQy/default-avatar.png";
-            document.getElementById('pName').innerText=d.name||'Anon';
-            document.getElementById('pBio').innerHTML=parseMentions(d.bio||'');
-            document.getElementById('pEditBtn').style.display=AppState.user?.uid===uid?'flex':'none';
+    window.openProfile = function(uid) {
+        AppState.profUid = uid; 
+        window.switchView('profileMode');
+        get(ref(db, 'users/'+uid)).then(function(snapshot) {
+            var d = snapshot.val()||{};
+            document.getElementById('pAva').src = d.avatar||"https://i.ibb.co/3sW3xQy/default-avatar.png";
+            document.getElementById('pName').innerText = d.name||'Anon';
+            document.getElementById('pBio').innerHTML = window.parseMentions(d.bio||'');
+            document.getElementById('pEditBtn').style.display = (AppState.user&&AppState.user.uid===uid)?'flex':'none';
             window.switchProfTab('uploads');
-        } catch(e) { window.showToast('Ошибка', true); }
+        }).catch(function() { window.showToast('Помилка', true); });
     };
-    window.saveProfile = async () => {
-        const f=document.getElementById('editAvaFile').files[0], b=document.getElementById('editBio').value;
-        let a=document.getElementById('pAva').src; document.getElementById('loader').style.display='flex';
+
+    window.saveProfile = async function() {
+        var f=document.getElementById('editAvaFile').files[0], b=document.getElementById('editBio').value;
+        var a=document.getElementById('pAva').src; document.getElementById('loader').style.display='flex';
         if(f) a=await upImg(f);
         await update(ref(db, 'users/'+AppState.user.uid), {avatar:a, bio:b}); 
         document.getElementById('loader').style.display='none'; window.closeModal('editProfileModal'); window.openProfile(AppState.user.uid);
     };
-    window.switchProfTab = (t) => { AppState.profTab=t; document.querySelectorAll('#profileMode .app-tab').forEach(b=>b.classList.remove('active')); document.getElementById('pt-'+t).classList.add('active'); renderProfFeed(); };
+
+    window.switchProfTab = function(t) { 
+        AppState.profTab=t; 
+        document.querySelectorAll('#profileMode .app-tab').forEach(function(b){b.classList.remove('active')}); 
+        document.getElementById('pt-'+t).classList.add('active'); 
+        renderProfFeed(); 
+    };
+
     function renderProfFeed() {
-        let items = [];
-        if(AppState.profTab==='uploads') ['gallery','board','shorts'].forEach(t=>items.push(...(AppState.data[t]||[]).filter(p=>p.uid===AppState.profUid).map(p=>({...p, _type:t}))));
-        else { const r=AppState.users[AppState.profUid]?.reposts||{}; Object.keys(r).forEach(id=>{ const type=r[id]; const post=AppState.data[type]?.find(x=>x.id===id); if(post) items.push({...post, _type:type}); }); }
-        renderGrid(items.sort((a,b)=>b.time-a.time), 'profFeed');
+        var items = [];
+        if(AppState.profTab==='uploads') {
+            ['gallery','board','shorts'].forEach(function(t){
+                var dbTarget = t==='gallery'?'posts':t;
+                if(AppState.data[dbTarget]) {
+                    var filtered = AppState.data[dbTarget].filter(function(p){return p.uid===AppState.profUid});
+                    filtered.forEach(function(p){ var obj=Object.assign({}, p); obj._type=t; items.push(obj); });
+                }
+            });
+        }
+        else { 
+            var r=AppState.users[AppState.profUid]?.reposts||{}; 
+            Object.keys(r).forEach(function(id){ 
+                var type=r[id]; var dbTarget = type==='gallery'?'posts':type;
+                var post=AppState.data[dbTarget]?.find(function(x){return x.id===id}); 
+                if(post) { var obj=Object.assign({}, post); obj._type=type; items.push(obj); }
+            }); 
+        }
+        renderGrid(items.sort(function(a,b){return b.time-a.time}), 'profFeed');
     }
 
-    // ПРОСМОТР ПОСТА И КОММЕНТАРИИ
-    window.openPost = async (id, type) => {
-        const dbType = type === 'gallery' ? 'gallery' : type; 
-        const p = AppState.data[dbType]?.find(x => x.id === id); if(!p) return;
+    window.openPost = function(id, type) {
+        var dbType = type === 'gallery' ? 'posts' : type; 
+        var p = AppState.data[dbType]?.find(function(x){return x.id === id}); if(!p) return;
         AppState.currentPostId = id; window.switchView('postMode');
         
-        RecomEngine.track(`${p.t1||''} ${p.t2||''} ${p.text||''}`);
+        RecomEngine.track((p.t1||'')+' '+(p.t2||'')+' '+(p.text||''));
 
-        const tags = (p.t1 ? `<span class="hashtag" onclick="window.setSearch('${p.t1}')">#${p.t1}</span>` : '') + (p.t2||'').split(' ').filter(Boolean).map(t=>`<span class="hashtag" onclick="window.setSearch('${t}')">#${t}</span>`).join(' ');
+        var tagsHTML = '';
+        if(p.t1) tagsHTML += '<span class="hashtag" onclick="window.setSearch(\''+p.t1+'\')">#'+p.t1+'</span>';
+        if(p.t2) { p.t2.split(' ').filter(Boolean).forEach(function(t) { tagsHTML += '<span class="hashtag" onclick="window.setSearch(\''+t+'\')">#'+t+'</span>'; }); }
         
-        document.getElementById('pvContainer').innerHTML = `<div class="pv-layout">
-            <div class="pv-main">
-                ${p.url ? `<div class="pv-media-box" style="animation: popIn 0.4s ease forwards;">${p.isVid?`<div class="source-badge"></div><video data-src="${p.url}" data-magnet="${p.magnet||''}" controls autoplay></video>`:'<img src="'+p.url+'">'}</div>` : ''}
-            </div>
-            <div class="pv-side" style="animation: fadeIn 0.5s ease forwards;">
-                <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;cursor:pointer" onclick="window.openProfile('${p.uid}')">
-                    <img src="${AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #333;">
-                    <div><b style="font-size:16px">${p.author}</b><br><span style="font-size:11px;color:var(--muted)">${new Date(p.time).toLocaleString()}</span></div>
-                </div>
-                ${p.text ? `<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">${parseMentions(p.text)}</p>` : ''}
-                <div style="margin-bottom:25px">${tags}</div>
-                <div class="action-row" style="flex-wrap:wrap; margin-bottom:25px;">
-                    <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${id}','${dbType}')">❤ Лайк (${p.likes?Object.keys(p.likes).length:0})</button>
-                    <button class="btn-action" onclick="window.repost('${id}','${dbType}')">🔄 Репост</button>
-                    ${AppState.isAdmin||AppState.user?.uid===p.uid?`<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del('${p.id}','${dbType=== 'gallery' ? 'posts' : dbType}')">🗑</button>`:''}
-                </div>
-                
-                <h4 style="margin-bottom:15px; font-size:13px; text-transform:uppercase; color:var(--muted);">Комментарии</h4>
-                <div class="comm-list" id="commList"></div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="cInp" placeholder="Написать..." autocomplete="off" spellcheck="false" role="presentation" style="flex:1;">
-                    <button class="btn-main" onclick="window.addComm('${id}','${dbType=== 'gallery' ? 'posts' : dbType}')">➤</button>
-                </div>
-            </div>
-        </div>`;
+        document.getElementById('pvContainer').innerHTML = '<div class="pv-layout">' +
+            '<div class="pv-main">' +
+                (p.url ? '<div class="pv-media-box" style="animation: popIn 0.4s ease forwards;">'+(p.isVid?'<video src="'+p.url+'" controls autoplay></video>':'<img src="'+p.url+'">')+'</div>' : '') +
+            '</div>' +
+            '<div class="pv-side" style="animation: fadeIn 0.5s ease forwards;">' +
+                '<div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;cursor:pointer" onclick="window.openProfile(\''+p.uid+'\')">' +
+                    '<img src="'+(AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png')+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #333;">' +
+                    '<div><b style="font-size:16px">'+p.author+'</b><br><span style="font-size:11px;color:var(--muted)">'+new Date(p.time).toLocaleString()+'</span></div>' +
+                '</div>' +
+                (p.text ? '<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">'+window.parseMentions(p.text)+'</p>' : '') +
+                '<div style="margin-bottom:25px">'+tagsHTML+'</div>' +
+                '<div class="action-row" style="flex-wrap:wrap; margin-bottom:25px;">' +
+                    '<button class="btn-action '+(p.likes&&p.likes[AppState.user?.uid]?'active':'')+'" onclick="window.like(\''+id+'\',\''+dbType+'\')">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</button>' +
+                    '<button class="btn-action" onclick="window.repost(\''+id+'\',\''+(type==='posts'?'gallery':type)+'\')">🔄 Репост</button>' +
+                    ((AppState.isAdmin||(AppState.user&&AppState.user.uid===p.uid))?'<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+dbType+'\')">🗑</button>':'') +
+                '</div>' +
+                '<h4 style="margin-bottom:15px; font-size:13px; text-transform:uppercase; color:var(--muted);">Коментарі</h4>' +
+                '<div class="comm-list" id="commList"></div>' +
+                '<div style="display:flex; gap:10px;">' +
+                    '<input type="text" id="cInp" placeholder="..." autocomplete="off" spellcheck="false" role="presentation" style="flex:1;">' +
+                    '<button class="btn-main" onclick="window.addComm(\''+id+'\',\''+dbType+'\')">➤</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
         
-        // Load Comments
-        const dbRefName = dbType === 'gallery' ? 'posts' : dbType;
-        onValue(ref(db, `${dbRefName}/${id}/comments`), s => {
-            const list = document.getElementById('commList'); if(!list) return;
+        onValue(ref(db, dbType+'/'+id+'/comments'), function(s) {
+            var list = document.getElementById('commList'); if(!list) return;
             list.innerHTML = '';
-            if(!s.exists()) { list.innerHTML = '<div style="color:var(--muted); font-size:12px; text-align:center;">Пока пусто...</div>'; return; }
-            s.forEach(c => {
-                const d = c.val();
-                list.innerHTML += `<div class="comm-item"><b style="cursor:pointer; color:var(--accent);" onclick="window.openProfile('${d.uid}')">${d.name}</b>: ${parseMentions(d.t)}</div>`;
+            if(!s.exists()) { list.innerHTML = '<div style="color:var(--muted); font-size:13px; text-align:center; padding: 20px;">Порожньо...</div>'; return; }
+            s.forEach(function(c) {
+                var d = c.val();
+                list.innerHTML += '<div class="comm-item"><b style="cursor:pointer; color:var(--accent);" onclick="window.openProfile(\''+d.uid+'\')">'+d.name+'</b>: '+window.parseMentions(d.t)+'</div>';
             });
             list.scrollTop = list.scrollHeight;
         });
-        
-        // P2P Trigger for Post View
-        if(p.isVid && p.magnet) {
-            const media = document.querySelector('#pvContainer video');
-            window.torrentClient.add(p.magnet, (t) => {
-                const f = t.files.find(fi => fi.name.endsWith('.mp4') || fi.name.endsWith('.webm'));
-                if(f) { f.renderTo(media, { autoplay: true }); const b = media.parentElement.querySelector('.source-badge'); if(b){b.className='source-badge p2p'; b.innerText='P2P';} }
-            });
-            setTimeout(() => { if(!media.src && !media.currentSrc) { media.src = p.url; const b = media.parentElement.querySelector('.source-badge'); if(b){b.className='source-badge cdn'; b.innerText='CDN';} } }, 4000);
-        } else if (p.isVid && p.url) {
-            const media = document.querySelector('#pvContainer video'); media.src = p.url;
-        }
 
-        // if(dbType === 'gallery') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs'); 
+        if(dbType === 'posts') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs');
+        else document.getElementById('aiRecs').innerHTML = '';
     };
 
-    window.addComm = async (id, type) => {
+    window.addComm = async function(id, type) {
         if(!AppState.user) return window.openAuth();
-        const inp = document.getElementById('cInp'); const txt = inp.value.trim();
+        var inp = document.getElementById('cInp'); var txt = inp.value.trim();
         if(!txt) return; inp.disabled = true;
-        try { await push(ref(db, `${type}/${id}/comments`), { uid: AppState.user.uid, name: AppState.user.displayName || 'Anon', t: txt, time: Date.now() }); inp.value = ''; } 
-        catch(e) { window.showToast('Ошибка', true); }
+        try { await push(ref(db, type+'/'+id+'/comments'), { uid: AppState.user.uid, name: AppState.user.displayName || 'Anon', t: txt, time: Date.now() }); inp.value = ''; } 
+        catch(e) { window.showToast('Помилка', true); }
         inp.disabled = false; inp.focus();
     };
 
-    // ФУНКЦИИ
-    window.goHome = () => { sInput.value=''; AppState.profUid=null; AppState.currentPostId=null; window.switchView('mainView'); window.switchTab(AppState.currentTab); };
-    window.closePost = () => window.goHome();
-    window.setSearch = (t) => { sInput.value=t; window.goHome(); window.renderCurrentTab(); };
-    window.like = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r=ref(db, `${realType}/${id}/likes/${AppState.user.uid}`); const s = await get(r); await set(r, s.exists()?null:true); };
-    window.repost = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r = ref(db, `users/${AppState.user.uid}/reposts/${id}`); const s = await get(r); await set(r, s.exists()?null:realType); window.showToast('fembooru: репост!'); };
-    window.del = async (id, type) => { if(confirm(t('del') + '?')) { const realType = type==='posts'?'gallery':type; await remove(ref(db, `${realType}/${id}`)); window.goHome(); } };
+    window.goHome = function() { sInput.value=''; AppState.profUid=null; AppState.currentPostId=null; window.switchView('mainView'); window.switchTab(AppState.currentTab); };
+    window.closePost = function() { window.goHome(); };
+    window.setSearch = function(t) { sInput.value=t; window.goHome(); window.renderCurrentTab(); };
     
-    window.setLang = (l) => { 
+    window.like = async function(id, type) { 
+        if(!AppState.user) return window.openAuth(); 
+        var realType = type==='posts'||type==='gallery' ? 'posts' : type; 
+        var r=ref(db, realType+'/'+id+'/likes/'+AppState.user.uid); 
+        var s = await get(r); await set(r, s.exists()?null:true); 
+    };
+    
+    window.repost = async function(id, type) { 
+        if(!AppState.user) return window.openAuth(); 
+        var realType = type==='posts'||type==='gallery' ? 'gallery' : type; 
+        var r = ref(db, 'users/'+AppState.user.uid+'/reposts/'+id); 
+        var s = await get(r); await set(r, s.exists()?null:realType); window.showToast('Збережено!'); 
+    };
+    
+    window.del = async function(id, type) { 
+        if(confirm(t('del') + '?')) { 
+            var realType = type==='posts'||type==='gallery' ? 'posts' : type; 
+            await remove(ref(db, realType+'/'+id)); window.goHome(); 
+        } 
+    };
+    
+    window.setLang = function(l) { 
         AppState.lang=l; 
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
         document.getElementById('lang-'+l).classList.add('active');
-        document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t(el.dataset.i18n); });
+        document.querySelectorAll('[data-i18n]').forEach(function(el){ el.innerText = t(el.dataset.i18n); });
         window.renderCurrentTab(); 
     };
     window.setLang('ru');
