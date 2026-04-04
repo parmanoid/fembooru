@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>fembooru</title>
     
     <link rel="preconnect" href="https://cdn.fluidplayer.com">
@@ -11,105 +11,174 @@
     
     <style>
         :root {
-            --bg: #070708; --card: #121214; --card-h: #1c1c1f;
+            --bg: #050506; --card: #101012; --card-h: #18181b;
             --accent: #e11d48; --accent-h: #f43f5e;
             --ai-glow: #7c3aed;
-            --text: #f4f4f5; --muted: #71717a; --border: #27272a;
-            --radius: 14px;
+            --text: #f4f4f5; --muted: #71717a; --border: #222226;
+            --radius: 16px; --radius-sm: 10px;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* HEADER */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(18, 18, 20, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); z-index: 1000; height: 60px; flex-shrink: 0; }
-        .top-nav-left { display: flex; align-items: center; gap: 12px; }
-        .nav-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
-        .nav-avatar:hover { border-color: var(--accent); transform: scale(1.05); }
-        .top-nav h1 { color: var(--accent); font-size: 22px; cursor: pointer; font-weight: 900; margin: 0; text-transform: lowercase; letter-spacing: -1px; }
+        /* Скроллбар */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* ШАПКА */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(10, 10, 12, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 1000; height: 64px; flex-shrink: 0; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        .top-nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s cubic-bezier(0.4,0,0.2,1); }
+        .nav-avatar:hover { border-color: var(--accent); transform: scale(1.08); box-shadow: 0 0 15px rgba(225,29,72,0.4); }
+        .top-nav h1 { color: var(--accent); font-size: 24px; cursor: pointer; font-weight: 900; letter-spacing: -1px; transition: 0.2s; }
+        .top-nav h1:hover { color: var(--accent-h); }
+        .menu-btn { background: none; border: none; color: white; font-size: 28px; cursor: pointer; display: none; }
 
         .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* SIDEBAR */
-        .sidebar { width: 280px; background: #0c0c0e; padding: 25px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; z-index: 150; transition: transform 0.3s; }
-        .lang-switcher { display: flex; gap: 5px; margin-bottom: 25px; background: #1f1f22; padding: 4px; border-radius: 8px;}
-        .lang-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 6px 0; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .lang-btn.active { background: #3f3f46; color: #fff; }
+        /* САЙДБАР */
+        .sidebar { width: 280px; background: rgba(10, 10, 12, 0.95); backdrop-filter: blur(10px); padding: 25px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; z-index: 150; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lang-switcher { display: flex; gap: 6px; margin-bottom: 25px; background: #161618; padding: 5px; border-radius: var(--radius-sm);}
+        .lang-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 8px 0; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .lang-btn.active { background: #2c2c30; color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 
-        /* NAVIGATION TABS */
-        .tabs-wrap { background: rgba(12, 12, 14, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); z-index: 500; }
-        .app-tabs { display: flex; max-width: 600px; margin: 0 auto; }
-        .app-tab { flex: 1; background: transparent; border: none; color: var(--muted); padding: 16px 0; font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 800; transition: 0.2s; border-radius: 0; }
-        .app-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(225, 29, 72, 0.05); }
+        .auth-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: var(--radius); margin-bottom: 25px; border: 1px solid var(--border); }
+        
+        /* ВКЛАДКИ */
+        .tabs-wrap { background: rgba(5, 5, 6, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); z-index: 500; }
+        .app-tabs { display: flex; max-width: 700px; margin: 0 auto; }
+        .app-tab { flex: 1; background: transparent; border: none; color: var(--muted); padding: 18px 0; font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+        .app-tab:hover { color: #fff; background: rgba(255,255,255,0.02); }
+        .app-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: linear-gradient(to top, rgba(225, 29, 72, 0.1), transparent); }
 
         .content { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; position: relative; }
-
-        /* VIEW MODES (IMPORTANT FIX) */
-        .view-layer { display: none; padding: 20px; animation: fadeIn 0.4s ease; flex-direction: column; min-height: 100%; }
+        
+        .view-layer { display: none; flex-direction: column; width: 100%; min-height: 100%; animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-layer.active { display: flex; }
+        .tab-content { display: none; flex-direction: column; padding: 20px; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: flex; }
 
-        /* SEARCH & HINTS */
+        /* ПОИСК */
         .search-wrap { position: relative; margin-bottom: 20px; }
-        .hints-box { position: absolute; top: 100%; left: 0; width: 100%; background: #1a1a1c; border-radius: 10px; z-index: 2000; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 10px 40px #000; border: 1px solid #333; margin-top: 8px; }
-        .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; border-bottom: 1px solid #222; color: #eee; }
-        .hint-item:hover { background: #27272a; color: var(--accent); }
+        .hints-box { position: absolute; top: 100%; left: 0; width: 100%; background: #161618; border-radius: var(--radius-sm); z-index: 2000; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.8); border: 1px solid #333; margin-top: 8px; }
+        .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; border-bottom: 1px solid #222; color: #eee; transition: 0.2s; }
+        .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
         .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 2px 6px; border-radius: 4px; }
 
-        /* GRID */
-        .gallery { display: flex; flex-wrap: wrap; gap: 14px; padding-bottom: 50px; }
+        /* КАРТОЧКИ (ГАЛЕРЕЯ) */
+        .gallery { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 50px; }
         .gallery::after { content: ""; flex-grow: 10; }
-        .post-card { flex: 1 1 210px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; height: fit-content; }
-        .pc-media { width: 100%; height: 250px; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
-        .pc-media img, .pc-media video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s; }
+        .post-card { flex: 1 1 220px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; height: fit-content; display: flex; flex-direction: column; }
+        .post-card:hover { border-color: #555; transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); z-index: 2; }
+        .pc-media { width: 100%; height: 260px; background: #0a0a0c; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .pc-media img, .pc-media video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s, transform 0.3s; }
+        .post-card:hover .pc-media img { transform: scale(1.05); }
         .pc-media .loaded { opacity: 1; }
-        .pc-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; background: var(--card); }
-        .nsfw-badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: white; font-size: 9px; font-weight: 900; padding: 3px 7px; border-radius: 4px; z-index: 5; }
+        .pc-info { padding: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; background: var(--card); z-index: 2;}
+        .nsfw-badge { position: absolute; top: 10px; left: 10px; background: rgba(225,29,72,0.9); color: white; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px);}
+        .ai-badge { position: absolute; top: 10px; right: 10px; background: rgba(124,58,237,0.9); color: white; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px);}
 
-        /* SHORTS */
+        /* ВИДЕО YOUTUBE-STYLE */
+        .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 50px; }
+        .yt-card { background: transparent; cursor: pointer; transition: 0.3s; }
+        .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-2px); }
+        .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; border-radius: var(--radius); overflow: hidden; position: relative; border: 1px solid var(--border); transition: 0.3s; }
+        .yt-thumb video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.3s; }
+        .yt-thumb .loaded { opacity: 1; }
+        .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; backdrop-filter: blur(2px); }
+        .yt-info { padding: 12px 0; display: flex; gap: 12px; align-items: flex-start; }
+        .yt-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; }
+        .yt-text { flex: 1; overflow: hidden; }
+        .yt-title { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+
+        /* БОРДА */
+        .board-feed { display: flex; flex-direction: column; gap: 16px; max-width: 700px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
+        .board-post { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 15px; transition: 0.3s; }
+        .board-post:hover { border-color: #333; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .b-header { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .b-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #27272a; }
+        .b-media { border-radius: 12px; overflow: hidden; border: 1px solid #333; background: #000; max-height: 500px; display: flex; justify-content: center; margin-top: 5px; }
+        .b-media img, .b-media video { max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.3s; }
+        .b-media .loaded { opacity: 1; }
+
+        /* ШОРТСЫ (TikTok) */
         .shorts-feed { height: calc(100vh - 120px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -20px; scrollbar-width: none; background: #000; }
-        .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; background: #000; position: relative; }
-        .short-ui { display: flex; gap: 20px; height: 92%; width: 100%; max-width: 850px; justify-content: center; position: relative; }
-        .short-video { aspect-ratio: 9/16; height: 100%; background: #000; border-radius: 18px; position: relative; border: 1px solid #222; overflow: hidden; }
+        .shorts-feed::-webkit-scrollbar { display: none; }
+        .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
+        .short-ui { display: flex; gap: 20px; height: 100%; width: 100%; max-width: 500px; justify-content: center; position: relative; }
+        .short-video { flex: 1; height: 100%; background: #000; border-radius: 20px; position: relative; border: 1px solid #222; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .short-video video { width: 100%; height: 100%; object-fit: cover; }
-        .short-sidebar { display: flex; flex-direction: column; justify-content: flex-end; gap: 20px; padding-bottom: 20px; }
-        .s-btn { width: 52px; height: 52px; border-radius: 50%; background: #1f1f22; border: 1px solid #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; position: relative; }
+        .short-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 20px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: white; pointer-events: none; z-index: 5;}
+        .short-sidebar { display: flex; flex-direction: column; justify-content: flex-end; gap: 15px; padding-bottom: 20px; width: 60px; }
+        .s-btn { width: 50px; height: 50px; border-radius: 50%; background: #1a1a1c; border: 1px solid #333; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; position: relative; transition: 0.2s; }
+        .s-btn:hover { background: #27272a; transform: scale(1.1); }
+        .s-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.1); }
+        .s-count { position: absolute; bottom: -18px; font-size: 11px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
 
-        /* MODALS */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .modal { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333; box-shadow: 0 20px 60px #000; }
+        /* ПРОФИЛЬ И ПОСТ */
+        .profile-header { background: var(--card); border-radius: var(--radius); padding: 35px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);}
+        .p-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; }
         
-        input, textarea, button { padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #1a1a1c; color: white; font-size: 14px; }
-        .btn-main { background: var(--accent); border: none; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .btn-main:hover { background: var(--accent-h); transform: translateY(-1px); }
+        .pv-layout { display: flex; gap: 25px; flex-wrap: wrap; margin-top: 10px; }
+        .pv-main { flex: 2; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
+        .pv-side { flex: 1; min-width: 300px; background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px;}
+        .pv-media-box { background: #000; border-radius: var(--radius); overflow: hidden; border: 1px solid #222; display: flex; justify-content: center; max-height: 80vh; }
+        .pv-media-box img, .pv-media-box video { max-width: 100%; max-height: 80vh; object-fit: contain; }
+        
+        .hashtag { color: #60a5fa; cursor: pointer; font-weight: 700; margin-right: 8px; font-size: 13px; display: inline-block; padding: 2px 6px; background: rgba(96,165,250,0.1); border-radius: 6px; margin-bottom: 6px; transition: 0.2s;}
+        .hashtag:hover { background: rgba(96,165,250,0.2); text-decoration: underline; }
 
-        /* PROFILE SCREEN */
-        .profile-header { background: var(--card); border-radius: var(--radius); padding: 30px; display: flex; gap: 25px; align-items: center; border: 1px solid var(--border); margin-bottom: 25px;}
-        .p-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); background: #27272a; }
+        /* ЭЛЕМЕНТЫ УПРАВЛЕНИЯ */
+        .btn-main { background: var(--accent); border: none; font-weight: 800; cursor: pointer; color: #fff; padding: 12px 20px; border-radius: var(--radius-sm); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-main:hover { background: var(--accent-h); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(225,29,72,0.3); }
+        .btn-action { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 10px 15px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; flex: 1;}
+        .btn-action:hover { background: #27272a; }
+        .btn-action.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.1); }
+        
+        input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #161618; color: white; font-size: 14px; transition: 0.2s; font-family: inherit;}
+        input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #loader { display: none; position: fixed; inset: 0; background: #000; z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { border: 4px solid rgba(255,255,255,0.05); border-top: 4px solid var(--accent); border-radius: 50%; width: 45px; height: 45px; animation: spin 0.8s linear infinite; }
+        /* МОДАЛКИ */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .modal { background: var(--card); padding: 35px; border-radius: var(--radius); width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333; box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: fadeUp 0.3s;}
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        #loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9000; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { border: 4px solid rgba(255,255,255,0.05); border-top: 4px solid var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
+        /* МОБИЛКА */
         @media (max-width: 768px) {
             .menu-btn { display: block; }
-            .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); z-index: 2000; width: 280px; box-shadow: 10px 0 30px #000; }
+            .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); z-index: 2000; width: 280px; box-shadow: 10px 0 30px rgba(0,0,0,0.8); }
             .sidebar.open { transform: translateX(0); }
+            
+            .short-wrap { padding: 0; }
             .short-ui { max-width: 100%; height: 100%; gap: 0; }
-            .short-video { width: 100%; border-radius: 0; }
-            .short-sidebar { position: absolute; right: 10px; bottom: 100px; z-index: 100; }
-            .s-btn { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+            .short-video { width: 100%; border-radius: 0; border: none; }
+            .short-sidebar { position: absolute; right: 10px; bottom: 80px; z-index: 100; padding: 0; }
+            .s-btn { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: none; width: 46px; height: 46px; }
+            .short-info-overlay { padding-right: 70px; padding-bottom: 20px; pointer-events: auto;}
+            
+            .profile-header { flex-direction: column; text-align: center; }
+            .pv-layout { flex-direction: column; }
+            .pv-side { position: static; }
         }
     </style>
 </head>
 <body>
 
 <div id="loader"><div class="spinner"></div></div>
-<div id="toastBox" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px;"></div>
+<div id="toastBox" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none;"></div>
 
 <div id="authModal" class="modal-overlay">
     <div class="modal">
-        <h2 style="text-align:center">fembooru: вход</h2>
+        <h2 style="text-align:center; margin:0">Вход в систему</h2>
         <input type="text" id="authName" placeholder="Никнейм">
         <input type="password" id="authPass" placeholder="Пароль">
         <button class="btn-main" onclick="window.submitAuth()">Начать</button>
@@ -119,8 +188,8 @@
 
 <div id="editProfileModal" class="modal-overlay">
     <div class="modal">
-        <h2>Настройки fembooru</h2>
-        <p style="font-size:11px; color:var(--muted)">Загрузи аватарку:</p>
+        <h2 style="margin:0">Настройки</h2>
+        <p style="font-size:11px; color:var(--muted); margin:0">Загрузи аватарку:</p>
         <input type="file" id="editAvaFile" accept="image/*">
         <textarea id="editBio" placeholder="О себе..." rows="3"></textarea>
         <button class="btn-main" onclick="window.saveProfile()">Сохранить</button>
@@ -136,7 +205,7 @@
     <button class="menu-btn" onclick="window.toggleMenu()">☰</button>
 </header>
 
-<div id="menuOverlay" onclick="window.toggleMenu()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:140;"></div>
+<div id="menuOverlay" onclick="window.toggleMenu()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:140; backdrop-filter:blur(3px);"></div>
 
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
@@ -146,20 +215,21 @@
             <button class="lang-btn" onclick="window.setLang('en')" id="lang-en">EN</button>
         </div>
         <div class="auth-box">
-            <div id="loggedOutView"><button class="btn-main" style="width:100%" onclick="window.openAuth()">Вход / Регистрация</button></div>
+            <div id="loggedOutView"><button class="btn-main" style="width:100%" onclick="window.openAuth()">Войти / Рега</button></div>
             <div id="loggedInView" style="display:none">
-                <div id="userNameDisplay" style="font-weight:900; cursor:pointer; color:#fff" onclick="window.openMyProfile()">User</div>
-                <button onclick="window.doLogout()" style="width:100%; background:#27272a; margin-top:10px; font-size:11px;">Выйти</button>
+                <div id="userNameDisplay" style="font-weight:900; cursor:pointer; color:#fff; font-size:16px;" onclick="window.openMyProfile()">User</div>
+                <button onclick="window.doLogout()" style="width:100%; background:#27272a; margin-top:12px; font-size:12px; padding:10px;">Выйти</button>
             </div>
         </div>
 
-        <h3 data-i18n="feedFilter">Фильтр</h3>
-        <div class="filter-group">
-            <label><input type="radio" name="rating" value="all" checked onchange="window.renderCurrentTab()"> <span>Всё</span></label>
-            <label><input type="radio" name="rating" value="sfw" onchange="window.renderCurrentTab()"> <span>SFW</span></label>
-            <label><input type="radio" name="rating" value="nsfw" onchange="window.renderCurrentTab()"> <span style="color:var(--accent)">NSFW</span></label>
+        <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;">Лента</h3>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:30px;">
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px;"><input type="radio" name="rating" value="all" checked onchange="window.renderCurrentTab()"> Всё подряд</label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px;"><input type="radio" name="rating" value="sfw" onchange="window.renderCurrentTab()"> Только SFW</label>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px; color:var(--accent); font-weight:bold;"><input type="radio" name="rating" value="nsfw" onchange="window.renderCurrentTab()"> NSFW</label>
         </div>
-        <h3 data-i18n="tagSearch">Поиск тегов</h3>
+        
+        <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;">Поиск тегов</h3>
         <div class="search-wrap">
             <input type="text" id="search" placeholder="Тэги..." style="width:100%">
             <div class="hints-box" id="hints"></div>
@@ -170,64 +240,81 @@
         <div id="mainView" class="view-layer active" style="padding:0">
             <nav class="tabs-wrap">
                 <div class="app-tabs">
-                    <button class="app-tab active" onclick="window.switchTab('posts')" id="tab-posts">Галерея</button>
+                    <button class="app-tab active" onclick="window.switchTab('gallery')" id="tab-gallery">Галерея</button>
                     <button class="app-tab" onclick="window.switchTab('board')" id="tab-board">Борда</button>
                     <button class="app-tab" onclick="window.switchTab('shorts')" id="tab-shorts">Шортсы</button>
+                    <button class="app-tab" onclick="window.switchTab('videos')" id="tab-videos">Видео</button>
                 </div>
             </nav>
 
-            <div id="tab-content-posts" class="tab-content active">
-                <div id="upGal" style="display:none; margin-bottom:20px" class="auth-box">
-                    <div style="display:flex; gap:10px; flex-wrap:wrap">
-                        <input type="file" id="fGal" accept="image/*,video/*" multiple style="flex:1">
-                        <input type="text" id="t1G" placeholder="Тэг" style="width:120px">
-                        <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1">
-                        <label><input type="checkbox" id="nGal"> NSFW</label>
-                        <button class="btn-main" onclick="window.upload('posts')">Запостить</button>
+            <div id="tab-content-gallery" class="tab-content active">
+                <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+                    <div style="display:flex; flex-direction:column; gap:15px;">
+                        <input type="file" id="fGal" accept="image/*,video/*" multiple>
+                        <textarea id="txtGal" placeholder="Описание к посту (необязательно)" rows="2"></textarea>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:150px">
+                            <input type="text" id="t2G" placeholder="Доп. тэги через пробел" style="flex:1; min-width:150px;">
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
+                            <button class="btn-main" onclick="window.upload('gallery')">Запостить</button>
+                        </div>
                     </div>
                 </div>
                 <div class="gallery" id="galFeed"></div>
             </div>
 
             <div id="tab-content-board" class="tab-content">
-                <div id="upBoard" style="display:none; margin-bottom:20px" class="auth-box">
-                    <textarea id="txtB" placeholder="О чем ты думаешь?" rows="2" style="width:100%; margin-bottom:10px"></textarea>
-                    <div style="display:flex; gap:10px"><input type="file" id="fBoard" style="flex:1"><button class="btn-main" onclick="window.upload('board')">Отправить</button></div>
+                <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:20px; border-radius:var(--radius); border:1px solid var(--border);">
+                    <textarea id="txtB" placeholder="Что нового?" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;"></textarea>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="file" id="fBoard" style="flex:1; min-width:200px;">
+                        <label style="display:flex; align-items:center; gap:8px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
+                        <button class="btn-main" onclick="window.upload('board')">Отправить</button>
+                    </div>
                 </div>
                 <div class="board-feed" id="boardFeed"></div>
             </div>
 
             <div id="tab-content-shorts" class="tab-content" style="padding:0">
-                <div id="upShorts" style="display:none; padding:15px; background:var(--card); border-bottom:1px solid var(--border)">
-                    <input type="file" id="fShorts" accept="video/*">
-                    <button class="btn-main" onclick="window.upload('shorts')">Залить</button>
+                <div id="upShorts" style="display:none; padding:20px; background:var(--card); border-bottom:1px solid var(--border);">
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; max-width:800px; margin:0 auto;">
+                        <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:200px;">
+                        <input type="text" id="txtS" placeholder="Описание к видео..." style="flex:2; min-width:200px;">
+                        <label style="display:flex; align-items:center; gap:8px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
+                        <button class="btn-main" onclick="window.upload('shorts')">Залить</button>
+                    </div>
                 </div>
                 <div class="shorts-feed" id="shortsFeed"></div>
             </div>
+
+            <div id="tab-content-videos" class="tab-content">
+                <h2 style="margin-bottom:20px; font-size:20px;">Все видео</h2>
+                <div class="yt-grid" id="ytFeed"></div>
+            </div>
         </div>
 
-        <div id="profileMode" class="view-layer">
-            <button class="btn-main" style="width:auto; align-self:flex-start; margin-bottom:20px; background:#27272a" onclick="window.goHome()">← Назад</button>
+        <div id="profileMode" class="view-layer" style="max-width: 1000px; margin: 0 auto;">
+            <button class="btn-main" style="width:auto; align-self:flex-start; background:#27272a; margin-bottom:20px;" onclick="window.goHome()">← В ленту</button>
             <div class="profile-header">
                 <img src="" id="pAva" class="p-avatar">
                 <div style="flex:1">
-                    <h2 id="pName" style="margin:0">User</h2>
-                    <p id="pBio" style="margin:10px 0; color:var(--muted)"></p>
-                    <button id="pEditBtn" class="btn-main" onclick="window.openModal('editProfileModal')" style="font-size:11px; padding:6px 12px">Настроить</button>
+                    <h2 id="pName" style="margin:0; font-size:28px;">User</h2>
+                    <p id="pBio" style="margin:12px 0; color:var(--muted); font-size:15px; white-space:pre-wrap; line-height:1.5;"></p>
+                    <button id="pEditBtn" class="btn-main" style="padding:8px 16px; display:none; font-size:12px;" onclick="window.openModal('editProfileModal')">Редактировать профиль</button>
                 </div>
             </div>
-            <div class="app-tabs" style="background:transparent; margin-bottom:20px">
-                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads">Моё</button>
+            <div class="app-tabs" style="background:transparent; margin-bottom:25px; max-width:400px; margin-left:0;">
+                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads">Загрузки</button>
                 <button class="app-tab" onclick="window.switchProfTab('reposts')" id="pt-reposts">Репосты</button>
             </div>
             <div class="gallery" id="profFeed"></div>
         </div>
 
-        <div id="postMode" class="view-layer">
-            <button class="btn-main" style="width:auto; align-self:flex-start; margin-bottom:20px; background:#27272a" onclick="window.closePost()">← Назад</button>
+        <div id="postMode" class="view-layer" style="max-width: 1200px; margin: 0 auto;">
+            <button class="btn-main" style="width:auto; align-self:flex-start; background:#27272a; margin-bottom:20px;" onclick="window.closePost()">← Назад</button>
             <div id="pvContainer"></div>
-            <h3 style="margin-top:40px; color:var(--ai-glow); font-size:14px">✦ НЕЙРО-РЕКОМЕНДАЦИИ</h3>
-            <div class="gallery" id="aiRecs" style="margin-top:15px"></div>
+            <h3 style="margin-top:40px; color:var(--ai-glow); font-size:15px; letter-spacing:1px; display:flex; align-items:center; gap:10px;">✦ НЕЙРО-ПОХОЖЕЕ</h3>
+            <div class="gallery" id="aiRecs" style="margin-top:20px"></div>
         </div>
     </main>
 </div>
@@ -239,25 +326,41 @@
 
     const config = { apiKey: "AIzaSyCTNoJDcWPcLh5XUEXBRLqCeFSu0lOuyEI", authDomain: "database-2560e.firebaseapp.com", databaseURL: "https://database-2560e-default-rtdb.europe-west1.firebasedatabase.app", projectId: "database-2560e", storageBucket: "database-2560e.firebasestorage.app", messagingSenderId: "52592277568", appId: "1:52592277568:web:4c49e5f818ee7348abc7a5" };
     const IMGBB = "120a27bcbb28d3ffd9f03bc4b32bb54f";
+    const GEMINI_KEY = "AIzaSyB9IgR3vnbeW0GizY6deDQ2pQrjEiajUqo";
 
     const app = initializeApp(config); const db = getDatabase(app); const auth = getAuth(app);
-    window.AppState = { user: null, isAdmin: false, data: { posts: [], board: [], shorts: [] }, users: {}, currentTab: 'posts', profUid: null, profTab: 'uploads', tags: {} };
+    window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, interests: JSON.parse(localStorage.getItem('ai_ints')||'{}') };
 
-    // SEARCH SYSTEM
+    // УТИЛИТЫ И ОТОБРАЖЕНИЕ
+    window.showToast = (m, e=false) => { const b=document.getElementById('toastBox'), t=document.createElement('div'); t.className=`toast ${e?'error':''} show`; t.style.background=e?'var(--accent)':'#27272a'; t.style.padding='12px 20px'; t.style.borderRadius='10px'; t.style.color='#fff'; t.style.fontWeight='bold'; t.innerText=m; b.appendChild(t); setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),400)}, 3000); };
+    window.openModal = (id) => document.getElementById(id).style.display='flex';
+    window.closeModal = (id) => document.getElementById(id).style.display='none';
+    window.toggleMenu = () => { const s=document.getElementById('sidebar'), o=document.getElementById('menuOverlay'); s.classList.toggle('open'); o.style.display=s.classList.contains('open')?'block':'none'; };
+    
+    window.switchView = (viewId) => {
+        document.querySelectorAll('.view-layer').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
+        const target = document.getElementById(viewId);
+        target.style.display = 'flex'; setTimeout(() => target.classList.add('active'), 10);
+    };
+
+    // УМНЫЙ ПОИСК
     const sInput = document.getElementById('search');
     const hBox = document.getElementById('hints');
 
     sInput.addEventListener('input', () => {
-        const val = sInput.value.toLowerCase().trim().replace('#', '');
-        if(!val) { hBox.style.display='none'; window.renderCurrentTab(); return; }
-        
-        const matches = Object.keys(AppState.tags).filter(t => t.includes(val));
+        const val = sInput.value.toLowerCase().replace(/#/g, '').trim();
+        const words = val.split(' ');
+        const lastWord = words[words.length - 1];
+
+        if(!lastWord) { hBox.style.display='none'; window.renderCurrentTab(); return; }
+
+        const matches = Object.keys(AppState.tags).filter(t => t.includes(lastWord));
         if(matches.length) {
             hBox.innerHTML = '';
             matches.sort((a,b) => AppState.tags[b] - AppState.tags[a]).slice(0, 8).forEach(tag => {
                 const el = document.createElement('div'); el.className = 'hint-item';
-                el.innerHTML = `<span>#${tag}</span> <span class="hint-count">${AppState.tags[tag]}</span>`;
-                el.onclick = () => { sInput.value = tag; hBox.style.display='none'; window.renderCurrentTab(); };
+                el.innerHTML = `<span style="font-weight:bold;">#${tag}</span> <span class="hint-count">${AppState.tags[tag]}</span>`;
+                el.onclick = () => { words[words.length-1] = tag; sInput.value = words.join(' ') + ' '; hBox.style.display='none'; window.renderCurrentTab(); };
                 hBox.appendChild(el);
             });
             hBox.style.display = 'block';
@@ -265,118 +368,36 @@
         window.renderCurrentTab();
     });
 
-    // LAZY LOADING
-    const lazyObserver = new IntersectionObserver((entries) => {
+    // LAZY LOADING (СЖАТИЕ ТРАФИКА)
+    const lazyObs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
+            const media = e.target.querySelector('img, video');
             if (e.isIntersecting) {
-                const media = e.target.querySelector('img, video');
-                if (media && media.dataset.src) {
-                    media.src = media.dataset.src;
-                    media.removeAttribute('data-src');
-                    media.classList.add('loaded');
+                if (media && media.dataset.src) { media.src = media.dataset.src; media.removeAttribute('data-src'); media.classList.add('loaded'); }
+                if (media && media.tagName==='VIDEO') {
+                    if (e.target.classList.contains('short-wrap')) media.play().catch(()=>{});
+                    else if (e.target.classList.contains('yt-thumb') || e.target.classList.contains('pc-media')) { /* just load metadata */ }
                 }
-                lazyObserver.unobserve(e.target);
+            } else {
+                if (media && media.tagName==='VIDEO' && e.target.classList.contains('short-wrap')) media.pause();
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.3 });
 
-    // UPLOAD & PROXY
-    async function upImg(file) { const fd = new FormData(); fd.append('image', file); const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB}`, { method: 'POST', body: fd }); const d = await res.json(); return d.success ? d.data.url : null; }
-    async function upVid(file) { 
-        const fd = new FormData(); fd.append('reqtype', 'fileupload'); fd.append('fileToUpload', file);
-        const r = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd });
-        return r.ok ? await r.text() : null;
-    }
-
-    window.upload = async (type) => {
-        const input = document.getElementById(type==='posts'?'fGal':type==='board'?'fBoard':'fShorts');
-        if(!input.files.length && type !== 'board') return;
-        document.getElementById('loader').style.display='flex';
-        const files = input.files.length ? input.files : [null];
-        for(let f of files) {
-            try {
-                let url = f ? (f.type.startsWith('image/') ? await upImg(f) : await upVid(f)) : null;
-                const nsfw = document.getElementById('n'+(type==='posts'?'Gal':type==='board'?'Board':'Shorts'))?.checked || false;
-                const data = { url, uid: AppState.user.uid, author: AppState.user.displayName, time: Date.now(), isVid: f?.type.includes('video') || false, nsfw };
-                if(type==='posts') { data.t1 = document.getElementById('t1G').value || 'art'; data.t2 = document.getElementById('t2G').value || ''; }
-                if(type==='board') data.text = document.getElementById('txtB').value;
-                await push(ref(db, type), data);
-            } catch(e) { window.showToast('Ошибка загрузки'); }
+    // ИИ ДВИЖОК
+    const AI = {
+        track: (tags) => { tags.split(' ').filter(Boolean).forEach(t => { const tag=t.toLowerCase().replace('#','').trim(); AppState.interests[tag]=(AppState.interests[tag]||0)+1; }); localStorage.setItem('ai_ints', JSON.stringify(AppState.interests)); },
+        score: (p) => { let s=0; const pt=[p.t1, ...(p.t2||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().trim()); pt.forEach(t=>s+=(AppState.interests[t]||0)); return s + (p.time/Date.now()); },
+        getSimilar: (post, type) => {
+            const currentTags = [post.t1, ...(post.t2||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().trim());
+            return AppState.data[type].filter(p => p.id !== post.id).map(p => {
+                const pTags = [p.t1, ...(p.t2||'').split(' ')].filter(Boolean).map(x=>x.toLowerCase().trim());
+                return { post: p, score: pTags.filter(t => currentTags.includes(t)).length };
+            }).filter(i => i.score > 0).sort((a,b) => b.score - a.score).slice(0, 6).map(i => i.post);
         }
-        document.getElementById('loader').style.display='none'; input.value='';
     };
 
-    // RENDER LOGIC
-    function fetchAll() {
-        onValue(ref(db, 'users'), s => AppState.users = s.val() || {});
-        ['posts', 'board', 'shorts'].forEach(t => onValue(ref(db, t), s => {
-            const a = []; AppState.tags = {};
-            s.forEach(c => { 
-                const d = c.val(); a.push({id:c.key,...d});
-                if(t==='posts') [d.t1, ...(d.t2||'').split(' ')].filter(Boolean).forEach(x => { 
-                    const tag = x.toLowerCase().trim(); AppState.tags[tag] = (AppState.tags[tag]||0)+1; 
-                });
-            });
-            AppState.data[t] = a.reverse(); window.renderCurrentTab();
-        }));
-    }
-
-    window.renderCurrentTab = () => {
-        if(AppState.profUid || AppState.currentPostId) return;
-        const rf = document.querySelector('input[name="rating"]:checked').value;
-        const q = sInput.value.toLowerCase().replace(/#/g, '').trim();
-        
-        let feed = AppState.data[AppState.currentTab].filter(p => {
-            if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
-            if(q) return `${p.t1||''} ${p.t2 || ''}`.toLowerCase().includes(q);
-            return true;
-        });
-
-        if(AppState.currentTab==='posts') renderGrid(feed, 'galFeed');
-        if(AppState.currentTab==='board') renderBoard(feed);
-        if(AppState.currentTab==='shorts') renderShorts(feed);
-    };
-
-    function renderGrid(arr, target) {
-        const el = document.getElementById(target); el.innerHTML = '';
-        if(!arr.length) el.innerHTML = `<div style="text-align:center;width:100%;padding:50px;color:var(--muted)">fembooru: пусто</div>`;
-        arr.forEach(p => {
-            const div = document.createElement('div'); div.className = 'post-card'; div.onclick = () => window.openPost(p.id, AppState.currentTab);
-            const mediaTag = p.isVid ? `<video data-src="${p.url}#t=0.1" preload="none" muted></video>` : `<img data-src="${p.url}" loading="lazy">`;
-            div.innerHTML = `${p.nsfw?'<div class="nsfw-badge">NSFW</div>':''}
-                <div class="pc-media">${mediaTag}</div>
-                <div class="pc-info"><span style="color:#60a5fa">#${p.t1}</span><span>❤ ${p.likes?Object.keys(p.likes).length:0}</span></div>`;
-            el.appendChild(div);
-            lazyObserver.observe(div);
-        });
-    }
-
-    function renderBoard(arr) {
-        const el = document.getElementById('boardFeed'); el.innerHTML = '';
-        arr.forEach(p => {
-            const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
-            const div = document.createElement('div'); div.className = 'board-post';
-            div.innerHTML = `<div class="b-header" onclick="window.openProfile('${p.uid}')"><img src="${ava}" class="b-avatar"> ${p.author}</div>
-                ${p.text?'<div style="font-size:15px">'+p.text+'</div>':''} ${p.url?`<div class="pc-media" style="border-radius:10px; margin-top:10px" onclick="window.openPost('${p.id}','board')">${p.isVid?'<video src="'+p.url+'" controls></video>':'<img src="'+p.url+'">'}</div>`:''}
-                <div style="display:flex;gap:10px;margin-top:10px"><button class="btn-main" style="flex:1" onclick="window.like('${p.id}','board')">❤ ${p.likes?Object.keys(p.likes).length:0}</button></div>`;
-            el.appendChild(div);
-        });
-    }
-
-    function renderShorts(arr) {
-        const el = document.getElementById('shortsFeed'); el.innerHTML = '';
-        arr.forEach(p => {
-            const div = document.createElement('div'); div.className = 'short-wrap';
-            div.innerHTML = `<div class="short-ui"><div class="short-video"><video src="${p.url}" loop playsinline preload="metadata" onclick="this.paused?this.play():this.pause()"></video>
-                <div style="position:absolute;bottom:20px;left:20px;z-index:10"><b onclick="window.openProfile('${p.uid}')" style="cursor:pointer;font-size:18px;text-shadow:0 1px 3px #000">@${p.author}</b></div></div>
-                <div class="short-sidebar"><button class="s-btn" onclick="window.like('${p.id}','shorts')">❤</button><button class="s-btn" onclick="window.repost('${p.id}','shorts')">🔄</button></div></div>`;
-            el.appendChild(div);
-        });
-        const obs = new IntersectionObserver(e => e.forEach(v => { const vid = v.target.querySelector('video'); if(v.isIntersecting) vid.play(); else vid.pause(); }), {threshold:0.7});
-        document.querySelectorAll('.short-wrap').forEach(w => obs.observe(w));
-    }
-
-    // AUTH & HELPERS
+    // АВТОРИЗАЦИЯ
     onAuthStateChanged(auth, u => {
         AppState.user = u; AppState.isAdmin = u && u.email === "test@anon.ru";
         ['Gal', 'Board', 'Shorts'].forEach(i => { if(document.getElementById('up'+i)) document.getElementById('up'+i).style.display = u ? 'block' : 'none'; });
@@ -389,18 +410,197 @@
         fetchAll();
     });
 
+    window.openAuth = () => window.openModal('authModal');
     window.submitAuth = async () => {
-        const n=document.getElementById('authName').value, p=document.getElementById('authPass').value, e=n.toLowerCase().replace(/[^a-z0-9]/g,'')+'@anon.ru';
+        const n=document.getElementById('authName').value.trim(), p=document.getElementById('authPass').value, e=n.toLowerCase().replace(/[^a-z0-9]/g,'')+'@anon.ru';
+        if(!n || p.length<6) return window.showToast('Минимум 6 символов пароль', true);
+        document.getElementById('loader').style.display='flex';
         try { await signInWithEmailAndPassword(auth, e, p); } catch(err) {
-            const res=await createUserWithEmailAndPassword(auth,e,p); await updateProfile(res.user,{displayName:n}); await set(ref(db,'users/'+res.user.uid),{name:n,avatar:"https://i.ibb.co/3sW3xQy/default-avatar.png"});
+            try { const res=await createUserWithEmailAndPassword(auth,e,p); await updateProfile(res.user,{displayName:n}); await set(ref(db,'users/'+res.user.uid),{name:n,avatar:"https://i.ibb.co/3sW3xQy/default-avatar.png",bio:''}); } catch(e2) { window.showToast('Ошибка регистрации', true); }
         }
+        document.getElementById('loader').style.display='none';
         window.closeModal('authModal');
     };
+    window.doLogout = () => signOut(auth);
 
+    // ЗАГРУЗКА
+    async function upImg(file) { const fd = new FormData(); fd.append('image', file); const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB}`, { method: 'POST', body: fd }); const d = await res.json(); return d.success ? d.data.url : null; }
+    async function upVid(file) { const fd = new FormData(); fd.append('reqtype', 'fileupload'); fd.append('fileToUpload', file); const r = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd }); return r.ok ? await r.text() : null; }
+
+    window.upload = async (type) => {
+        const input = document.getElementById(type==='gallery'?'fGal':type==='board'?'fBoard':'fShorts');
+        if(!input.files.length && type !== 'board') return;
+        document.getElementById('loader').style.display='flex';
+        const files = input.files.length ? input.files : [null];
+        for(let f of files) {
+            try {
+                let url = f ? (f.type.startsWith('image/') ? await upImg(f) : await upVid(f)) : null;
+                const nsfw = document.getElementById('n'+(type==='gallery'?'Gal':type==='board'?'Board':'Shorts'))?.checked || false;
+                const data = { url, uid: AppState.user.uid, author: AppState.user.displayName, time: Date.now(), isVid: f?.type.includes('video') || false, nsfw };
+                
+                if(type==='gallery') { data.t1 = document.getElementById('t1G').value || 'art'; data.t2 = document.getElementById('t2G').value || ''; data.text = document.getElementById('txtGal').value || ''; }
+                if(type==='board') data.text = document.getElementById('txtB').value || '';
+                if(type==='shorts') data.text = document.getElementById('txtS').value || '';
+                
+                await push(ref(db, type === 'gallery' ? 'posts' : type), data); // Галерея сохраняет в узел posts для legacy
+            } catch(e) { window.showToast('Ошибка загрузки', true); }
+        }
+        document.getElementById('loader').style.display='none'; input.value='';
+        if(document.getElementById('txtGal')) document.getElementById('txtGal').value='';
+        if(document.getElementById('txtB')) document.getElementById('txtB').value='';
+        if(document.getElementById('txtS')) document.getElementById('txtS').value='';
+    };
+
+    // ИЗВЛЕЧЕНИЕ И РЕНДЕР
+    function fetchAll() {
+        onValue(ref(db, 'users'), s => { AppState.users = s.val() || {}; if(AppState.profUid) renderProfFeed(); });
+        ['posts', 'board', 'shorts'].forEach(t => onValue(ref(db, t), s => {
+            const a = []; AppState.tags = {};
+            s.forEach(c => { 
+                const d = c.val(); a.push({id:c.key,...d});
+                if(t==='posts') [d.t1, ...(d.t2||'').split(' ')].filter(Boolean).forEach(x => { const tag=x.toLowerCase().trim(); AppState.tags[tag]=(AppState.tags[tag]||0)+1; });
+            });
+            AppState.data[t==='posts'?'gallery':t] = a.reverse(); // В коде используем 'gallery'
+            window.renderCurrentTab();
+        }));
+    }
+
+    window.switchTab = (t) => {
+        window.switchView('mainView');
+        AppState.currentTab = t; AppState.profUid = null; AppState.currentPostId = null;
+        document.querySelectorAll('.app-tab').forEach(b => b.classList.toggle('active', b.id === 'tab-'+t));
+        document.querySelectorAll('.tab-content').forEach(c => {
+            c.style.display = 'none'; c.classList.remove('active');
+            if(c.id === 'tab-content-'+t) { c.style.display = 'flex'; setTimeout(()=>c.classList.add('active'),10); }
+        });
+        window.renderCurrentTab();
+    };
+
+    window.renderCurrentTab = () => {
+        if(AppState.profUid || AppState.currentPostId) return;
+        const rf = document.querySelector('input[name="rating"]:checked').value;
+        const q = sInput.value.toLowerCase().replace(/#/g, '').trim().split(' ').filter(Boolean);
+        
+        if (AppState.currentTab === 'videos') {
+            renderVideos(rf, q);
+            return;
+        }
+
+        let feed = AppState.data[AppState.currentTab]?.filter(p => {
+            if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
+            if(q.length) {
+                const searchStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase();
+                return q.every(word => searchStr.includes(word));
+            }
+            return true;
+        }) || [];
+
+        if(AppState.currentTab==='gallery') feed.sort((a,b) => AI.score(b) - AI.score(a)); // AI Sort
+
+        if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed');
+        if(AppState.currentTab==='board') renderBoard(feed);
+        if(AppState.currentTab==='shorts') renderShorts(feed);
+    };
+
+    function renderGrid(arr, target) {
+        const el = document.getElementById(target); el.innerHTML = '';
+        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:18px;font-weight:bold;">fembooru: пусто</div>`; return; }
+        arr.forEach(p => {
+            const div = document.createElement('div'); div.className = 'post-card'; div.onclick = () => window.openPost(p.id, target.includes('prof')?'gallery':'gallery');
+            const isRecom = AI.score(p) > 1.5 ? '<div class="ai-badge">AI</div>' : '';
+            const mediaTag = p.isVid ? `<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="${p.url}#t=0.1" preload="none" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` : `<img data-src="${p.url}" loading="lazy">`;
+            div.innerHTML = `${p.nsfw?'<div class="nsfw-badge">NSFW</div>':''} ${isRecom}
+                <div class="pc-media">${mediaTag}</div>
+                <div class="pc-info"><span style="color:#60a5fa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">#${p.t1||'post'}</span><span style="flex-shrink:0;">❤ ${p.likes?Object.keys(p.likes).length:0}</span></div>`;
+            el.appendChild(div);
+            lazyObs.observe(div);
+        });
+    }
+
+    function renderVideos(rf, q) {
+        const el = document.getElementById('ytFeed'); el.innerHTML = '';
+        let allVids = [];
+        ['gallery', 'board', 'shorts'].forEach(t => {
+            if(AppState.data[t]) {
+                const vids = AppState.data[t].filter(p => p.isVid && p.url);
+                vids.forEach(v => allVids.push({...v, _type: t}));
+            }
+        });
+
+        allVids = allVids.filter(p => {
+            if(rf==='sfw' && p.nsfw) return false; if(rf==='nsfw' && !p.nsfw) return false;
+            if(q.length) {
+                const searchStr = `${p.t1||''} ${p.t2||''} ${p.text||''}`.toLowerCase();
+                return q.every(word => searchStr.includes(word));
+            }
+            return true;
+        }).sort((a,b) => b.time - a.time);
+
+        if(!allVids.length) { el.innerHTML = `<div style="text-align:center;width:100%;grid-column:1/-1;padding:50px;color:var(--muted)">Видео не найдено</div>`; return; }
+
+        allVids.forEach(p => {
+            const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
+            const div = document.createElement('div'); div.className = 'yt-card'; div.onclick = () => window.openPost(p.id, p._type);
+            div.innerHTML = `
+                <div class="yt-thumb">
+                    ${p.nsfw?'<div class="nsfw-badge">NSFW</div>':''}
+                    <div class="vid-icon-big">▶</div>
+                    <video data-src="${p.url}#t=0.1" preload="none" muted onmouseover="this.play()" onmouseout="this.pause()"></video>
+                </div>
+                <div class="yt-info">
+                    <img src="${ava}" class="yt-avatar">
+                    <div class="yt-text">
+                        <div class="yt-title">${p.text || (p.t1 ? `#${p.t1}` : 'Видео без названия')}</div>
+                        <div class="yt-meta">
+                            <span>${p.author}</span> • <span>❤ ${p.likes?Object.keys(p.likes).length:0}</span>
+                        </div>
+                    </div>
+                </div>`;
+            el.appendChild(div);
+            lazyObs.observe(div);
+        });
+    }
+
+    function renderBoard(arr) {
+        const el = document.getElementById('boardFeed'); el.innerHTML = '';
+        if(!arr.length) { el.innerHTML = `<div style="text-align:center;width:100%;padding:50px;color:var(--muted)">Ничего нет</div>`; return; }
+        arr.forEach(p => {
+            const ava = AppState.users[p.uid]?.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
+            const div = document.createElement('div'); div.className = 'board-post';
+            div.innerHTML = `<div class="b-header" onclick="window.openProfile('${p.uid}')"><img src="${ava}" class="b-avatar"> <div><span style="color:#fff">${p.author}</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">${new Date(p.time).toLocaleString()}</span></div></div>
+                ${p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.5;">'+p.text+'</div>':''} 
+                ${p.url?`<div class="b-media" onclick="window.openPost('${p.id}','board')">${p.isVid?'<video data-src="'+p.url+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">'}</div>`:''}
+                <div style="display:flex;gap:10px;margin-top:5px">
+                    <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${p.id}','board')">❤ ${p.likes?Object.keys(p.likes).length:0}</button>
+                    <button class="btn-action" onclick="window.repost('${p.id}','board')">🔄 Репост</button>
+                    <button class="btn-action" onclick="window.openPost('${p.id}','board')">💬 Открыть</button>
+                </div>`;
+            el.appendChild(div);
+            if(p.url) lazyObs.observe(div);
+        });
+    }
+
+    function renderShorts(arr) {
+        const el = document.getElementById('shortsFeed'); el.innerHTML = '';
+        if(!arr.length) return;
+        arr.forEach(p => {
+            const div = document.createElement('div'); div.className = 'short-wrap';
+            div.innerHTML = `<div class="short-ui"><div class="short-video"><video data-src="${p.url}" preload="none" loop playsinline></video>
+                <div class="short-info-overlay"><b onclick="window.openProfile('${p.uid}')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;"><img src="${AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:30px;height:30px;border-radius:50%;object-fit:cover">@${p.author}</b><p style="margin:8px 0 0;font-size:14px;line-height:1.4;">${p.text||''}</p></div></div>
+                <div class="short-sidebar">
+                    <button class="s-btn ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${p.id}','shorts')">❤<span class="s-count">${p.likes?Object.keys(p.likes).length:0}</span></button>
+                    <button class="s-btn" onclick="window.repost('${p.id}','shorts')">🔄</button>
+                    <button class="s-btn" onclick="window.openPost('${p.id}','shorts')">💬</button>
+                    ${AppState.isAdmin||AppState.user?.uid===p.uid?`<button class="s-btn" style="color:var(--accent)" onclick="window.del('${p.id}','shorts')">🗑</button>`:''}
+                </div></div>`;
+            el.appendChild(div);
+            lazyObs.observe(div);
+        });
+    }
+
+    // ПРОФИЛЬ
     window.openProfile = async (uid) => {
-        AppState.profUid = uid; 
-        document.querySelectorAll('.view-layer').forEach(l => l.classList.remove('active'));
-        document.getElementById('profileMode').classList.add('active');
+        AppState.profUid = uid; window.switchView('profileMode');
         const d = (await get(ref(db, 'users/'+uid))).val()||{};
         document.getElementById('pAva').src=d.avatar||"https://i.ibb.co/3sW3xQy/default-avatar.png";
         document.getElementById('pName').innerText=d.name||'Anon';
@@ -408,32 +608,62 @@
         document.getElementById('pEditBtn').style.display=AppState.user?.uid===uid?'block':'none';
         window.switchProfTab('uploads');
     };
+    window.saveProfile = async () => {
+        const f=document.getElementById('editAvaFile').files[0], b=document.getElementById('editBio').value;
+        let a=document.getElementById('pAva').src; document.getElementById('loader').style.display='flex';
+        if(f) a=await upImg(f);
+        await update(ref(db, 'users/'+AppState.user.uid), {avatar:a, bio:b}); 
+        document.getElementById('loader').style.display='none'; window.closeModal('editProfileModal'); window.openProfile(AppState.user.uid);
+    };
+    window.switchProfTab = (t) => { AppState.profTab=t; document.querySelectorAll('#profileMode .app-tab').forEach(b=>b.classList.toggle('active',b.id==='pt-'+t)); renderProfFeed(); };
+    function renderProfFeed() {
+        let items = [];
+        if(AppState.profTab==='uploads') ['gallery','board','shorts'].forEach(t=>items.push(...(AppState.data[t]||[]).filter(p=>p.uid===AppState.profUid)));
+        else { const r=AppState.users[AppState.profUid]?.reposts||{}; Object.keys(r).forEach(id=>{ const type=r[id]; const post=AppState.data[type]?.find(x=>x.id===id); if(post) items.push({...post, _type:type}); }); }
+        renderGrid(items.sort((a,b)=>b.time-a.time), 'profFeed');
+    }
 
-    window.openPost = (id, type) => {
-        const p = AppState.data[type].find(x => x.id === id); if(!p) return;
-        AppState.currentPostId = id;
-        document.querySelectorAll('.view-layer').forEach(l => l.classList.remove('active'));
-        document.getElementById('postMode').classList.add('active');
-        const tags = `<span class="hashtag" onclick="window.setSearch('${p.t1}')">#${p.t1}</span>` + (p.t2||'').split(' ').filter(Boolean).map(t=>`<span class="hashtag" onclick="window.setSearch('${t}')">#${t}</span>`).join(' ');
-        document.getElementById('pvContainer').innerHTML = `<div style="display:flex;gap:20px;flex-wrap:wrap"><div style="flex:2;min-width:300px"><div style="background:#000;border-radius:12px;overflow:hidden">${p.isVid?'<video src="'+p.url+'" controls autoplay></video>':'<img src="'+p.url+'" style="width:100%">'}</div></div><div style="flex:1;min-width:280px;background:var(--card);padding:20px;border-radius:12px;height:fit-content"><h3>@${p.author}</h3><p>${p.text||''}</p><div>${tags}</div><button class="btn-main" style="width:100%;margin-top:20px" onclick="window.like('${id}','${type}')">❤ Лайк</button></div></div>`;
+    // ПРОСМОТР ПОСТА
+    window.openPost = async (id, type) => {
+        if(type==='posts') type='gallery'; // fix for legacy naming
+        const p = AppState.data[type]?.find(x => x.id === id); if(!p) return;
+        AppState.currentPostId = id; window.switchView('postMode');
+        
+        AI.track(`${p.t1||''} ${p.t2||''}`); // Обучение ИИ
+
+        const tags = (p.t1 ? `<span class="hashtag" onclick="window.setSearch('${p.t1}')">#${p.t1}</span>` : '') + (p.t2||'').split(' ').filter(Boolean).map(t=>`<span class="hashtag" onclick="window.setSearch('${t}')">#${t}</span>`).join(' ');
+        
+        document.getElementById('pvContainer').innerHTML = `<div class="pv-layout">
+            <div class="pv-main">
+                ${p.url ? `<div class="pv-media-box">${p.isVid?'<video src="'+p.url+'" controls autoplay></video>':'<img src="'+p.url+'">'}</div>` : ''}
+            </div>
+            <div class="pv-side">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;cursor:pointer" onclick="window.openProfile('${p.uid}')">
+                    <img src="${AppState.users[p.uid]?.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png'}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #333;">
+                    <div><b style="font-size:16px">${p.author}</b><br><span style="font-size:11px;color:var(--muted)">${new Date(p.time).toLocaleString()}</span></div>
+                </div>
+                ${p.text ? `<p style="font-size:15px;line-height:1.5;margin-bottom:20px;white-space:pre-wrap;">${p.text}</p>` : ''}
+                <div style="margin-bottom:25px">${tags}</div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-action ${p.likes?.[AppState.user?.uid]?'active':''}" onclick="window.like('${id}','${type}')">❤ ${p.likes?Object.keys(p.likes).length:0}</button>
+                    <button class="btn-action" onclick="window.repost('${id}','${type}')">🔄 Репост</button>
+                    ${AppState.isAdmin||AppState.user?.uid===p.uid?`<button class="btn-action" style="color:var(--accent); flex:0.5" onclick="window.del('${p.id}','${type}')">🗑</button>`:''}
+                </div>
+            </div>
+        </div>`;
+        
+        if(type === 'gallery') renderGrid(AI.getSimilar(p, type), 'aiRecs');
+        else document.getElementById('aiRecs').innerHTML = '';
     };
 
-    window.switchTab = (t) => { AppState.currentTab=t; window.renderCurrentTab(); document.querySelectorAll('.app-tab').forEach(b => b.classList.toggle('active', b.id==='tab-'+t)); document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id==='tab-content-'+t)); };
-    window.switchProfTab = (t) => { AppState.profTab=t; document.querySelectorAll('#profileMode .app-tab').forEach(b=>b.classList.toggle('active',b.id==='pt-'+t)); renderProfFeed(); };
-    function renderProfFeed() { let items = []; if(AppState.profTab==='uploads') ['posts','board','shorts'].forEach(t=>items.push(...AppState.data[t].filter(p=>p.uid===AppState.profUid))); else { const r=AppState.users[AppState.profUid]?.reposts||{}; Object.keys(r).forEach(id=>{ const type=r[id]; const post=AppState.data[type]?.find(x=>x.id===id); if(post) items.push(post); }); } renderGrid(items.sort((a,b)=>b.time-a.time), 'profFeed'); }
-    window.goHome = () => { AppState.profUid=null; AppState.currentPostId=null; document.querySelectorAll('.view-layer').forEach(l => l.classList.remove('active')); document.getElementById('mainView').classList.add('active'); };
+    // ФУНКЦИИ КНОПОК
+    window.goHome = () => { sInput.value=''; AppState.profUid=null; AppState.currentPostId=null; window.switchView('mainView'); window.switchTab(AppState.currentTab); };
     window.closePost = () => window.goHome();
-    window.closeModal = (id) => document.getElementById(id).style.display='none';
-    window.openModal = (id) => document.getElementById(id).style.display='flex';
-    window.openAuth = () => window.openModal('authModal');
-    window.doLogout = () => signOut(auth);
-    window.setLang = (l) => { AppState.lang=l; window.renderCurrentTab(); };
-    window.showToast = (m) => { const b=document.getElementById('toastBox'), t=document.createElement('div'); t.className='toast show'; t.innerText=m; b.appendChild(t); setTimeout(()=>t.remove(),3000); };
     window.setSearch = (t) => { sInput.value=t; window.goHome(); window.renderCurrentTab(); };
-    window.saveProfile = async () => { const f=document.getElementById('editAvaFile').files[0], b=document.getElementById('editBio').value; let a=document.getElementById('pAva').src; if(f) a=await upImg(f); await update(ref(db, 'users/'+AppState.user.uid),{avatar:a,bio:b}); window.openProfile(AppState.user.uid); };
-    window.like = async (id, type) => { if(!AppState.user) return window.openAuth(); const r=ref(db, `${type}/${id}/likes/${AppState.user.uid}`); const s = await get(r); await set(r, s.exists()?null:true); };
-    window.repost = async (id, type) => { if(!AppState.user) return window.openAuth(); const r = ref(db, `users/${AppState.user.uid}/reposts/${id}`); const s = await get(r); await set(r, s.exists()?null:type); window.showToast('fembooru: репост!'); };
-    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('menuOverlay').style.display = document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none'; };
+    window.like = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r=ref(db, `${realType}/${id}/likes/${AppState.user.uid}`); const s = await get(r); await set(r, s.exists()?null:true); };
+    window.repost = async (id, type) => { if(!AppState.user) return window.openAuth(); const realType = type==='posts'?'gallery':type; const r = ref(db, `users/${AppState.user.uid}/reposts/${id}`); const s = await get(r); await set(r, s.exists()?null:realType); window.showToast('fembooru: репост сохранен!'); };
+    window.del = async (id, type) => { if(confirm('Удалить навсегда?')) { const realType = type==='posts'?'gallery':type; await remove(ref(db, `${realType}/${id}`)); window.goHome(); } };
+    window.setLang = (l) => { AppState.lang=l; window.renderCurrentTab(); };
 
 </script>
 </body>
