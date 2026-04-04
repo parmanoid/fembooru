@@ -289,50 +289,22 @@
 
     window.doLogout = () => signOut(auth);
 
-    // НАДЕЖНАЯ ЗАГРУЗКА КАРТИНОК
     async function imgUpload(file) {
-        try {
-            const fd = new FormData(); fd.append('image', file);
-            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
-            const d = await res.json(); 
-            if(d.success) return d.data.url;
-        } catch(e) {}
-        
-        // Резервный способ если imgbb лежит
-        const fd2 = new FormData();
-        fd2.append('reqtype', 'fileupload');
-        fd2.append('fileToUpload', file);
-        const res2 = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: fd2 });
-        if(res2.ok) return await res2.text();
-        
-        throw new Error('Сервера картинок недоступны');
+        const fd = new FormData(); fd.append('image', file);
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+        const d = await res.json(); 
+        if(d.success) return d.data.url;
+        throw new Error('ImgBB отклонил файл');
     }
 
-    // НАДЕЖНАЯ ЗАГРУЗКА ВИДЕО
     async function vidUpload(file) {
         const fd = new FormData();
         fd.append('reqtype', 'fileupload');
         fd.append('fileToUpload', file);
-        
-        try {
-            // Способ 1: Прямой запрос кэтбокс
-            const res = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: fd });
-            if(res.ok) {
-                const url = await res.text();
-                if(url.startsWith('http')) return url;
-            }
-        } catch(e) {}
-        
-        try {
-            // Способ 2: Запасной сервер литтербокс
-            const res2 = await fetch('https://litterbox.catbox.moe/resources/internals/api.php', { method: 'POST', body: fd });
-            if(res2.ok) {
-                const url2 = await res2.text();
-                if(url2.startsWith('http')) return url2;
-            }
-        } catch(e) {}
-        
-        throw new Error('Оба сервера видео сбросили соединение');
+        // Возвращаем надежный рабочий способ из твоей сборки
+        const res = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd });
+        if(res.ok) return await res.text();
+        throw new Error('Catbox или прокси легли');
     }
 
     window.upload = async () => {
@@ -349,30 +321,16 @@
                 const isVid = f.type.includes('video');
                 text.innerText = `Грузим [${i+1}/${files.length}]...`;
                 
-                let url = '';
-                if(isVid) {
-                    url = await vidUpload(f);
-                } else {
-                    url = await imgUpload(f);
-                }
-                
-                if(!url || !url.startsWith('http')) throw new Error('Сервер вернул кривую ссылку');
+                const url = isVid ? await vidUpload(f) : await imgUpload(f);
                 
                 await push(ref(db, 'posts'), {
-                    url: url, 
-                    isVid: isVid, 
-                    uid: user.uid, 
-                    author: user.displayName,
+                    url, isVid, uid: user.uid, author: user.displayName,
                     t1: document.getElementById('tag1').value.trim() || 'разное',
                     t2: document.getElementById('tag2').value.trim() || '',
                     nsfw: document.getElementById('nsfw').checked,
                     time: Date.now()
                 });
-            } catch(e) { 
-                window.showToast(`Ошибка ${f.name}: ` + e.message, true); 
-                loader.style.display = 'none';
-                return;
-            }
+            } catch(e) { window.showToast(`Ошибка ${f.name}: ` + e.message, true); }
         }
         loader.style.display = 'none';
         document.getElementById('file').value = '';
@@ -390,14 +348,17 @@
             s.forEach(c => { 
                 const data = c.val();
                 posts.push({ id: c.key, ...data });
-                const tags = [data.t1, ...data.t2.split(' ')].filter(t => t);
+                // ЗАЩИТА ОТ ОШИБКИ SPLIT ЗДЕСЬ:
+                const t2Str = data.t2 || '';
+                const tags = [data.t1, ...t2Str.split(' ')].filter(t => t);
                 tags.forEach(t => { const ct = t.toLowerCase(); tagStats[ct] = (tagStats[ct] || 0) + 1; });
             });
 
             let rendered = 0;
             posts.reverse().forEach(p => {
                 const q = document.getElementById('search').value.toLowerCase();
-                if(q && !`${p.t1} ${p.t2}`.toLowerCase().includes(q)) return;
+                const pTagStr = `${p.t1} ${p.t2 || ''}`.toLowerCase();
+                if(q && !pTagStr.includes(q)) return;
                 
                 if(ratingFilter === 'sfw' && p.nsfw) return;
                 if(ratingFilter === 'nsfw' && !p.nsfw) return;
@@ -413,6 +374,9 @@
                     comms += `<div class="comment-item"><span class="c-author">${c.u}:</span> ${c.t}</div>`;
                 });
 
+                // ЗАЩИТА ОТ ОШИБКИ SPLIT ПРИ ОТРИСОВКЕ ТЕГОВ ЗДЕСЬ:
+                const safeT2 = p.t2 || '';
+
                 div.innerHTML = `
                     <div class="post-header">
                         <span class="post-author">👤 ${p.author}</span>
@@ -424,7 +388,7 @@
                     </div>
                     <div class="tag-row">
                         <span class="tag primary" onclick="window.applyTag('${p.t1}')">#${p.t1}</span>
-                        ${p.t2.split(' ').map(t => t ? `<span class="tag" onclick="window.applyTag('${t}')">#${t}</span>` : '').join('')}
+                        ${safeT2.split(' ').map(t => t ? `<span class="tag" onclick="window.applyTag('${t}')">#${t}</span>` : '').join('')}
                     </div>
                     <div class="actions">
                         <button class="btn-like ${liked}" onclick="window.like('${p.id}')">❤ ${likes}</button>
