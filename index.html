@@ -73,21 +73,12 @@
         .upload-controls > input[type="file"] { flex: 1; min-width: 200px; padding: 9px; cursor: pointer; background: #1f1f22;}
         .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 0 10px;}
         
-        /* ИДЕАЛЬНАЯ ПЛИТКА (Justified Flexbox) */
-        .gallery { 
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding-bottom: 50px; 
-        }
-        /* Фикс для последнего ряда, чтобы карточка не растягивалась на весь экран */
-        .gallery::after {
-            content: "";
-            flex-grow: 10;
-        }
+        /* БЕСШОВНАЯ ПЛИТКА */
+        .gallery { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 50px; }
+        .gallery::after { content: ""; flex-grow: 10; }
 
         .post-card { 
-            flex: 1 1 280px; /* Растет, сужается, базовая ширина 280px */
+            flex: 1 1 280px; 
             max-width: 100%;
             background: var(--card); 
             border-radius: var(--radius); 
@@ -114,7 +105,6 @@
         .post-card-media { width: 100%; height: 280px; position: relative; background: #050505; display: flex; justify-content: center; align-items: center; overflow: hidden;}
         .post-card-media img, .post-card-media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .post-card:hover .post-card-media img { transform: scale(1.05); }
-        .post-card-media video { object-fit: cover; }
 
         .post-card-info { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: var(--card); border-top: 1px solid var(--border); z-index: 2;}
         .card-stats { font-size: 13px; color: var(--muted); font-weight: 700; display: flex; gap: 12px;}
@@ -188,11 +178,6 @@
         
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 140; backdrop-filter: blur(4px); opacity: 0; transition: 0.4s;}
         .sidebar-overlay.active { display: block; opacity: 1; }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
     </style>
 </head>
 <body>
@@ -207,9 +192,8 @@
 <div id="authModal" class="modal-overlay">
     <div class="modal">
         <h2 id="modalTitle" data-i18n="loginTitle">Вход</h2>
-        <input type="text" id="regName" placeholder="Nickname" style="display:none;">
-        <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPass" placeholder="Password (min 6)">
+        <input type="text" id="authName" placeholder="Твой никнейм">
+        <input type="password" id="authPass" placeholder="Пароль (от 6 символов)">
         <button class="btn-main" onclick="window.submitAuth()" style="margin-top: 10px;" data-i18n="continueBtn">Продолжить</button>
         <button onclick="window.closeAuth()" style="background: transparent; border: none; color: var(--muted);" data-i18n="cancelBtn">Отмена</button>
     </div>
@@ -327,7 +311,11 @@
             delete: '🗑', adminDelete: '🔨', like: 'Нравится',
             comments: 'Комментарии', noComments: 'Будь первым!', writeComment: 'Написать коммент...',
             send: '➤', notFound: 'Ничего не найдено ¯\\_(ツ)_/¯',
-            tag1Holder: 'Главный тег', tag2Holder: 'Доп. теги (пробел)'
+            tag1Holder: 'Главный тег', tag2Holder: 'Доп. теги (пробел)',
+            nameHolder: 'Твой никнейм', passHolder: 'Пароль (от 6 символов)',
+            errNameReq: 'Никнейм обязателен', errPassLen: 'Пароль минимум 6 символов',
+            regSuccess: 'Аккаунт успешно создан!', loginSuccess: 'С возвращением!',
+            errNameTaken: 'Этот никнейм уже занят!', errWrongCreds: 'Неверный никнейм или пароль'
         },
         uk: {
             loginTitle: 'Вхід', regTitle: 'Реєстрація', continueBtn: 'Продовжити', cancelBtn: 'Відміна',
@@ -340,7 +328,11 @@
             delete: '🗑', adminDelete: '🔨', like: 'Подобається',
             comments: 'Коментарі', noComments: 'Будь першим!', writeComment: 'Написати комент...',
             send: '➤', notFound: 'Нічого не знайдено ¯\\_(ツ)_/¯',
-            tag1Holder: 'Головний тег', tag2Holder: 'Дод. теги (пробіл)'
+            tag1Holder: 'Головний тег', tag2Holder: 'Дод. теги (пробіл)',
+            nameHolder: 'Твій нікнейм', passHolder: 'Пароль (від 6 символів)',
+            errNameReq: 'Нікнейм обов\'язковий', errPassLen: 'Пароль мінімум 6 символів',
+            regSuccess: 'Акаунт успішно створено!', loginSuccess: 'З поверненням!',
+            errNameTaken: 'Цей нікнейм вже зайнятий!', errWrongCreds: 'Невірний нікнейм або пароль'
         },
         en: {
             loginTitle: 'Login', regTitle: 'Register', continueBtn: 'Continue', cancelBtn: 'Cancel',
@@ -353,7 +345,11 @@
             delete: '🗑', adminDelete: '🔨', like: 'Like',
             comments: 'Comments', noComments: 'Be the first!', writeComment: 'Write a comment...',
             send: '➤', notFound: 'Nothing found ¯\\_(ツ)_/¯',
-            tag1Holder: 'Main tag', tag2Holder: 'Extra tags (space)'
+            tag1Holder: 'Main tag', tag2Holder: 'Extra tags (space)',
+            nameHolder: 'Your nickname', passHolder: 'Password (min 6)',
+            errNameReq: 'Nickname required', errPassLen: 'Password min 6 chars',
+            regSuccess: 'Account created!', loginSuccess: 'Welcome back!',
+            errNameTaken: 'This nickname is already taken!', errWrongCreds: 'Wrong nickname or password'
         }
     };
 
@@ -366,6 +362,8 @@
         document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t(el.getAttribute('data-i18n')); });
         document.getElementById('tag1').placeholder = t('tag1Holder');
         document.getElementById('tag2').placeholder = t('tag2Holder');
+        document.getElementById('authName').placeholder = t('nameHolder');
+        document.getElementById('authPass').placeholder = t('passHolder');
         if(AppState.currentPostId) window.renderPostView(AppState.currentPostId);
         else window.renderGallery();
     };
@@ -396,16 +394,56 @@
         if(!AppState.posts.length) fetchPosts(); else window.renderGallery();
     });
 
-    window.openAuth = (m) => { authMode = m; document.getElementById('authModal').style.display = 'flex'; document.getElementById('regName').style.display = m==='reg'?'block':'none'; document.getElementById('modalTitle').innerText = m==='reg'?t('regTitle'):t('loginTitle'); };
-    window.closeAuth = () => { document.getElementById('authModal').style.display = 'none'; };
-    window.submitAuth = async () => {
-        const e=document.getElementById('authEmail').value.trim(), p=document.getElementById('authPass').value, n=document.getElementById('regName').value.trim();
-        try {
-            if(authMode==='reg') { if(!n)throw new Error('Name required'); await updateProfile((await createUserWithEmailAndPassword(auth, e, p)).user, { displayName: n }); } 
-            else await signInWithEmailAndPassword(auth, e, p);
-            window.closeAuth(); if(window.innerWidth<=768) window.toggleMenu();
-        } catch(err) { window.showToast(err.message, true); }
+    window.openAuth = (m) => { 
+        authMode = m; 
+        document.getElementById('authModal').style.display = 'flex'; 
+        document.getElementById('modalTitle').innerText = m==='reg'?t('regTitle'):t('loginTitle'); 
     };
+    window.closeAuth = () => { document.getElementById('authModal').style.display = 'none'; };
+    
+    // МАГИЯ АВТОГЕНЕРАЦИИ ПОЧТЫ
+    function generateAnonEmail(name) {
+        const ru = {
+            'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i',
+            'й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t',
+            'у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'',
+            'э':'e','ю':'yu','я':'ya','і':'i','ї':'yi','є':'ye','ґ':'g'
+        };
+        let str = name.toLowerCase().replace(/[а-яёіїєґ]/g, m => ru[m] || m);
+        let clean = str.replace(/[^a-z0-9]/g, '');
+        if(!clean) clean = 'anon' + Math.floor(Math.random()*10000); 
+        return clean + '@anon.ru';
+    }
+
+    window.submitAuth = async () => {
+        const n = document.getElementById('authName').value.trim();
+        const p = document.getElementById('authPass').value;
+        
+        if(!n) return window.showToast(t('errNameReq'), true);
+        if(p.length < 6) return window.showToast(t('errPassLen'), true);
+        
+        // Генерация скрытой почты из никнейма
+        const e = generateAnonEmail(n);
+
+        try {
+            if(authMode === 'reg') { 
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await updateProfile(res.user, { displayName: n });
+                window.showToast(t('regSuccess'));
+            } else {
+                await signInWithEmailAndPassword(auth, e, p);
+                window.showToast(t('loginSuccess'));
+            }
+            window.closeAuth(); 
+            if(window.innerWidth <= 768) window.toggleMenu();
+        } catch(err) { 
+            let msg = err.message;
+            if(err.code === 'auth/email-already-in-use') msg = t('errNameTaken');
+            else if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') msg = t('errWrongCreds');
+            window.showToast(msg, true); 
+        }
+    };
+
     window.doLogout = () => signOut(auth);
 
     async function safeUpload(file) {
@@ -467,8 +505,9 @@
             div.className = 'post-card'; div.style.animationDelay = `${i * 0.03}s`;
             div.onclick = () => window.openPost(p.id);
             
+            // Экономная загрузка: видео грузит только первый кадр (preload metadata). 
             const mediaHtml = p.isVid 
-                ? `<div class="vid-icon">▶</div><video src="${p.url}#t=0.1" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>` 
+                ? `<div class="vid-icon">▶</div><video src="${p.url}#t=0.1" preload="metadata" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>` 
                 : `<img src="${p.url}" loading="lazy">`;
 
             div.innerHTML = `
