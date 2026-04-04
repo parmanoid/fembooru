@@ -33,7 +33,6 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* ШАПКА И ИИ */
         .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(5, 5, 6, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 1000; height: 64px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .top-nav-left { display: flex; align-items: center; gap: 15px; }
         .nav-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5);}
@@ -50,7 +49,6 @@
 
         .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* САЙДБАР */
         .sidebar { width: 280px; background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(10px); padding: 25px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; z-index: 150; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .lang-switcher { display: flex; gap: 6px; margin-bottom: 25px; background: #121214; padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border);}
         .lang-btn { flex: 1; background: transparent; border: none; color: var(--muted); padding: 8px 0; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase;}
@@ -59,7 +57,6 @@
 
         .auth-box { background: rgba(255,255,255,0.02); padding: 15px; border-radius: var(--radius-sm); margin-bottom: 25px; border: 1px solid var(--border); }
         
-        /* КНОПКИ */
         .btn-main { background: linear-gradient(135deg, var(--accent), #be123c); border: none; font-weight: 800; cursor: pointer; color: #fff; padding: 12px 20px; border-radius: var(--radius-sm); transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 15px rgba(225,29,72,0.2);}
         .btn-main:hover { background: linear-gradient(135deg, var(--accent-h), var(--accent)); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(225,29,72,0.4); }
         .btn-main:active { transform: translateY(0) scale(0.98); }
@@ -75,17 +72,14 @@
         input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 14px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
 
-        /* УПОМИНАНИЯ И ХИНТЫ */
         .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 2px 6px; background: rgba(225,29,72,0.1); border-radius: 6px; transition: 0.2s; display: inline-block;}
         .user-mention:hover { background: rgba(225,29,72,0.2); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(225,29,72,0.3);}
         
-        /* Плавный скролл для мобильных добавлены свойства -webkit-overflow-scrolling и overscroll-behavior */
-        .hints-box { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 20px 50px rgba(0,0,0,0.9); max-height: 280px; overflow-y: auto; display: none; animation: fadeIn 0.2s; min-width: 220px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        .hints-box { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 20px 50px rgba(0,0,0,0.9); max-height: 250px; overflow-y: auto; display: none; animation: fadeIn 0.2s; min-width: 220px; }
         .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; color: #eee; transition: 0.2s; gap: 10px;}
         .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
         .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 3px 8px; border-radius: 6px; }
 
-        /* НАВИГАЦИЯ ВЬЮХ */
         .tabs-wrap { background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 500; width: 100%; padding: 10px 0;}
         .app-tabs { display: flex; max-width: 900px; margin: 0 auto; gap: 15px; padding: 0 15px;}
         .app-tab { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); padding: 12px 0; font-size: 13px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.3s; border-radius: var(--radius-sm); text-align: center;}
@@ -102,13 +96,12 @@
         .src-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 10; backdrop-filter: blur(4px); transition: 0.3s; display: none;}
         .src-badge.p2p { background: rgba(16, 185, 129, 0.9); display: block; }
 
-        /* ГАЛЕРЕЯ */
         .gallery { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 50px; }
         .gallery::after { content: ""; flex-grow: 10; }
         .post-card { flex: 1 1 220px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; height: fit-content; display: flex; flex-direction: column; animation: popIn 0.4s ease forwards; opacity: 0; }
         .post-card:hover { border-color: #444; transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.7); z-index: 2; }
         
-        .pc-media { width: 100%; height: 260px; background: #050506; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; pointer-events: none; }
+        .pc-media { width: 100%; height: 260px; background: #050506; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .pc-media img, .pc-media video { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.5s, transform 0.5s; }
         .post-card:hover .pc-media img { transform: scale(1.05); }
         .pc-media .loaded { opacity: 1; }
@@ -121,11 +114,10 @@
         .pc-info { padding: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; background: var(--card); z-index: 2; border-top: 1px solid var(--border);}
         .nsfw-badge { position: absolute; top: 12px; left: 12px; background: rgba(225,29,72,0.95); color: white; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px); letter-spacing: 0.5px;}
 
-        /* YOUTUBE ВИДЕО */
         .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding-bottom: 50px; }
         .yt-card { background: transparent; cursor: pointer; transition: 0.3s; animation: popIn 0.4s forwards; opacity: 0;}
         .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.7);}
-        .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; border-radius: var(--radius); overflow: hidden; position: relative; border: 1px solid var(--border); transition: 0.3s; display: flex; justify-content: center; align-items: center; pointer-events: none;}
+        .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; border-radius: var(--radius); overflow: hidden; position: relative; border: 1px solid var(--border); transition: 0.3s; display: flex; justify-content: center; align-items: center; }
         .yt-thumb video { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; opacity: 0; transition: 0.5s; }
         .yt-thumb .loaded { opacity: 1; }
         .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; backdrop-filter: blur(4px); transition: 0.3s;}
@@ -135,7 +127,6 @@
         .yt-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;}
         .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; cursor: pointer; z-index: 2;}
 
-        /* БОРДА */
         .board-feed { display: flex; flex-direction: column; gap: 20px; max-width: 750px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
         .board-post { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 15px; transition: 0.3s; animation: fadeUp 0.4s forwards; opacity: 0; cursor: pointer;}
         .board-post:hover { border-color: #333; box-shadow: 0 15px 30px rgba(0,0,0,0.4); transform: translateY(-2px);}
@@ -145,13 +136,12 @@
         .b-media img, .b-media video { width: auto; height: auto; max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.5s; }
         .b-media .loaded { opacity: 1; }
 
-        /* ШОРТСЫ */
         .shorts-feed { height: calc(100vh - 130px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -25px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
         .short-ui { display: flex; flex-direction: row; gap: 30px; height: 100%; width: 100%; max-width: 600px; justify-content: center; align-items: center; position: relative; }
         
-        .short-video { flex: 1; height: 100%; max-width: 480px; background: transparent; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid #222;}
+        .short-video { flex: 1; height: 100%; max-width: 480px; background: transparent; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); border: 1px solid #222; cursor: pointer;}
         .short-video video { width: 100%; height: 100%; object-fit: contain; background: #000;}
         
         .short-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 25px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: white; pointer-events: none; z-index: 5; border-radius: 0 0 16px 16px;}
@@ -162,7 +152,6 @@
         .s-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.15); box-shadow: 0 0 20px rgba(225,29,72,0.4);}
         .s-count { position: absolute; bottom: -22px; font-size: 12px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
 
-        /* ПРОФИЛЬ И ПОСТ */
         .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
         .p-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; box-shadow: 0 0 25px rgba(0,0,0,0.6);}
         
@@ -183,7 +172,6 @@
         .comm-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; padding-right: 8px; }
         .comm-item { background: #161619; padding: 14px 16px; border-radius: var(--radius-sm); font-size: 14px; border: 1px solid #222; line-height: 1.4;}
 
-        /* МОДАЛКИ */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .modal { background: var(--card); padding: 40px; border-radius: 24px; width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; border: 1px solid #333; box-shadow: 0 30px 60px rgba(0,0,0,0.9); animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);}
 
@@ -389,7 +377,6 @@
     };
     window.t = function(k) { return (dict[AppState.lang] && dict[AppState.lang][k]) ? dict[AppState.lang][k] : k; };
 
-    // УТИЛИТЫ И ОТОБРАЖЕНИЕ
     window.showToast = function(m, e) { var b=document.getElementById('toastBox'), t=document.createElement('div'); t.className='toast '+(e?'error':'')+' show'; t.style.background=e?'var(--accent)':'#27272a'; t.style.padding='12px 20px'; t.style.borderRadius='10px'; t.style.color='#fff'; t.style.fontWeight='bold'; t.style.boxShadow='0 10px 30px rgba(0,0,0,0.5)'; t.style.transition='0.3s'; t.style.fontSize='14px'; t.innerText=m; b.appendChild(t); setTimeout(function() { t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(function(){t.remove()},300)}, 3000); };
     window.openModal = function(id) { document.getElementById(id).style.display='flex'; };
     window.closeModal = function(id) { document.getElementById(id).style.display='none'; };
@@ -407,12 +394,11 @@
     function getName(uid) { return (AppState.users[uid] && AppState.users[uid].name) ? AppState.users[uid].name : 'Anon'; }
     function getAva(uid) { return (AppState.users[uid] && AppState.users[uid].avatar) ? AppState.users[uid].avatar : 'https://i.ibb.co/3sW3xQy/default-avatar.png'; }
 
-    // АИ ХЕДЕР (GEMINI) - Мультиязычный
     function loadAiFact(lang) {
         var fallbacks = {
-            ru: ["Оставайся милым :3", "fembooru loves you", "Твой уютный уголок", "Больше милоты в ленту", "Не забудь поставить лайк!", "Лучшее место для постинга"],
-            en: ["Stay cute :3", "fembooru loves you", "Your cozy corner", "More cuteness in the feed", "Don't forget to like!", "Best place to post"],
-            uk: ["Залишайся милим :3", "fembooru loves you", "Твій затишний куточок", "Більше милоти у стрічку", "Не забудь поставити лайк!", "Найкраще місце для постів"]
+            ru: ["Оставайся милым :3", "fembooru loves you", "Твой уютный уголок", "Больше милоты в ленту", "Не забудь поставить лайк!"],
+            en: ["Stay cute :3", "fembooru loves you", "Your cozy corner", "More cuteness in the feed", "Don't forget to like!"],
+            uk: ["Залишайся милим :3", "fembooru loves you", "Твій затишний куточок", "Більше милоти у стрічку", "Не забудь поставити лайк!"]
         };
         var arr = fallbacks[lang] || fallbacks['ru'];
         var el = document.getElementById('aiFact');
@@ -428,7 +414,7 @@
         } catch(e) {}
     }
 
-    // МЕНШОНЫ И ТЕГИ (АБСОЛЮТНЫЙ ОБРАБОТЧИК)
+    // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК ПОДСКАЗОК (@ И #)
     document.addEventListener('input', function(e) {
         var el = e.target;
         if(el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
@@ -445,18 +431,15 @@
             mBox.style.display = 'none';
             sBox.style.display = 'none';
 
-            // Логика @Упоминаний
-            if(lastWord.indexOf('@') === 0 && lastWord.length > 0) {
+            if(lastWord.indexOf('@') === 0) {
                 var searchName = lastWord.substring(1).toLowerCase();
                 var uKeys = Object.keys(AppState.users);
                 var matches = [];
                 for(var i=0; i<uKeys.length; i++) {
                     var u = AppState.users[uKeys[i]];
-                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) {
-                        matches.push(u);
-                    }
+                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) { matches.push(u); }
                 }
-                matches = matches.slice(0, 50); // Выводим до 50
+                matches = matches.slice(0, 50); 
                 
                 if(matches.length > 0) {
                     mBox.innerHTML = '';
@@ -478,7 +461,6 @@
                     mBox.style.display = 'block';
                 }
             } 
-            // Логика #Тегов
             else if ((el.id === 'search' || el.id === 't1G' || el.id === 't2G') && lastWord.length > 0) {
                 var tagSearch = lastWord.replace(/#/g, '').toLowerCase();
                 if(tagSearch) {
@@ -491,10 +473,11 @@
                         sBox.innerHTML = '';
                         tagMatches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).slice(0, 20).forEach(function(tag) {
                             var div = document.createElement('div'); div.className = 'hint-item';
+                            var prefix = el.id === 't1G' ? '' : '#';
                             div.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
                             div.onmousedown = function(ev) {
                                 ev.preventDefault();
-                                words[words.length-1] = tag; 
+                                words[words.length-1] = prefix + tag; 
                                 window.activeInput.value = words.join(' ') + ' '; 
                                 sBox.style.display = 'none'; 
                                 if(el.id === 'search') window.renderCurrentTab();
@@ -536,14 +519,13 @@
         else window.showToast('Пользователь не найден', true);
     };
 
-    // LAZY LOADING 5.0 (ОСВОБОЖДЕНИЕ ПАМЯТИ)
+    // LAZY LOADING (ЖЕСТКАЯ ОЧИСТКА ПАМЯТИ)
     var lazyObs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
             var medias = e.target.querySelectorAll('img, video');
             for(var i=0; i<medias.length; i++) {
                 var media = medias[i];
                 if (e.isIntersecting) {
-                    // Если мы вернулись, восстанавливаем src
                     var savedSrc = media.getAttribute('data-saved-src');
                     var dataSrc = media.getAttribute('data-src');
                     
@@ -567,17 +549,7 @@
                                     var badge = media.parentElement.querySelector('.src-badge'); if(badge){ badge.className='src-badge p2p'; badge.innerText='P2P'; badge.style.display='block';}
                                 }
                             });
-                            setTimeout(function() {
-                                if (!media.src && !media.currentSrc && media.getAttribute('data-saved-src')) {
-                                    media.src = media.getAttribute('data-saved-src'); media.classList.add('loaded');
-                                    var badge = media.parentElement.querySelector('.src-badge'); if(badge){ badge.className='src-badge cdn'; badge.innerText='CDN'; badge.style.display='block';}
-                                }
-                            }, 3500);
-                        } else if (!media.getAttribute('data-p2p-init')) {
-                            media.src = media.getAttribute('data-saved-src');
-                            media.classList.add('loaded');
                         }
-                        
                         if (e.target.closest('.short-wrap')) {
                             var p = media.play();
                             if(p !== undefined) p.catch(function(){});
@@ -587,7 +559,6 @@
                     if (media.tagName==='VIDEO') {
                         media.pause();
                         if(e.target.closest('.short-wrap')) {
-                            // ЖЕСТКАЯ ОЧИСТКА ПАМЯТИ
                             if(media.src && media.src !== "") {
                                 media.setAttribute('data-saved-src', media.src);
                                 media.removeAttribute('src'); 
@@ -600,7 +571,18 @@
         });
     }, { threshold: 0.05, rootMargin: "400px 0px" });
 
-    // АВТОРИЗАЦИЯ
+    var RecomEngine = {
+        score: function(p) { return p.time/Date.now(); },
+        getSimilar: function(post, type) {
+            var curTxt = [post.t1||'', ...(post.t2||'').split(' '), ...(post.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()});
+            return AppState.data[type].filter(function(p) { return p.id !== post.id; }).map(function(p) {
+                var pTxt = [p.t1||'', ...(p.t2||'').split(' '), ...(p.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()});
+                var common = pTxt.filter(function(t){ return curTxt.indexOf(t) !== -1; }).length;
+                return { post: p, score: common };
+            }).filter(function(i) { return i.score > 0; }).sort(function(a,b) { return b.score - a.score; }).slice(0, 8).map(function(i) { return i.post; });
+        }
+    };
+
     onAuthStateChanged(auth, function(u) {
         AppState.user = u; AppState.isAdmin = u && u.email === "test@anon.ru";
         ['Gal', 'Board', 'Shorts'].forEach(function(i) { if(document.getElementById('up'+i)) document.getElementById('up'+i).style.display = u ? 'block' : 'none'; });
@@ -635,7 +617,6 @@
     };
     window.doLogout = function() { signOut(auth); };
 
-    // СЖАТИЕ И ЗАГРУЗКА
     function compressImage(file, quality) {
         if(!quality) quality = 0.7;
         return new Promise(function(resolve) {
@@ -665,7 +646,7 @@
     }
 
     window.upload = async function(type) {
-        var dbNode = type; if(type === 'gallery') dbNode = 'posts'; 
+        var dbNode = type === 'gallery' ? 'posts' : type; 
         var input = document.getElementById(type==='gallery'?'fGal':type==='board'?'fBoard':'fShorts');
         if(!input.files.length && type !== 'board') return;
         document.getElementById('loader').style.display='flex';
@@ -698,9 +679,20 @@
         if(document.getElementById('txtS')) document.getElementById('txtS').value='';
     };
 
-    // ИЗВЛЕЧЕНИЕ И РЕНДЕР
     function fetchAll() {
-        onValue(ref(db, 'users'), function(s) { AppState.users = s.val() || {}; if(AppState.profUid) renderProfFeed(); });
+        onValue(ref(db, 'users'), function(s) { 
+            AppState.users = s.val() || {}; 
+            if(AppState.profUid) {
+                // Синхронно обновляем имя и аву, если данные изменились
+                var u = AppState.users[AppState.profUid];
+                if(u) {
+                    document.getElementById('pAva').src = u.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
+                    document.getElementById('pName').innerText = u.name || 'Anon';
+                    document.getElementById('pBio').innerHTML = window.parseMentions(u.bio || '');
+                }
+                renderProfFeed(); 
+            }
+        });
         ['posts', 'board', 'shorts'].forEach(function(t) { 
             onValue(ref(db, t), function(s) {
                 var a = []; AppState.tags = {};
@@ -743,6 +735,8 @@
             return true;
         }) : [];
 
+        if(AppState.currentTab==='gallery') feed.sort(function(a,b) { return RecomEngine.score(b) - RecomEngine.score(a); });
+
         if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed', 'gallery');
         if(AppState.currentTab==='board') renderBoard(feed);
         if(AppState.currentTab==='shorts') renderShorts(feed);
@@ -757,11 +751,10 @@
                 var div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = (index*0.03)+'s';
                 var tType = p._type || dbTypeParam || 'gallery';
                 
-                // Делегирование клика
                 div.onclick = function() { window.openPost(p.id, tType); };
                 
                 var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="none" muted loop style="pointer-events:none;"></video>' : '<img data-src="'+p.url+'" loading="lazy" style="pointer-events:none;">';
-                var authorName = getName(p.uid) || p.author || 'Anon';
+                var authorName = getName(p.uid);
                 var authorTag = '<div class="pc-author-badge" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'"><span style="overflow:hidden; text-overflow:ellipsis; max-width:60px; white-space:nowrap;">'+authorName+'</span></div>';
 
                 div.innerHTML = (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') + authorTag +
@@ -795,12 +788,12 @@
             (function(p, index) {
                 var div = document.createElement('div'); div.className = 'yt-card'; div.style.animationDelay = (index*0.05)+'s';
                 div.onclick = function() { window.openPost(p.id, p._type); };
-                var authorName = getName(p.uid) || p.author || 'Anon';
-                div.innerHTML = '<div class="yt-thumb">' +
+                var authorName = getName(p.uid);
+                div.innerHTML = '<div class="yt-thumb" style="pointer-events:none;">' +
                         (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') +
                         '<div class="vid-icon-big">▶</div>' +
                         '<div class="src-badge"></div>' +
-                        '<video data-src="'+p.url+'#t=0.1" data-magnet="'+(p.magnet||'')+'" preload="none" muted style="pointer-events:none;"></video>' +
+                        '<video data-src="'+p.url+'#t=0.1" data-magnet="'+(p.magnet||'')+'" preload="none" muted></video>' +
                     '</div>' +
                     '<div class="yt-info">' +
                         '<img src="'+getAva(p.uid)+'" class="yt-avatar" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')">' +
@@ -822,7 +815,7 @@
             (function(p, index) {
                 var div = document.createElement('div'); div.className = 'board-post'; div.style.animationDelay = (index*0.05)+'s';
                 div.onclick = function() { window.openPost(p.id, 'board'); }; 
-                var authorName = getName(p.uid) || p.author || 'Anon';
+                var authorName = getName(p.uid);
                 div.innerHTML = '<div class="b-header" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'" class="b-avatar"> <div><span style="color:#fff">'+authorName+'</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">'+new Date(p.time).toLocaleString()+'</span></div></div>' +
                     (p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.6;">'+window.parseMentions(p.text)+'</div>':'') + 
                     (p.url?'<div class="b-media" style="pointer-events:none;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">')+'</div>':'') +
@@ -843,7 +836,7 @@
         for(var i=0; i<arr.length; i++) {
             (function(p) {
                 var div = document.createElement('div'); div.className = 'short-wrap';
-                var authorName = getName(p.uid) || p.author || 'Anon';
+                var authorName = getName(p.uid);
                 div.innerHTML = '<div class="short-ui"><div class="short-video" onclick="window.openPost(\''+p.id+'\',\'shorts\')"><div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" loop playsinline style="pointer-events:none;"></video>' +
                     '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px; pointer-events:auto;"><img src="'+getAva(p.uid)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+authorName+'</b><p style="margin:0;font-size:15px;line-height:1.5; pointer-events:auto;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
                     '<div class="short-sidebar">' +
@@ -858,7 +851,7 @@
         }
     }
 
-    // СИНХРОННЫЙ ПРОФИЛЬ (РАБОТАЕТ БЕЗ ASYNC)
+    // СИНХРОННЫЙ ПРОФИЛЬ 
     window.safeOpenProfile = function(uid) {
         if(uid === 'MY') { if(AppState.user) uid = AppState.user.uid; else return window.openAuth(); }
         window.pauseAllVideos();
@@ -934,7 +927,7 @@
         if(p.t1) tagsHTML += '<span class="hashtag" onclick="window.setSearch(\''+p.t1+'\')">#'+p.t1+'</span>';
         if(p.t2) { var t2arr = p.t2.split(' '); for(var j=0; j<t2arr.length; j++) { if(t2arr[j]) tagsHTML += '<span class="hashtag" onclick="window.setSearch(\''+t2arr[j]+'\')">#'+t2arr[j]+'</span>'; } }
         
-        var authorName = getName(p.uid) || p.author || 'Anon';
+        var authorName = getName(p.uid);
         var isLiked = p.likes && AppState.user && p.likes[AppState.user.uid];
         var likesCount = p.likes ? Object.keys(p.likes).length : 0;
         var canDel = AppState.isAdmin || (AppState.user && AppState.user.uid === p.uid);
