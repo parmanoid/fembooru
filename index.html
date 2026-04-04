@@ -40,14 +40,11 @@
         .btn-main { background: var(--accent); border: none; color: white; }
         .btn-main:hover { background: #ff5555; transform: translateY(-1px); }
         .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-group { display: flex; gap: 10px; }
-        .btn-group button { flex: 1; }
 
         h3 { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .filter-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         .filter-group label { font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #ccc; }
         .filter-group input { accent-color: var(--accent); width: 18px; height: 18px; margin: 0;}
-        .filter-group input:checked + span { color: white; font-weight: bold; }
 
         .search-wrap { position: relative; margin-bottom: 20px; }
         .hints { position: absolute; top: 100%; left: 0; width: 100%; background: #222; border-radius: 8px; z-index: 50; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-top: 5px; border: 1px solid #444;}
@@ -56,30 +53,23 @@
 
         .content { flex: 1; padding: 25px; overflow-y: auto; background: var(--bg); position: relative;}
         
-        .upload-section { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .upload-section { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); }
         .upload-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .upload-controls > input[type="file"] { flex: 1; min-width: 200px; }
-        .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 0 10px;}
+        .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0 10px;}
         
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding-bottom: 50px;}
         .post { background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid var(--border); animation: fadeIn 0.4s ease; display: flex; flex-direction: column; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: var(--muted); }
-        .post-author { font-weight: bold; color: #eee; }
-        .btn-delete { background: none; border: none; color: var(--muted); font-size: 12px; padding: 5px; }
-        .btn-delete:hover { color: var(--accent); }
-
         .media-wrap { width: 100%; border-radius: 10px; overflow: hidden; background: #050505; margin-bottom: 15px; position: relative; }
         .media-wrap img, .media-wrap video { width: 100%; height: auto; max-height: 600px; display: block; object-fit: contain; cursor: pointer; }
-        .nsfw-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(255,62,62,0.9); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; pointer-events: none; backdrop-filter: blur(4px); z-index: 10;}
+        .nsfw-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(255,62,62,0.9); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; z-index: 10;}
 
         .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
         .tag { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; color: #ccc; border: 1px solid #333;}
         .tag.primary { color: #4da6ff; border-color: rgba(77, 166, 255, 0.3); }
-        .tag:hover { background: #333; }
-        
-        .actions { display: flex; align-items: center; margin-bottom: 15px; }
+
         .btn-like { background: transparent; border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; color: #eee; display: flex; align-items: center; gap: 6px; font-weight: bold;}
         .btn-like.active { color: var(--accent); border-color: var(--accent); background: rgba(255,62,62,0.1); }
 
@@ -87,18 +77,14 @@
         .comments-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; font-size: 13px; }
         .comment-item { line-height: 1.4; word-break: break-word; border-bottom: 1px solid #222; padding-bottom: 5px;}
         .c-author { color: #4da6ff; font-weight: bold; margin-right: 5px; }
-        .comment-input-wrap { display: flex; gap: 8px; }
-        .comment-input-wrap input { flex: 1; padding: 10px; font-size: 13px; }
-        .comment-input-wrap button { background: #333; border: none; border-radius: 8px; padding: 0 15px; color: white; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal { background: var(--card); padding: 30px; border-radius: 16px; width: 90%; max-width: 320px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .modal h2 { margin: 0 0 10px; text-align: center; }
+        .modal { background: var(--card); padding: 30px; border-radius: 16px; width: 90%; max-width: 320px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--border); }
         
         .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; width: 90%; max-width: 300px; text-align: center; pointer-events: none;}
-        .toast { background: #222; border: 1px solid #444; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 8px 16px rgba(0,0,0,0.5); opacity: 0; transform: translateY(20px); transition: 0.3s ease; font-weight: bold; }
+        .toast { background: #222; border: 1px solid #444; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; opacity: 0; transform: translateY(20px); transition: 0.3s ease; font-weight: bold; }
         .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.error { background: var(--accent); border-color: #ff6666; }
+        .toast.error { background: var(--accent); }
 
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; color: white; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { border: 4px solid #333; border-top: 4px solid var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;}
@@ -107,24 +93,15 @@
         @media (max-width: 768px) {
             .mobile-nav { display: flex; }
             .sidebar-title { display: none; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); background: #111; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); background: #111; }
             .sidebar.open { transform: translateX(0); }
-            
             .content { padding: 15px; height: calc(100vh - 60px); }
-            
             .upload-controls { flex-direction: column; align-items: stretch; }
-            .upload-controls > * { width: 100%; }
-            .checkbox-wrap { justify-content: center; padding: 10px 0; background: rgba(255,62,62,0.1); border-radius: 8px; border: 1px solid rgba(255,62,62,0.3);}
-            
             .gallery { grid-template-columns: 1fr; gap: 15px; }
         }
         
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 140; backdrop-filter: blur(2px);}
         .sidebar-overlay.active { display: block; }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -133,16 +110,16 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <p id="loader-text" style="font-family: monospace; letter-spacing: 1px;">загрузка fembooru...</p>
+    <p id="loader-text">загрузка fembooru...</p>
 </div>
 
 <div id="authModal" class="modal-overlay">
     <div class="modal">
         <h2 id="modalTitle">вход</h2>
         <input type="text" id="regName" placeholder="Твой никнейм" style="display:none;">
-        <input type="email" id="authEmail" placeholder="Email (любой)">
-        <input type="password" id="authPass" placeholder="Пароль (от 6 символов)">
-        <button class="btn-main" onclick="window.submitAuth()" style="margin-top: 5px;">Погнали</button>
+        <input type="email" id="authEmail" placeholder="Email">
+        <input type="password" id="authPass" placeholder="Пароль">
+        <button class="btn-main" onclick="window.submitAuth()">Погнали</button>
         <button onclick="window.closeAuth()" style="background: transparent; border: none; color: var(--muted);">Отмена</button>
     </div>
 </div>
@@ -160,10 +137,10 @@
         
         <div class="auth-box">
             <div id="loggedOutView">
-                <div class="auth-text">Войди в аккаунт, чтобы публиковать арты и писать комментарии.</div>
-                <div class="btn-group">
-                    <button class="btn-main" onclick="window.openAuth('login')">Вход</button>
-                    <button style="background:#333;" onclick="window.openAuth('reg')">Рега</button>
+                <div class="auth-text">Войди в аккаунт для публикации.</div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-main" style="flex:1" onclick="window.openAuth('login')">Вход</button>
+                    <button style="flex:1; background:#333;" onclick="window.openAuth('reg')">Рега</button>
                 </div>
             </div>
             <div id="loggedInView" style="display:none;">
@@ -172,16 +149,16 @@
             </div>
         </div>
 
-        <h3>Настройки ленты</h3>
+        <h3>Лента</h3>
         <div class="filter-group">
-            <label><input type="radio" name="rating" value="all" checked onchange="window.load()"> <span>Всё подряд</span></label>
-            <label><input type="radio" name="rating" value="sfw" onchange="window.load()"> <span>Только SFW</span></label>
-            <label><input type="radio" name="rating" value="nsfw" onchange="window.load()"> <span>Только NSFW</span></label>
+            <label><input type="radio" name="rating" value="all" checked onchange="window.load()"> <span>Всё</span></label>
+            <label><input type="radio" name="rating" value="sfw" onchange="window.load()"> <span>SFW</span></label>
+            <label><input type="radio" name="rating" value="nsfw" onchange="window.load()"> <span>NSFW</span></label>
         </div>
 
-        <h3>Поиск по тегам</h3>
+        <h3>Поиск</h3>
         <div class="search-wrap">
-            <input type="text" id="search" placeholder="Начни вводить..." style="width: 100%;" autocomplete="off">
+            <input type="text" id="search" placeholder="Ищи тег..." style="width: 100%;" autocomplete="off">
             <div id="hints" class="hints"></div>
         </div>
     </aside>
@@ -190,17 +167,12 @@
         <div class="upload-section" id="uploadPanel" style="display: none;">
             <div class="upload-controls">
                 <input type="file" id="file" accept="image/*,video/*" multiple>
-                <input type="text" id="tag1" placeholder="Главный тег (напр. anime)">
-                <input type="text" id="tag2" placeholder="Детали (через пробел)">
+                <input type="text" id="tag1" placeholder="Главный тег">
+                <input type="text" id="tag2" placeholder="Доп. теги">
                 <label class="checkbox-wrap"><input type="checkbox" id="nsfw"> NSFW</label>
                 <button class="btn-main" onclick="window.upload()">Опубликовать</button>
             </div>
         </div>
-
-        <div id="guestWarn" style="text-align: center; color: var(--muted); margin-bottom: 25px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed #333;">
-            Только авторизованные пользователи могут загружать контент.
-        </div>
-
         <div class="gallery" id="gal"></div>
     </main>
 </div>
@@ -247,7 +219,6 @@
     onAuthStateChanged(auth, (u) => {
         user = u;
         document.getElementById('uploadPanel').style.display = u ? 'block' : 'none';
-        document.getElementById('guestWarn').style.display = u ? 'none' : 'block';
         document.getElementById('loggedOutView').style.display = u ? 'none' : 'block';
         document.getElementById('loggedInView').style.display = u ? 'block' : 'none';
         if(u) document.getElementById('userNameDisplay').innerText = `Привет, ${u.displayName}!`;
@@ -258,14 +229,10 @@
         authMode = m;
         document.getElementById('authModal').style.display = 'flex';
         document.getElementById('regName').style.display = m === 'reg' ? 'block' : 'none';
-        document.getElementById('modalTitle').innerText = m === 'reg' ? 'Регистрация' : 'Вход в аккаунт';
+        document.getElementById('modalTitle').innerText = m === 'reg' ? 'Регистрация' : 'Вход';
     };
 
-    window.closeAuth = () => {
-        document.getElementById('authModal').style.display = 'none';
-        document.getElementById('authEmail').value = '';
-        document.getElementById('authPass').value = '';
-    };
+    window.closeAuth = () => document.getElementById('authModal').style.display = 'none';
 
     window.submitAuth = async () => {
         const e = document.getElementById('authEmail').value.trim();
@@ -273,68 +240,54 @@
         const n = document.getElementById('regName').value.trim();
         try {
             if(authMode === 'reg') {
-                if(!n) return window.showToast('Никнейм обязателен!', true);
-                if(p.length < 6) return window.showToast('Пароль минимум 6 символов', true);
                 const res = await createUserWithEmailAndPassword(auth, e, p);
                 await updateProfile(res.user, { displayName: n });
-                window.showToast('Аккаунт создан!');
             } else {
                 await signInWithEmailAndPassword(auth, e, p);
-                window.showToast('Успешный вход!');
             }
             window.closeAuth();
-            if(window.innerWidth <= 768) window.toggleMenu();
         } catch(err) { window.showToast(err.message, true); }
     };
 
     window.doLogout = () => signOut(auth);
 
-    async function imgUpload(file) {
-        const fd = new FormData(); fd.append('image', file);
-        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
-        const d = await res.json(); 
-        if(d.success) return d.data.url;
-        throw new Error('ImgBB отклонил файл');
-    }
-
-    async function vidUpload(file) {
-        const fd = new FormData();
-        fd.append('reqtype', 'fileupload');
-        fd.append('fileToUpload', file);
-        // Возвращаем надежный рабочий способ из твоей сборки
-        const res = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd });
-        if(res.ok) return await res.text();
-        throw new Error('Catbox или прокси легли');
+    async function safeUpload(file) {
+        // Пробуем ImgBB для фото
+        if (file.type.startsWith('image/')) {
+            try {
+                const fd = new FormData(); fd.append('image', file);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+                const d = await res.json();
+                if(d.success) return d.data.url;
+            } catch(e) {}
+        }
+        // Запасной для фото и основной для видео - Catbox через прокси
+        const fd2 = new FormData();
+        fd2.append('reqtype', 'fileupload');
+        fd2.append('fileToUpload', file);
+        const res2 = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd2 });
+        if(res2.ok) return await res2.text();
+        throw new Error('Сервера перегружены');
     }
 
     window.upload = async () => {
         const files = document.getElementById('file').files;
-        if(!files.length) return window.showToast('Выбери файлы!', true);
-        
-        const loader = document.getElementById('loader');
-        const text = document.getElementById('loader-text');
-        loader.style.display = 'flex';
-        
-        for(let i=0; i<files.length; i++) {
-            const f = files[i];
+        if(!files.length) return;
+        document.getElementById('loader').style.display = 'flex';
+        for(let f of files) {
             try {
-                const isVid = f.type.includes('video');
-                text.innerText = `Грузим [${i+1}/${files.length}]...`;
-                
-                const url = isVid ? await vidUpload(f) : await imgUpload(f);
-                
+                const url = await safeUpload(f);
                 await push(ref(db, 'posts'), {
-                    url, isVid, uid: user.uid, author: user.displayName,
-                    t1: document.getElementById('tag1').value.trim() || 'разное',
+                    url, isVid: f.type.includes('video'), uid: user.uid, author: user.displayName,
+                    t1: document.getElementById('tag1').value.trim() || 'art',
                     t2: document.getElementById('tag2').value.trim() || '',
                     nsfw: document.getElementById('nsfw').checked,
                     time: Date.now()
                 });
-            } catch(e) { window.showToast(`Ошибка ${f.name}: ` + e.message, true); }
+            } catch(e) { window.showToast(`Сбой: ` + e.message, true); }
         }
-        loader.style.display = 'none';
+        document.getElementById('loader').style.display = 'none';
         document.getElementById('file').value = '';
-        window.showToast('Успешно опубликовано!');
     };
 
     window.load = () => {
@@ -348,22 +301,20 @@
             s.forEach(c => { 
                 const data = c.val();
                 posts.push({ id: c.key, ...data });
-                // ЗАЩИТА ОТ ОШИБКИ SPLIT ЗДЕСЬ:
-                const t2Str = data.t2 || '';
-                const tags = [data.t1, ...t2Str.split(' ')].filter(t => t);
-                tags.forEach(t => { const ct = t.toLowerCase(); tagStats[ct] = (tagStats[ct] || 0) + 1; });
+                const allTags = [data.t1, ...(data.t2 || '').split(' ')].filter(t => t);
+                allTags.forEach(t => { 
+                    const clean = t.toLowerCase();
+                    tagStats[clean] = (tagStats[clean] || 0) + 1;
+                });
             });
 
-            let rendered = 0;
             posts.reverse().forEach(p => {
                 const q = document.getElementById('search').value.toLowerCase();
-                const pTagStr = `${p.t1} ${p.t2 || ''}`.toLowerCase();
-                if(q && !pTagStr.includes(q)) return;
-                
+                const tags = `${p.t1} ${p.t2 || ''}`.toLowerCase();
+                if(q && !tags.includes(q)) return;
                 if(ratingFilter === 'sfw' && p.nsfw) return;
                 if(ratingFilter === 'nsfw' && !p.nsfw) return;
 
-                rendered++;
                 const div = document.createElement('div');
                 div.className = 'post';
                 const likes = p.likes ? Object.keys(p.likes).length : 0;
@@ -373,9 +324,6 @@
                 if(p.comments) Object.values(p.comments).forEach(c => {
                     comms += `<div class="comment-item"><span class="c-author">${c.u}:</span> ${c.t}</div>`;
                 });
-
-                // ЗАЩИТА ОТ ОШИБКИ SPLIT ПРИ ОТРИСОВКЕ ТЕГОВ ЗДЕСЬ:
-                const safeT2 = p.t2 || '';
 
                 div.innerHTML = `
                     <div class="post-header">
@@ -388,15 +336,15 @@
                     </div>
                     <div class="tag-row">
                         <span class="tag primary" onclick="window.applyTag('${p.t1}')">#${p.t1}</span>
-                        ${safeT2.split(' ').map(t => t ? `<span class="tag" onclick="window.applyTag('${t}')">#${t}</span>` : '').join('')}
+                        ${(p.t2 || '').split(' ').map(t => t ? `<span class="tag" onclick="window.applyTag('${t}')">#${t}</span>` : '').join('')}
                     </div>
-                    <div class="actions">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                         <button class="btn-like ${liked}" onclick="window.like('${p.id}')">❤ ${likes}</button>
                     </div>
                     <div class="comments-area">
-                        <div class="comments-list">${comms || '<div style="color:var(--muted); text-align:center;">Нет комментариев</div>'}</div>
+                        <div class="comments-list">${comms || 'Нет комментов'}</div>
                         <div class="comment-input-wrap">
-                            <input type="text" id="i-${p.id}" placeholder="Написать..." onkeypress="if(event.key === 'Enter') window.comm('${p.id}')">
+                            <input type="text" id="i-${p.id}" placeholder="Твой коммент...">
                             <button onclick="window.comm('${p.id}')">➤</button>
                         </div>
                     </div>
@@ -404,8 +352,6 @@
                 gal.appendChild(div);
                 if(p.isVid) setTimeout(() => fluidPlayer(`v-${p.id}`, {layoutControls:{primaryColor:"#ff3e3e",fillToContainer:true}}), 50);
             });
-
-            if(rendered === 0) gal.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 50px;">Ничего не найдено</div>`;
         });
     };
 
@@ -417,14 +363,13 @@
         const matches = Object.keys(tagStats).filter(t => t.includes(val));
         if (matches.length > 0) {
             matches.sort((a, b) => tagStats[b] - tagStats[a]);
-            matches.slice(0, 8).forEach(m => {
+            matches.slice(0, 10).forEach(m => {
                 const item = document.createElement('div');
                 item.className = 'hint-item';
                 item.innerHTML = `<span>#${m}</span> <span style="color:var(--muted)">${tagStats[m]}</span>`;
                 item.onclick = () => {
                     document.getElementById('search').value = m;
                     box.style.display = 'none';
-                    if(window.innerWidth <= 768) window.toggleMenu(); 
                     window.load();
                 };
                 box.appendChild(item);
@@ -434,39 +379,25 @@
         window.load();
     });
 
-    window.applyTag = (t) => { 
-        document.getElementById('search').value = t.toLowerCase(); 
-        window.load(); 
-        document.getElementById('mainContent').scrollTo({top: 0, behavior: 'smooth'});
-    };
-    
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-wrap')) document.getElementById('hints').style.display = 'none';
-    });
-
-    window.del = (id) => confirm('Точно удаляем?') && remove(ref(db, `posts/${id}`));
-
+    window.applyTag = (t) => { document.getElementById('search').value = t.toLowerCase(); window.load(); };
+    window.del = (id) => confirm('Удалить?') && remove(ref(db, `posts/${id}`));
     window.like = async (id) => {
-        if(!user) return window.showToast('Нужно войти в аккаунт!', true);
-        const p = ref(db, `posts/${id}/likes/${user.uid}`);
-        onValue(p, (s) => {
-            const val = s.exists() ? null : true;
-            update(ref(db), { [`posts/${id}/likes/${user.uid}`]: val });
-        }, { onlyOnce: true });
+        if(!user) return window.showToast('Войди!', true);
+        const hasLiked = (await (update(ref(db), { [`posts/${id}/likes/${user.uid}`]: user ? true : null })));
+        // Переключение лайка
+        const lRef = ref(db, `posts/${id}/likes/${user.uid}`);
+        onValue(lRef, (s) => {
+            const v = s.exists() ? null : true;
+            update(ref(db), { [`posts/${id}/likes/${user.uid}`]: v });
+        }, {onlyOnce: true});
     };
-
     window.comm = async (id) => {
-        if(!user) return window.showToast('Нужно войти в аккаунт!', true);
-        const input = document.getElementById(`i-${id}`);
-        const t = input.value.trim();
-        if(!t) return;
-        
-        input.disabled = true;
+        const t = document.getElementById(`i-${id}`).value;
+        if(!t || !user) return;
         await push(ref(db, `posts/${id}/comments`), { u: user.displayName, t: t });
-        input.value = '';
-        input.disabled = false;
-        input.focus();
+        document.getElementById(`i-${id}`).value = '';
     };
+    document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrap')) document.getElementById('hints').style.display = 'none'; });
 
 </script>
 </body>
