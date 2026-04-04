@@ -33,7 +33,7 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        /* ШАПКА И ИИ */
+        /* ШАПКА */
         .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(5, 5, 6, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 1000; height: 64px; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .top-nav-left { display: flex; align-items: center; gap: 15px; }
         .nav-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #27272a; cursor: pointer; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5);}
@@ -74,7 +74,6 @@
 
         input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 14px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
-        input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: white; -webkit-box-shadow: 0 0 0px 1000px #0f0f11 inset; transition: background-color 5000s ease-in-out 0s; }
 
         /* УПОМИНАНИЯ И ХИНТЫ */
         .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 2px 6px; background: rgba(225,29,72,0.1); border-radius: 6px; transition: 0.2s; display: inline-block;}
@@ -102,7 +101,7 @@
         .src-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 10; backdrop-filter: blur(4px); transition: 0.3s; display: none;}
         .src-badge.p2p { background: rgba(16, 185, 129, 0.9); display: block; }
 
-        /* ГАЛЕРЕЯ (ИСПРАВЛЕН КЛИК ПО ПОСТУ) */
+        /* ГАЛЕРЕЯ */
         .gallery { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 50px; }
         .gallery::after { content: ""; flex-grow: 10; }
         .post-card { flex: 1 1 220px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; height: fit-content; display: flex; flex-direction: column; animation: popIn 0.4s ease forwards; opacity: 0; }
@@ -113,7 +112,6 @@
         .post-card:hover .pc-media img { transform: scale(1.05); }
         .pc-media .loaded { opacity: 1; }
         
-        /* АВАТАРКА АВТОРА */
         .pc-author-badge { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.8); padding: 4px 8px; border-radius: 20px; z-index: 5; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); transition: 0.2s;}
         .pc-author-badge:hover { background: var(--accent); border-color: transparent;}
         .pc-author-badge img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
@@ -122,7 +120,7 @@
         .pc-info { padding: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; background: var(--card); z-index: 2; border-top: 1px solid var(--border);}
         .nsfw-badge { position: absolute; top: 12px; left: 12px; background: rgba(225,29,72,0.95); color: white; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px); letter-spacing: 0.5px;}
 
-        /* YOUTUBE ВИДЕО (ГОРИЗОНТАЛЬНЫЕ) */
+        /* YOUTUBE ВИДЕО (ТОЛЬКО ГОРИЗОНТАЛЬНЫЕ) */
         .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding-bottom: 50px; }
         .yt-card { background: transparent; cursor: pointer; transition: 0.3s; animation: popIn 0.4s forwards; opacity: 0;}
         .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.7);}
@@ -132,9 +130,9 @@
         .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; backdrop-filter: blur(4px); transition: 0.3s;}
         .yt-card:hover .vid-icon-big { background: var(--accent); border-color: transparent; transform: translate(-50%, -50%) scale(1.1);}
         .yt-info { padding: 16px 4px; display: flex; gap: 14px; align-items: flex-start; }
-        .yt-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid #333; z-index: 2;}
+        .yt-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid #333; cursor: pointer;}
         .yt-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;}
-        .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
+        .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; cursor: pointer;}
 
         /* БОРДА */
         .board-feed { display: flex; flex-direction: column; gap: 20px; max-width: 750px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
@@ -146,7 +144,7 @@
         .b-media img, .b-media video { width: auto; height: auto; max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.5s; pointer-events: none;}
         .b-media .loaded { opacity: 1; }
 
-        /* ШОРТСЫ (СВОБОДНЫЕ ПРОПОРЦИИ) */
+        /* ШОРТСЫ (БЕЗ ИСКАЖЕНИЙ) */
         .shorts-feed { height: calc(100vh - 130px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -25px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
@@ -164,10 +162,9 @@
         .s-count { position: absolute; bottom: -22px; font-size: 12px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
 
         /* ПРОФИЛЬ И ПОСТ */
-        .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
+        .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
         .p-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; box-shadow: 0 0 25px rgba(0,0,0,0.6);}
         
-        /* ВКЛАДКИ ПРОФИЛЯ РЯДОМ */
         .profile-tabs-container { display: flex; gap: 15px; margin-bottom: 25px; justify-content: flex-start; }
         .profile-tabs-container .app-tab { flex: 0 1 auto; padding: 12px 25px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: rgba(255,255,255,0.03);}
         .profile-tabs-container .app-tab.active { background: rgba(225,29,72,0.1); border-color: var(--accent); }
@@ -175,8 +172,6 @@
         .pv-layout { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; margin-top: 10px;}
         .pv-main { flex: 3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
         .pv-side { flex: 1; min-width: 320px; background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);}
-        
-        /* ИСПРАВЛЕНИЕ МЕДИА-БОКСА */
         .pv-media-box { background: #050506; border-radius: var(--radius); display: flex; justify-content: center; align-items: center; min-height: 50vh; max-height: 85vh; width: 100%; border: 1px solid #222; box-shadow: 0 20px 60px rgba(0,0,0,0.8); position: relative;}
         .pv-media-box img, .pv-media-box video { width: auto; height: auto; max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: var(--radius);}
         
@@ -202,8 +197,6 @@
             .sidebar.open { transform: translateX(0); }
             
             .short-wrap { padding: 0; }
-            
-            /* Mobile Shorts = Fullscreen */
             .short-ui { max-width: 100%; height: 100%; gap: 0; flex-direction: column; position: relative;}
             .short-video { width: 100%; max-width: none; border-radius: 0; border: none; height: 100%; background: #000;}
             .short-video video { border-radius: 0; border: none; object-fit: cover; }
@@ -224,7 +217,7 @@
 <div id="toastBox" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none;"></div>
 
 <div id="globalMentions" class="hints-box" style="width:auto; min-width:220px; max-width:320px;"></div>
-<div id="searchHints" class="hints-box" style="width:auto; min-width:280px; max-width:400px; box-sizing:border-box;"></div>
+<div id="searchHints" class="hints-box" style="width:auto; min-width:280px; max-width:400px;"></div>
 
 <div id="authModal" class="modal-overlay">
     <div class="modal">
@@ -286,7 +279,7 @@
         </div>
         
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="searchTitle">Поиск тегов</h3>
-        <div class="search-wrap" id="searchContainer">
+        <div class="search-wrap">
             <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="off" spellcheck="false" role="presentation">
         </div>
     </aside>
@@ -359,7 +352,7 @@
                 </div>
             </div>
             <div class="profile-tabs-container">
-                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads" data-i18n="tabMy">Моё</button>
+                <button class="app-tab active" onclick="window.switchProfTab('uploads')" id="pt-uploads" data-i18n="tabMy">Загрузки</button>
                 <button class="app-tab" onclick="window.switchProfTab('reposts')" id="pt-reposts" data-i18n="tabRep">Репосты</button>
             </div>
             <div class="gallery" id="profFeed"></div>
@@ -385,15 +378,15 @@
     var GEMINI_KEY = "AIzaSyB9IgR3vnbeW0GizY6deDQ2pQrjEiajUqo";
 
     var app = initializeApp(config); var db = getDatabase(app); var auth = getAuth(app);
-    window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, lang: 'ru' };
+    window.AppState = { user: null, isAdmin: false, data: { gallery: [], board: [], shorts: [] }, users: {}, currentTab: 'gallery', profUid: null, profTab: 'uploads', tags: {}, interests: JSON.parse(localStorage.getItem('f_ints')||'{}'), lang: 'ru' };
 
     try { window.torrentClient = new window.WebTorrent(); } catch(e){}
 
     // ТРАНСЛЯТОР
     var dict = {
-        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Опубликовать", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Моё", tabRep: "Репосты", simPosts: "Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватарка:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
+        ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Опубликовать", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Загрузки", tabRep: "Репосты", simPosts: "Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватарка:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить" },
         en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit Profile", tabMy: "Uploads", tabRep: "Reposts", simPosts: "Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search Tags", authTitle: "Login", btnEnter: "Continue", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "It's empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete" },
-        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Опублікувати", btnUpload: "Завантажити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Моє", tabRep: "Репости", simPosts: "Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Всі", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Поїхали", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватарка:", btnSave: "Зберегти", empty: "Тут поки порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
+        uk: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Відео", tabShorts: "Шортси", btnPost: "Опублікувати", btnUpload: "Завантажити", btnLogin: "Увійти", btnLogout: "Вийти", btnBack: "Назад", btnEditProf: "Налаштувати", tabMy: "Завантаження", tabRep: "Репости", simPosts: "Схоже", vidsTitle: "Всі відео", filterTitle: "Стрічка", fAll: "Всі", fSfw: "Безпечно", searchTitle: "Пошук", authTitle: "Вхід", btnEnter: "Поїхали", btnCancel: "Відміна", profSettings: "Налаштування", profAva: "Аватарка:", btnSave: "Зберегти", empty: "Тут поки порожньо...", emptySearch: "Нічого не знайдено ¯\\_(ツ)_/¯", del: "Видалити" }
     };
     window.t = function(k) { return (dict[AppState.lang] && dict[AppState.lang][k]) ? dict[AppState.lang][k] : k; };
 
@@ -403,7 +396,6 @@
     window.closeModal = function(id) { document.getElementById(id).style.display='none'; };
     window.toggleMenu = function() { var s=document.getElementById('sidebar'), o=document.getElementById('menuOverlay'); s.classList.toggle('open'); o.style.display=s.classList.contains('open')?'block':'none'; };
     
-    // Функция глобальной остановки медиа
     window.pauseAllVideos = function() {
         document.querySelectorAll('video').forEach(function(v) { v.pause(); });
     };
@@ -418,7 +410,7 @@
     function getName(uid) { return (AppState.users[uid] && AppState.users[uid].name) ? AppState.users[uid].name : 'Anon'; }
     function getAva(uid) { return (AppState.users[uid] && AppState.users[uid].avatar) ? AppState.users[uid].avatar : 'https://i.ibb.co/3sW3xQy/default-avatar.png'; }
 
-    // АИ ХЕДЕР (GEMINI) - Локализованный
+    // АИ ХЕДЕР (GEMINI) - Мультиязычный
     function loadAiFact(lang) {
         var fallbacks = {
             ru: ["Оставайся милым :3", "fembooru loves you", "Твой уютный уголок"],
@@ -439,17 +431,24 @@
         } catch(e) {}
     }
 
-    // МЕНШОНЫ (УПОМИНАНИЯ) ГЛОБАЛЬНЫЙ ФИКС
-    document.addEventListener('keyup', function(e) {
-        if(e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && e.target.type === 'text' && e.target.id !== 'search')) {
-            window.activeInput = e.target;
-            var val = e.target.value; 
-            var pos = e.target.selectionStart || val.length;
+    // МЕНШОНЫ И ТЕГИ (УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК)
+    document.addEventListener('input', function(e) {
+        var el = e.target;
+        if(el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
+            window.activeInput = el;
+            var val = el.value; 
+            var pos = el.selectionStart || val.length;
             var textBefore = val.substring(0, pos); 
             var words = textBefore.split(/\s+/);
             var lastWord = words[words.length - 1];
 
             var mBox = document.getElementById('globalMentions');
+            var sBox = document.getElementById('searchHints');
+            
+            mBox.style.display = 'none';
+            sBox.style.display = 'none';
+
+            // Логика @Упоминаний
             if(lastWord.indexOf('@') === 0 && lastWord.length > 0) {
                 var searchName = lastWord.substring(1).toLowerCase();
                 var matches = Object.keys(AppState.users).filter(function(uid) {
@@ -469,12 +468,40 @@
                         };
                         mBox.appendChild(div);
                     });
-                    var rect = e.target.getBoundingClientRect();
+                    var rect = el.getBoundingClientRect();
                     mBox.style.top = (rect.bottom + window.scrollY + 5) + 'px'; 
                     mBox.style.left = rect.left + 'px';
                     mBox.style.display = 'block';
-                } else { mBox.style.display = 'none'; }
-            } else { mBox.style.display = 'none'; }
+                }
+            } 
+            // Логика #Тегов (только для нужных полей)
+            else if ((el.id === 'search' || el.id === 't1G' || el.id === 't2G') && lastWord.length > 0) {
+                var tagSearch = lastWord.replace(/#/g, '').toLowerCase();
+                if(tagSearch) {
+                    var tagMatches = Object.keys(AppState.tags).filter(function(t) { return t.indexOf(tagSearch) !== -1; });
+                    if(tagMatches.length > 0) {
+                        sBox.innerHTML = '';
+                        tagMatches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).slice(0, 8).forEach(function(tag) {
+                            var div = document.createElement('div'); div.className = 'hint-item';
+                            div.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
+                            div.onmousedown = function(ev) {
+                                ev.preventDefault();
+                                words[words.length-1] = tag; 
+                                window.activeInput.value = words.join(' ') + ' '; 
+                                sBox.style.display = 'none'; 
+                                if(el.id === 'search') window.renderCurrentTab();
+                                window.activeInput.focus();
+                            };
+                            sBox.appendChild(div);
+                        });
+                        var rect = el.getBoundingClientRect();
+                        sBox.style.top = (rect.bottom + window.scrollY + 5) + 'px'; 
+                        sBox.style.left = rect.left + 'px';
+                        sBox.style.display = 'block';
+                    }
+                }
+            }
+            if(el.id === 'search') window.renderCurrentTab();
         }
     });
     
@@ -482,7 +509,7 @@
         var mBox = document.getElementById('globalMentions');
         var sBox = document.getElementById('searchHints');
         if(window.activeInput && e.target !== window.activeInput && !mBox.contains(e.target)) mBox.style.display = 'none'; 
-        if(e.target.id !== 'search' && !sBox.contains(e.target)) sBox.style.display = 'none';
+        if(e.target.id !== 'search' && e.target.id !== 't1G' && e.target.id !== 't2G' && !sBox.contains(e.target)) sBox.style.display = 'none';
     });
 
     window.parseMentions = function(text) {
@@ -497,83 +524,46 @@
         else window.showToast('Пользователь не найден', true);
     };
 
-    // УМНЫЙ ПОИСК И ХЕШТЕГИ
-    var sInput = document.getElementById('search');
-    var sBox = document.getElementById('searchHints');
-
-    sInput.addEventListener('keyup', function() {
-        var val = sInput.value.toLowerCase().replace(/#/g, '').trim();
-        var words = val.split(' '); 
-        var lastWord = words[words.length - 1];
-
-        if(!lastWord) { sBox.style.display='none'; window.renderCurrentTab(); return; }
-
-        var matches = Object.keys(AppState.tags).filter(function(t) { return t.indexOf(lastWord) !== -1; });
-        if(matches.length) {
-            sBox.innerHTML = '';
-            matches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).slice(0, 8).forEach(function(tag) {
-                var el = document.createElement('div'); el.className = 'hint-item';
-                el.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
-                el.onclick = function() { words[words.length-1] = tag; sInput.value = words.join(' ') + ' '; sBox.style.display='none'; window.renderCurrentTab(); };
-                sBox.appendChild(el);
-            });
-            var rect = sInput.getBoundingClientRect();
-            sBox.style.top = (rect.bottom + window.scrollY + 5) + 'px'; 
-            sBox.style.left = rect.left + 'px';
-            sBox.style.display = 'block';
-        } else { sBox.style.display = 'none'; }
-        window.renderCurrentTab();
-    });
-
     // LAZY LOADING 5.0 (ОСВОБОЖДЕНИЕ ПАМЯТИ)
     var lazyObs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
-            var media = e.target.querySelector('img, video');
-            if (!media) return;
-            
-            if (e.isIntersecting) {
-                // Если мы вернулись, восстанавливаем src
-                var savedSrc = media.getAttribute('data-saved-src');
-                if (savedSrc) {
-                    media.src = savedSrc;
-                    media.removeAttribute('data-saved-src');
-                    media.classList.add('loaded');
-                } else if (media.getAttribute('data-src')) {
-                    media.src = media.getAttribute('data-src');
-                    media.removeAttribute('data-src');
-                    media.classList.add('loaded');
-                }
-                
-                if (media.tagName==='VIDEO') {
-                    var magnet = media.getAttribute('data-magnet');
-                    if (magnet && window.torrentClient && !media.getAttribute('data-p2p-init')) {
-                        media.setAttribute('data-p2p-init', 'true');
-                        window.torrentClient.add(magnet, function(torrent) {
-                            var file = torrent.files.find(function(f){return f.name.indexOf('.mp4')!==-1 || f.name.indexOf('.webm')!==-1});
-                            if (file) {
-                                file.renderTo(media, { autoplay: e.target.closest('.short-wrap') ? true : false });
-                                var badge = media.parentElement.querySelector('.src-badge'); if(badge){ badge.className='src-badge p2p'; badge.innerText='P2P'; badge.style.display='block';}
-                            }
-                        });
-                        setTimeout(function() {
-                            if (!media.src && !media.currentSrc && media.getAttribute('data-saved-src')) {
-                                media.src = media.getAttribute('data-saved-src'); media.classList.add('loaded');
-                                var badge = media.parentElement.querySelector('.src-badge'); if(badge){ badge.className='src-badge cdn'; badge.innerText='CDN'; badge.style.display='block';}
-                            }
-                        }, 3500);
-                    }
+            var medias = e.target.querySelectorAll('img, video');
+            for(var i=0; i<medias.length; i++) {
+                var media = medias[i];
+                if (e.isIntersecting) {
+                    var savedSrc = media.getAttribute('data-saved-src');
+                    var dataSrc = media.getAttribute('data-src');
                     
-                    if (e.target.closest('.short-wrap')) {
-                        var playPromise = media.play();
-                        if (playPromise !== undefined) playPromise.catch(function(){});
+                    if (dataSrc) {
+                        media.setAttribute('data-saved-src', dataSrc);
+                        media.src = dataSrc;
+                        media.removeAttribute('data-src');
+                        media.classList.add('loaded');
+                    } else if (savedSrc && !media.src) {
+                        media.src = savedSrc;
                     }
-                }
-            } else {
-                if (media.tagName==='VIDEO') {
-                    media.pause();
-                    if(e.target.closest('.short-wrap')) {
-                        // ЖЕСТКАЯ ОЧИСТКА ПАМЯТИ
-                        if(media.src && media.src !== "") {
+
+                    if (media.tagName==='VIDEO') {
+                        var magnet = media.getAttribute('data-magnet');
+                        if (magnet && window.torrentClient && !media.getAttribute('data-p2p-init')) {
+                            media.setAttribute('data-p2p-init', 'true');
+                            window.torrentClient.add(magnet, function(torrent) {
+                                var file = torrent.files.find(function(f){return f.name.indexOf('.mp4')!==-1 || f.name.indexOf('.webm')!==-1});
+                                if (file) {
+                                    file.renderTo(media, { autoplay: e.target.closest('.short-wrap') ? true : false });
+                                    var badge = media.parentElement.querySelector('.src-badge'); if(badge){ badge.className='src-badge p2p'; badge.innerText='P2P'; badge.style.display='block';}
+                                }
+                            });
+                        }
+                        if (e.target.closest('.short-wrap')) {
+                            var p = media.play();
+                            if(p !== undefined) p.catch(function(){});
+                        }
+                    }
+                } else {
+                    if (media.tagName==='VIDEO') {
+                        media.pause();
+                        if(e.target.closest('.short-wrap') && media.src) {
                             media.setAttribute('data-saved-src', media.src);
                             media.removeAttribute('src'); 
                             media.load(); 
@@ -582,11 +572,11 @@
                 }
             }
         });
-    }, { threshold: 0.01, rootMargin: "400px 0px" });
+    }, { threshold: 0.05, rootMargin: "400px 0px" });
 
     // СИСТЕМА РЕКОМЕНДАЦИЙ
     var RecomEngine = {
-        score: function(p) { return p.time/Date.now(); }, // Simplified for legacy performance
+        score: function(p) { return p.time/Date.now(); }, // Легкий скоринг
         getSimilar: function(post, type) {
             var curTxt = [post.t1||'', ...(post.t2||'').split(' '), ...(post.text||'').split(' ')].filter(Boolean).map(function(x){return x.toLowerCase().replace(/[^a-zа-я0-9]/gi,'').trim()});
             return AppState.data[type].filter(function(p) { return p.id !== post.id; }).map(function(p) {
@@ -726,7 +716,8 @@
     window.renderCurrentTab = function() {
         if(AppState.profUid || AppState.currentPostId) return;
         var rf = document.querySelector('input[name="rating"]:checked').value;
-        var q = sInput.value.toLowerCase().replace(/#/g, '').trim().split(' ').filter(Boolean);
+        var sInputLocal = document.getElementById('search');
+        var q = sInputLocal ? sInputLocal.value.toLowerCase().replace(/#/g, '').trim().split(' ').filter(Boolean) : [];
         
         if (AppState.currentTab === 'videos') { renderVideos(rf, q); return; }
 
@@ -739,25 +730,27 @@
             return true;
         }) : [];
 
-        if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed');
+        if(AppState.currentTab==='gallery') feed.sort(function(a,b) { return RecomEngine.score(b) - RecomEngine.score(a); });
+
+        if(AppState.currentTab==='gallery') renderGrid(feed, 'galFeed', 'gallery');
         if(AppState.currentTab==='board') renderBoard(feed);
         if(AppState.currentTab==='shorts') renderShorts(feed);
     };
 
-    function renderGrid(arr, target) {
+    function renderGrid(arr, target, dbTypeParam) {
         var el = document.getElementById(target); el.innerHTML = '';
         if(!arr.length) { el.innerHTML = '<div style="text-align:center;width:100%;padding:80px 20px;color:var(--muted);font-size:16px;font-weight:bold;">'+t('emptySearch')+'</div>'; return; }
         arr.forEach(function(p, i) {
             var div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = (i*0.03)+'s';
-            var dbType = target.indexOf('prof')!==-1 ? (p._type||'gallery') : 'gallery';
-            div.onclick = function() { window.openPost(p.id, dbType); };
+            var tType = p._type || dbTypeParam || 'gallery';
+            div.onclick = function() { window.openPost(p.id, tType); };
             
-            var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="metadata" muted loop></video>' : '<img data-src="'+p.url+'" loading="lazy">';
+            var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="none" muted loop></video>' : '<img data-src="'+p.url+'" loading="lazy">';
             var authorName = getName(p.uid) || p.author || 'Anon';
             var authorTag = '<div class="pc-author-badge" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'"><span style="overflow:hidden; text-overflow:ellipsis; max-width:60px; white-space:nowrap;">'+authorName+'</span></div>';
 
             div.innerHTML = (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') + authorTag +
-                '<div class="pc-media">'+mediaTag+'</div>' +
+                '<div class="pc-media" style="pointer-events:none;">'+mediaTag+'</div>' +
                 '<div class="pc-info"><span style="color:#60a5fa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">#'+(p.t1||'post')+'</span><span style="flex-shrink:0;">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>';
             el.appendChild(div);
             lazyObs.observe(div);
@@ -786,16 +779,16 @@
             var div = document.createElement('div'); div.className = 'yt-card'; div.style.animationDelay = (i*0.05)+'s';
             div.onclick = function() { window.openPost(p.id, p._type); };
             var authorName = getName(p.uid) || p.author || 'Anon';
-            div.innerHTML = '<div class="yt-thumb">' +
+            div.innerHTML = '<div class="yt-thumb" style="pointer-events:none;">' +
                     (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') +
                     '<div class="vid-icon-big">▶</div>' +
                     '<div class="src-badge"></div>' +
-                    '<video data-src="'+p.url+'#t=0.1" data-magnet="'+(p.magnet||'')+'" preload="metadata" muted onmouseover="this.play()" onmouseout="this.pause()"></video>' +
+                    '<video data-src="'+p.url+'#t=0.1" data-magnet="'+(p.magnet||'')+'" preload="none" muted></video>' +
                 '</div>' +
                 '<div class="yt-info">' +
                     '<img src="'+getAva(p.uid)+'" class="yt-avatar" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')">' +
                     '<div class="yt-text">' +
-                        '<div class="yt-title">'+(p.text || (p.t1 ? '#'+p.t1 : 'Видео без названия'))+'</div>' +
+                        '<div class="yt-title">'+(p.text || (p.t1 ? '#'+p.t1 : 'Видео'))+'</div>' +
                         '<div class="yt-meta"><span onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer">'+authorName+'</span> • <span>❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>' +
                     '</div>' +
                 '</div>';
@@ -812,7 +805,7 @@
             var authorName = getName(p.uid) || p.author || 'Anon';
             div.innerHTML = '<div class="b-header" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'" class="b-avatar"> <div><span style="color:#fff">'+authorName+'</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">'+new Date(p.time).toLocaleString()+'</span></div></div>' +
                 (p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.6;">'+window.parseMentions(p.text)+'</div>':'') + 
-                (p.url?'<div class="b-media" onclick="window.openPost(\''+p.id+'\',\'board\')">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="metadata" controls></video>':'<img data-src="'+p.url+'" loading="lazy">')+'</div>':'') +
+                (p.url?'<div class="b-media" onclick="window.openPost(\''+p.id+'\',\'board\')" style="cursor:pointer;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" controls style="pointer-events:none;"></video>':'<img data-src="'+p.url+'" loading="lazy" style="pointer-events:none;">')+'</div>':'') +
                 '<div class="action-row" style="margin-top:10px">' +
                     '<button class="btn-action '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="window.like(\''+p.id+'\',\'board\')">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</button>' +
                     '<button class="btn-action" onclick="window.repost(\''+p.id+'\',\'board\')">🔄 Репост</button>' +
@@ -829,8 +822,8 @@
         arr.forEach(function(p) {
             var div = document.createElement('div'); div.className = 'short-wrap';
             var authorName = getName(p.uid) || p.author || 'Anon';
-            div.innerHTML = '<div class="short-ui"><div class="short-video"><div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="metadata" loop playsinline></video>' +
-                '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><img src="'+getAva(p.uid)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+authorName+'</b><p style="margin:0;font-size:15px;line-height:1.5;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
+            div.innerHTML = '<div class="short-ui"><div class="short-video"><div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" loop playsinline></video>' +
+                '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px; pointer-events:auto;"><img src="'+getAva(p.uid)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+authorName+'</b><p style="margin:0;font-size:15px;line-height:1.5; pointer-events:auto;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
                 '<div class="short-sidebar">' +
                     '<button class="s-btn '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="window.like(\''+p.id+'\',\'shorts\')">❤<span class="s-count">'+(p.likes?Object.keys(p.likes).length:0)+'</span></button>' +
                     '<button class="s-btn" onclick="window.repost(\''+p.id+'\',\'shorts\')">🔄</button>' +
@@ -842,17 +835,17 @@
         });
     }
 
-    // СИНХРОННЫЙ ПРОФИЛЬ (LEGACY SAFE)
+    // СИНХРОННЫЙ ПРОФИЛЬ 
     window.safeOpenProfile = function(uid) {
         if(uid === 'MY') { if(AppState.user) uid = AppState.user.uid; else return window.openAuth(); }
         window.pauseAllVideos();
         AppState.profUid = uid; 
         
-        var u = AppState.users[uid] || {};
+        var u = AppState.users[uid] || { name: 'Anon', avatar: 'https://i.ibb.co/3sW3xQy/default-avatar.png', bio: '' };
         document.getElementById('pAva').src = u.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
         document.getElementById('pName').innerText = u.name || 'Anon';
         document.getElementById('pBio').innerHTML = window.parseMentions(u.bio || '');
-        document.getElementById('pEditBtn').style.display = (AppState.user&&AppState.user.uid===uid)?'flex':'none';
+        document.getElementById('pEditBtn').style.display = (AppState.user && AppState.user.uid === uid) ? 'flex' : 'none';
         
         window.switchView('profileMode');
         window.switchProfTab('uploads');
@@ -896,7 +889,7 @@
                 if(post) { var obj=Object.assign({}, post); obj._type=type; items.push(obj); }
             }); 
         }
-        renderGrid(items.sort(function(a,b){return b.time-a.time}), 'profFeed');
+        renderGrid(items.sort(function(a,b){return b.time-a.time}), 'profFeed', 'gallery');
     }
 
     // ПРОСМОТР ПОСТА И КОММЕНТАРИИ
@@ -924,7 +917,7 @@
                 (p.text ? '<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">'+window.parseMentions(p.text)+'</p>' : '') +
                 '<div style="margin-bottom:25px">'+tagsHTML+'</div>' +
                 '<div class="action-row" style="flex-wrap:wrap; margin-bottom:25px;">' +
-                    '<button class="btn-action '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="window.like(\''+id+'\',\''+dbType+'\')">❤ Лайк ('+(p.likes?Object.keys(p.likes).length:0)+')</button>' +
+                    '<button class="btn-action '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="window.like(\''+id+'\',\''+dbType+'\')">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</button>' +
                     '<button class="btn-action" onclick="window.repost(\''+id+'\',\''+(type==='posts'?'gallery':type)+'\')">🔄 Репост</button>' +
                     ((AppState.isAdmin||(AppState.user&&AppState.user.uid===p.uid))?'<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+dbType+'\')">🗑</button>':'') +
                 '</div>' +
@@ -958,6 +951,9 @@
             }
             setTimeout(function() { if(!media.src && !media.currentSrc) { media.src = p.url; var b = media.parentElement.querySelector('.src-badge'); if(b){b.className='src-badge cdn'; b.innerText='CDN'; b.style.display='block';} } }, 3500);
         }
+
+        if(dbType === 'posts') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs', 'gallery');
+        else document.getElementById('aiRecs').innerHTML = '';
     };
 
     window.addComm = function(id, type) {
@@ -969,9 +965,9 @@
         }).catch(function(){ window.showToast('Ошибка', true); inp.disabled = false; });
     };
 
-    window.goHome = function() { window.pauseAllVideos(); sInput.value=''; AppState.profUid=null; AppState.currentPostId=null; window.switchView('mainView'); window.switchTab(AppState.currentTab); };
+    window.goHome = function() { window.pauseAllVideos(); document.getElementById('search').value=''; AppState.profUid=null; AppState.currentPostId=null; window.switchView('mainView'); window.switchTab(AppState.currentTab); };
     window.closePost = function() { window.goHome(); };
-    window.setSearch = function(t) { sInput.value=t; window.goHome(); window.renderCurrentTab(); };
+    window.setSearch = function(t) { document.getElementById('search').value=t; window.goHome(); window.renderCurrentTab(); };
     
     window.like = function(id, type) { 
         if(!AppState.user) return window.openAuth(); 
