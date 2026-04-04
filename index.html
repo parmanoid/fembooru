@@ -25,7 +25,6 @@
         
         body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Glassmorphism Мобильная шапка */
         .mobile-nav { display: none; justify-content: space-between; align-items: center; padding: 12px 20px; background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); z-index: 100; position: relative; }
         .mobile-nav h1 { margin: 0; color: var(--accent); font-size: 24px; letter-spacing: 1px; cursor: pointer; font-weight: 900; }
         .menu-btn { background: none; border: none; color: white; font-size: 26px; cursor: pointer; padding: 0; transition: transform 0.2s;}
@@ -33,7 +32,6 @@
 
         .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* Боковое меню */
         .sidebar { width: 280px; background: #0f0f11; padding: 30px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 150; flex-shrink: 0; }
         .sidebar-title { color: var(--accent); text-align: center; letter-spacing: 2px; margin-bottom: 25px; font-size: 28px; font-weight: 900; cursor: pointer; transition: 0.3s; }
         .sidebar-title:hover { text-shadow: 0 0 15px rgba(225, 29, 72, 0.5); }
@@ -68,7 +66,6 @@
         .hint-item:last-child { border-bottom: none; }
         .hint-item:hover { background: #3f3f46; color: var(--accent); padding-left: 22px;}
 
-        /* Контент и Галерея */
         .content { flex: 1; padding: 25px; overflow-y: auto; background: var(--bg); position: relative; scroll-behavior: smooth;}
         
         .upload-section { background: var(--card); padding: 20px; border-radius: var(--radius); margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 8px 30px rgba(0,0,0,0.4);}
@@ -76,52 +73,50 @@
         .upload-controls > input[type="file"] { flex: 1; min-width: 200px; padding: 9px; cursor: pointer; background: #1f1f22;}
         .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 0 10px;}
         
-        /* MASONRY LAYOUT (Колонки) */
+        /* ИДЕАЛЬНАЯ ПЛИТКА (Justified Flexbox) */
         .gallery { 
-            column-count: 1; 
-            column-gap: 20px; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
             padding-bottom: 50px; 
         }
-        @media (min-width: 600px) { .gallery { column-count: 2; } }
-        @media (min-width: 1000px) { .gallery { column-count: 3; } }
-        @media (min-width: 1400px) { .gallery { column-count: 4; } }
-        @media (min-width: 1800px) { .gallery { column-count: 5; } }
+        /* Фикс для последнего ряда, чтобы карточка не растягивалась на весь экран */
+        .gallery::after {
+            content: "";
+            flex-grow: 10;
+        }
 
-        /* Карточка поста */
         .post-card { 
+            flex: 1 1 280px; /* Растет, сужается, базовая ширина 280px */
+            max-width: 100%;
             background: var(--card); 
             border-radius: var(--radius); 
             border: 1px solid var(--border); 
             overflow: hidden; 
-            display: inline-block; /* Важно для Masonry */
-            width: 100%;
-            margin-bottom: 20px; 
-            break-inside: avoid; /* Запрет разрыва внутри колонки */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            display: flex; 
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; 
             opacity: 0; 
             transform: translateY(30px); 
             animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
             cursor: pointer; 
             position: relative;
         }
-        .post-card:hover { border-color: #3f3f46; box-shadow: 0 15px 40px rgba(0,0,0,0.6); transform: translateY(-6px); }
+        .post-card:hover { border-color: #52525b; box-shadow: 0 15px 40px rgba(0,0,0,0.8); transform: translateY(-4px); z-index: 2; }
         
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Абсолютные элементы на карточке */
         .nsfw-badge { position: absolute; top: 12px; left: 12px; background: rgba(225, 29, 72, 0.9); color: white; font-size: 11px; padding: 5px 10px; border-radius: 8px; font-weight: 800; pointer-events: none; backdrop-filter: blur(5px); z-index: 10; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);}
-        
         .btn-delete-mini { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; z-index: 10; backdrop-filter: blur(5px); transition: 0.2s;}
         .btn-delete-mini:hover { background: var(--accent); border-color: var(--accent); transform: scale(1.1); }
         .btn-delete-mini.admin { background: rgba(245, 158, 11, 0.8); border-color: #f59e0b; color: #000; }
 
-        /* Изображение/Видео адаптируется под свои пропорции */
-        .post-card-media { width: 100%; position: relative; background: #050505; display: flex; justify-content: center; align-items: center; min-height: 150px;}
-        .post-card-media img, .post-card-media video { width: 100%; height: auto; display: block; object-fit: cover; }
-        /* Ограничиваем максимальную высоту, чтобы очень длинные картинки не ломали всё */
-        .post-card-media img { max-height: 60vh; object-fit: cover; } 
+        .post-card-media { width: 100%; height: 280px; position: relative; background: #050505; display: flex; justify-content: center; align-items: center; overflow: hidden;}
+        .post-card-media img, .post-card-media video { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .post-card:hover .post-card-media img { transform: scale(1.05); }
+        .post-card-media video { object-fit: cover; }
 
-        .post-card-info { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: var(--card); border-top: 1px solid var(--border);}
+        .post-card-info { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: var(--card); border-top: 1px solid var(--border); z-index: 2;}
         .card-stats { font-size: 13px; color: var(--muted); font-weight: 700; display: flex; gap: 12px;}
         .vid-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; border: 2px solid rgba(255,255,255,0.8); backdrop-filter: blur(2px);}
 
@@ -175,7 +170,6 @@
         #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; color: white; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(5px);}
         .spinner { border: 4px solid rgba(255,255,255,0.05); border-top: 4px solid var(--accent); border-radius: 50%; width: 60px; height: 60px; animation: spin 0.8s linear infinite; margin-bottom: 25px;}
 
-        /* Адаптивность Mobile First */
         @media (max-width: 900px) {
             .pv-layout { flex-direction: column; }
             .pv-sidebar { width: 100%; position: static; order: 2; }
@@ -473,7 +467,6 @@
             div.className = 'post-card'; div.style.animationDelay = `${i * 0.03}s`;
             div.onclick = () => window.openPost(p.id);
             
-            // Нативное превью видео для экономии интернета
             const mediaHtml = p.isVid 
                 ? `<div class="vid-icon">▶</div><video src="${p.url}#t=0.1" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>` 
                 : `<img src="${p.url}" loading="lazy">`;
@@ -489,7 +482,7 @@
             `;
             gal.appendChild(div);
         });
-        if(!count) gal.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 50px;">${t('notFound')}</div>`;
+        if(!count) gal.innerHTML = `<div style="flex: 1 1 100%; text-align: center; color: var(--muted); padding: 50px;">${t('notFound')}</div>`;
     };
 
     window.openPost = (id) => {
@@ -508,7 +501,7 @@
 
         let cmHtml = ''; if(p.comments) Object.values(p.comments).forEach(c => cmHtml += `<div class="comment-item"><span class="c-author">${c.u}:</span> ${c.t}</div>`);
         const isAuthor = AppState.user && AppState.user.uid === p.uid;
-        let dBtn = ''; if (isAuthor) dBtn = `<button class="btn-delete" onclick="window.del('${p.id}')">${t('delete')}</button>`; else if (AppState.isAdmin) dBtn = `<button class="btn-delete admin-del" onclick="window.del('${p.id}')">${t('adminDelete')}</button>`;
+        let dBtn = ''; if (isAuthor) dBtn = `<button class="btn-main" style="background:rgba(225,29,72,0.1); border:1px solid rgba(225,29,72,0.3); color:var(--accent); width:100%; margin-top:10px;" onclick="window.del('${p.id}')">${t('delete')}</button>`; else if (AppState.isAdmin) dBtn = `<button class="btn-main" style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); color:#f59e0b; width:100%; margin-top:10px;" onclick="window.del('${p.id}')">${t('adminDelete')}</button>`;
         const t2Html = (p.t2||'').split(' ').filter(Boolean).map(tag => `<span class="tag" onclick="window.applyTag('${tag}'); window.closePost();">#${tag}</span>`).join('');
 
         ctn.innerHTML = `
