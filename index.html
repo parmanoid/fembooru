@@ -10,98 +10,155 @@
     
     <style>
         :root {
-            --bg: #0d0d0d;
-            --card: #161616;
+            --bg: #090909;
+            --card: #141414;
             --accent: #ff3e3e;
-            --text: #ffffff;
+            --accent-hover: #ff5c5c;
+            --text: #f0f0f0;
             --muted: #888888;
-            --border: #2a2a2a;
+            --border: #222222;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        .mobile-nav { display: none; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); border-bottom: 1px solid var(--border); z-index: 100; position: relative; }
-        .mobile-nav h1 { margin: 0; color: var(--accent); font-size: 20px; letter-spacing: 1px; cursor: pointer; }
-        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; }
+        /* Мобильная шапка */
+        .mobile-nav { display: none; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); border-bottom: 1px solid var(--border); z-index: 100; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .mobile-nav h1 { margin: 0; color: var(--accent); font-size: 22px; letter-spacing: 2px; cursor: pointer; text-transform: lowercase; }
+        .menu-btn { background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; transition: 0.2s;}
+        .menu-btn:active { transform: scale(0.9); }
 
         .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        .sidebar { width: 280px; background: #111; padding: 25px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 150; flex-shrink: 0; }
-        .sidebar-title { color: var(--accent); text-align: center; letter-spacing: 2px; margin-bottom: 30px; font-size: 24px; font-weight: bold; cursor: pointer; }
+        /* Боковое меню */
+        .sidebar { width: 280px; background: #0f0f0f; padding: 25px 20px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 150; flex-shrink: 0; }
+        .sidebar-title { color: var(--accent); text-align: center; letter-spacing: 2px; margin-bottom: 30px; font-size: 26px; font-weight: 800; cursor: pointer; text-transform: lowercase; transition: 0.3s; }
+        .sidebar-title:hover { text-shadow: 0 0 10px rgba(255, 62, 62, 0.5); }
         
-        .auth-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--border); }
-        .auth-text { font-size: 13px; margin-bottom: 15px; color: #ccc; text-align: center;}
+        .auth-box { background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--border); transition: 0.3s; }
+        .auth-box:hover { border-color: #333; background: rgba(255,255,255,0.04); }
+        .auth-text { font-size: 13px; margin-bottom: 15px; color: #bbb; text-align: center; line-height: 1.4;}
         
-        input, button { padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); background: #1a1a1a; color: white; outline: none; font-size: 14px; transition: 0.2s; }
-        input:focus { border-color: var(--accent); }
+        /* Элементы управления */
+        input, button { padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); background: #1a1a1a; color: white; outline: none; font-size: 14px; transition: all 0.2s ease; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255, 62, 62, 0.2); }
         button { cursor: pointer; font-weight: bold; }
         .btn-main { background: var(--accent); border: none; color: white; }
-        .btn-main:hover { background: #ff5555; transform: translateY(-1px); }
-        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-main:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 62, 62, 0.3); }
+        .btn-main:active { transform: translateY(0); }
+        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-group button { flex: 1; }
 
         h3 { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .filter-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .filter-group label { font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #ccc; }
-        .filter-group input { accent-color: var(--accent); width: 18px; height: 18px; margin: 0;}
+        .filter-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .filter-group label { font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #aaa; transition: 0.2s;}
+        .filter-group label:hover { color: #fff; }
+        .filter-group input { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; cursor: pointer;}
+        .filter-group input:checked + span { color: white; font-weight: bold; }
 
+        /* Поиск и Автокомплит */
         .search-wrap { position: relative; margin-bottom: 20px; }
-        .hints { position: absolute; top: 100%; left: 0; width: 100%; background: #222; border-radius: 8px; z-index: 50; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-top: 5px; border: 1px solid #444;}
-        .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
-        .hint-item:hover { background: #333; color: var(--accent); }
+        .hints { position: absolute; top: 100%; left: 0; width: 100%; background: #1a1a1a; border-radius: 8px; z-index: 50; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.7); margin-top: 5px; border: 1px solid #333;}
+        .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; border-bottom: 1px solid #222; transition: 0.2s;}
+        .hint-item:last-child { border-bottom: none; }
+        .hint-item:hover { background: #2a2a2a; color: var(--accent); padding-left: 20px;}
 
-        .content { flex: 1; padding: 25px; overflow-y: auto; background: var(--bg); position: relative;}
+        /* Основной контент */
+        .content { flex: 1; padding: 25px; overflow-y: auto; background: var(--bg); position: relative; scroll-behavior: smooth;}
         
-        .upload-section { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--border); }
-        .upload-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .upload-controls > input[type="file"] { flex: 1; min-width: 200px; }
-        .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0 10px;}
+        .upload-section { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: 0.3s;}
+        .upload-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .upload-controls > input[type="file"] { flex: 1; min-width: 200px; padding: 9px; cursor: pointer;}
+        .checkbox-wrap { color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; padding: 0 10px; transition: 0.2s;}
+        .checkbox-wrap:hover { opacity: 0.8; }
         
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding-bottom: 50px;}
-        .post { background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid var(--border); animation: fadeIn 0.4s ease; display: flex; flex-direction: column; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Галерея и Карточки */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding-bottom: 50px;}
+        .post { background: var(--card); border-radius: 12px; padding: 18px; border: 1px solid var(--border); display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; transform: translateY(20px); animation: slideUp 0.5s forwards; }
+        .post:hover { border-color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-4px); }
         
-        .media-wrap { width: 100%; border-radius: 10px; overflow: hidden; background: #050505; margin-bottom: 15px; position: relative; }
-        .media-wrap img, .media-wrap video { width: 100%; height: auto; max-height: 600px; display: block; object-fit: contain; cursor: pointer; }
-        .nsfw-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(255,62,62,0.9); color: white; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; z-index: 10;}
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; color: var(--muted); }
+        .post-author { font-weight: bold; color: #eee; display: flex; align-items: center; gap: 6px;}
+        .btn-delete { background: rgba(255, 62, 62, 0.1); border: 1px solid rgba(255, 62, 62, 0.3); color: var(--accent); font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: bold; transition: 0.2s;}
+        .btn-delete:hover { background: var(--accent); color: white; }
+        .btn-delete.admin-del { border-color: #ffaa00; color: #ffaa00; background: rgba(255, 170, 0, 0.1); }
+        .btn-delete.admin-del:hover { background: #ffaa00; color: #000; }
 
-        .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
-        .tag { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; color: #ccc; border: 1px solid #333;}
-        .tag.primary { color: #4da6ff; border-color: rgba(77, 166, 255, 0.3); }
+        .media-wrap { width: 100%; border-radius: 8px; overflow: hidden; background: #050505; margin-bottom: 18px; position: relative; border: 1px solid #1a1a1a;}
+        .media-wrap img, .media-wrap video { width: 100%; height: auto; max-height: 550px; display: block; object-fit: contain; cursor: zoom-in; transition: transform 0.3s ease;}
+        .media-wrap img:active { transform: scale(0.98); }
+        .nsfw-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(255,62,62,0.95); color: white; font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold; pointer-events: none; backdrop-filter: blur(4px); z-index: 10; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);}
 
-        .btn-like { background: transparent; border: 1px solid var(--border); border-radius: 20px; padding: 8px 16px; color: #eee; display: flex; align-items: center; gap: 6px; font-weight: bold;}
+        .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+        .tag { background: #1a1a1a; padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; color: #ccc; border: 1px solid #2a2a2a; transition: 0.2s; font-weight: 500;}
+        .tag.primary { color: #4da6ff; border-color: rgba(77, 166, 255, 0.2); background: rgba(77, 166, 255, 0.05);}
+        .tag:hover { background: #2a2a2a; color: white; transform: translateY(-2px);}
+        
+        .actions { display: flex; align-items: center; margin-bottom: 18px; }
+        .btn-like { background: #1a1a1a; border: 1px solid var(--border); border-radius: 20px; padding: 8px 18px; color: #eee; display: flex; align-items: center; gap: 8px; font-weight: bold; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 13px;}
+        .btn-like:hover { background: #222; }
+        .btn-like:active { transform: scale(0.9); }
         .btn-like.active { color: var(--accent); border-color: var(--accent); background: rgba(255,62,62,0.1); }
+        .btn-like.active .heart-icon { animation: heartBeat 0.4s ease forwards; }
 
-        .comments-area { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; margin-top: auto; border: 1px solid var(--border); }
-        .comments-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; font-size: 13px; }
-        .comment-item { line-height: 1.4; word-break: break-word; border-bottom: 1px solid #222; padding-bottom: 5px;}
-        .c-author { color: #4da6ff; font-weight: bold; margin-right: 5px; }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal { background: var(--card); padding: 30px; border-radius: 16px; width: 90%; max-width: 320px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--border); }
+        .comments-area { background: #111; border-radius: 10px; padding: 15px; margin-top: auto; border: 1px solid var(--border); }
+        .comments-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; font-size: 13px; }
+        .comment-item { line-height: 1.5; word-break: break-word; background: #181818; padding: 8px 12px; border-radius: 8px; }
+        .c-author { color: #4da6ff; font-weight: bold; margin-right: 5px; font-size: 12px;}
+        .comment-input-wrap { display: flex; gap: 8px; }
+        .comment-input-wrap input { flex: 1; padding: 10px 15px; font-size: 13px; border-radius: 8px; background: #1a1a1a;}
+        .comment-input-wrap button { background: #333; border: none; border-radius: 8px; padding: 0 18px; color: white; transition: 0.2s;}
+        .comment-input-wrap button:hover { background: var(--accent); }
+
+        /* Всплывающие окна и Тосты */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal { background: var(--card); padding: 35px 30px; border-radius: 16px; width: 90%; max-width: 340px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333; box-shadow: 0 25px 50px rgba(0,0,0,0.6); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .modal h2 { margin: 0 0 15px; text-align: center; font-weight: 800; letter-spacing: 1px;}
         
-        .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; width: 90%; max-width: 300px; text-align: center; pointer-events: none;}
-        .toast { background: #222; border: 1px solid #444; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; opacity: 0; transform: translateY(20px); transition: 0.3s ease; font-weight: bold; }
+        .toast-container { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; width: 90%; max-width: 320px; text-align: center; pointer-events: none;}
+        .toast { background: #222; border: 1px solid #444; color: white; padding: 14px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 0; transform: translateY(20px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 600; letter-spacing: 0.5px;}
         .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.error { background: var(--accent); }
+        .toast.error { background: var(--accent); border-color: #ff6666; }
 
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; color: white; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { border: 4px solid #333; border-top: 4px solid var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;}
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; color: white; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(3px);}
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite; margin-bottom: 25px;}
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
+        /* Адаптивка */
         @media (max-width: 768px) {
             .mobile-nav { display: flex; }
             .sidebar-title { display: none; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); background: #111; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; transform: translateX(-100%); background: #0f0f0f; box-shadow: 5px 0 25px rgba(0,0,0,0.8); }
             .sidebar.open { transform: translateX(0); }
-            .content { padding: 15px; height: calc(100vh - 60px); }
-            .upload-controls { flex-direction: column; align-items: stretch; }
-            .gallery { grid-template-columns: 1fr; gap: 15px; }
+            
+            .content { padding: 15px; height: calc(100vh - 62px); }
+            
+            .upload-controls { flex-direction: column; align-items: stretch; gap: 15px;}
+            .upload-controls > * { width: 100%; }
+            .checkbox-wrap { justify-content: center; padding: 12px 0; background: rgba(255,62,62,0.05); border-radius: 8px; border: 1px solid rgba(255,62,62,0.2);}
+            
+            .gallery { grid-template-columns: 1fr; gap: 20px; }
+            .post { padding: 15px; }
         }
         
-        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 140; backdrop-filter: blur(2px);}
-        .sidebar-overlay.active { display: block; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 140; backdrop-filter: blur(3px); opacity: 0; transition: 0.3s;}
+        .sidebar-overlay.active { display: block; opacity: 1; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
     </style>
 </head>
 <body>
@@ -110,7 +167,7 @@
 
 <div id="loader">
     <div class="spinner"></div>
-    <p id="loader-text">загрузка fembooru...</p>
+    <p id="loader-text" style="font-family: monospace; letter-spacing: 2px; font-size: 16px; font-weight: bold; color: #ccc;">загрузка fembooru...</p>
 </div>
 
 <div id="authModal" class="modal-overlay">
@@ -118,8 +175,8 @@
         <h2 id="modalTitle">вход</h2>
         <input type="text" id="regName" placeholder="Твой никнейм" style="display:none;">
         <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPass" placeholder="Пароль">
-        <button class="btn-main" onclick="window.submitAuth()">Погнали</button>
+        <input type="password" id="authPass" placeholder="Пароль (от 6 символов)">
+        <button class="btn-main" onclick="window.submitAuth()" style="margin-top: 10px;">Продолжить</button>
         <button onclick="window.closeAuth()" style="background: transparent; border: none; color: var(--muted);">Отмена</button>
     </div>
 </div>
@@ -137,49 +194,55 @@
         
         <div class="auth-box">
             <div id="loggedOutView">
-                <div class="auth-text">Войди в аккаунт для публикации.</div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-main" style="flex:1" onclick="window.openAuth('login')">Вход</button>
-                    <button style="flex:1; background:#333;" onclick="window.openAuth('reg')">Рега</button>
+                <div class="auth-text">Войди в аккаунт, чтобы публиковать арты и общаться.</div>
+                <div class="btn-group">
+                    <button class="btn-main" onclick="window.openAuth('login')">Вход</button>
+                    <button style="background:#2a2a2a;" onclick="window.openAuth('reg')">Рега</button>
                 </div>
             </div>
             <div id="loggedInView" style="display:none;">
-                <div class="auth-text" id="userNameDisplay" style="color:white; font-size:15px; font-weight:bold;">Привет!</div>
-                <button onclick="window.doLogout()" style="width: 100%; background: #222;">Выйти</button>
+                <div class="auth-text" id="userNameDisplay" style="color:white; font-size:16px; font-weight:800; letter-spacing: 1px;">Привет!</div>
+                <button onclick="window.doLogout()" style="width: 100%; background: #222;">Выйти из аккаунта</button>
             </div>
         </div>
 
-        <h3>Лента</h3>
+        <h3>Настройки ленты</h3>
         <div class="filter-group">
-            <label><input type="radio" name="rating" value="all" checked onchange="window.load()"> <span>Всё</span></label>
-            <label><input type="radio" name="rating" value="sfw" onchange="window.load()"> <span>SFW</span></label>
-            <label><input type="radio" name="rating" value="nsfw" onchange="window.load()"> <span>NSFW</span></label>
+            <label><input type="radio" name="rating" value="all" checked onchange="window.load()"> <span>Всё подряд</span></label>
+            <label><input type="radio" name="rating" value="sfw" onchange="window.load()"> <span>Только SFW</span></label>
+            <label><input type="radio" name="rating" value="nsfw" onchange="window.load()"> <span>Только NSFW</span></label>
         </div>
 
-        <h3>Поиск</h3>
+        <h3>Поиск по тегам</h3>
         <div class="search-wrap">
-            <input type="text" id="search" placeholder="Ищи тег..." style="width: 100%;" autocomplete="off">
+            <input type="text" id="search" placeholder="Можно писать несколько..." style="width: 100%;" autocomplete="off">
             <div id="hints" class="hints"></div>
         </div>
+        <p style="font-size: 11px; color: var(--muted); margin-top: -10px; line-height: 1.4;">Ищи несколько тегов через пробел (например: <span style="color:#fff">anime cute</span>)</p>
     </aside>
 
     <main class="content" id="mainContent">
         <div class="upload-section" id="uploadPanel" style="display: none;">
             <div class="upload-controls">
                 <input type="file" id="file" accept="image/*,video/*" multiple>
-                <input type="text" id="tag1" placeholder="Главный тег">
-                <input type="text" id="tag2" placeholder="Доп. теги">
+                <input type="text" id="tag1" placeholder="Главный тег (напр. anime)">
+                <input type="text" id="tag2" placeholder="Детали (через пробел)">
                 <label class="checkbox-wrap"><input type="checkbox" id="nsfw"> NSFW</label>
                 <button class="btn-main" onclick="window.upload()">Опубликовать</button>
             </div>
         </div>
+
+        <div id="guestWarn" style="text-align: center; color: var(--muted); margin-bottom: 25px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed #333; font-weight: bold; letter-spacing: 0.5px;">
+            Только авторизованные пользователи могут загружать контент.
+        </div>
+
         <div class="gallery" id="gal"></div>
     </main>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
     const config = {
@@ -193,11 +256,13 @@
     };
 
     const IMGBB_KEY = "120a27bcbb28d3ffd9f03bc4b32bb54f";
+    const ADMIN_EMAIL = "test@anon.ru";
 
     const app = initializeApp(config);
     const db = getDatabase(app);
     const auth = getAuth(app);
     let user = null;
+    let isAdmin = false;
     let authMode = 'login';
     let tagStats = {}; 
 
@@ -208,20 +273,35 @@
         t.innerText = msg;
         box.appendChild(t);
         setTimeout(() => t.classList.add('show'), 10);
-        setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
+        setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3000);
     };
 
     window.toggleMenu = () => {
         document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('menuOverlay').classList.toggle('active');
+        const overlay = document.getElementById('menuOverlay');
+        if(overlay.classList.contains('active')) {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.classList.remove('active'), 300);
+        } else {
+            overlay.classList.add('active');
+            setTimeout(() => overlay.style.opacity = '1', 10);
+        }
     };
 
     onAuthStateChanged(auth, (u) => {
         user = u;
+        isAdmin = u && u.email === ADMIN_EMAIL;
+        
         document.getElementById('uploadPanel').style.display = u ? 'block' : 'none';
+        document.getElementById('guestWarn').style.display = u ? 'none' : 'block';
         document.getElementById('loggedOutView').style.display = u ? 'none' : 'block';
         document.getElementById('loggedInView').style.display = u ? 'block' : 'none';
-        if(u) document.getElementById('userNameDisplay').innerText = `Привет, ${u.displayName}!`;
+        
+        if(u) {
+            let nameDisplay = u.displayName || 'Анон';
+            if(isAdmin) nameDisplay += ' 👑'; // Корона для админа
+            document.getElementById('userNameDisplay').innerText = `Привет, ${nameDisplay}!`;
+        }
         window.load();
     });
 
@@ -229,10 +309,14 @@
         authMode = m;
         document.getElementById('authModal').style.display = 'flex';
         document.getElementById('regName').style.display = m === 'reg' ? 'block' : 'none';
-        document.getElementById('modalTitle').innerText = m === 'reg' ? 'Регистрация' : 'Вход';
+        document.getElementById('modalTitle').innerText = m === 'reg' ? 'Регистрация' : 'Вход в аккаунт';
     };
 
-    window.closeAuth = () => document.getElementById('authModal').style.display = 'none';
+    window.closeAuth = () => {
+        document.getElementById('authModal').style.display = 'none';
+        document.getElementById('authEmail').value = '';
+        document.getElementById('authPass').value = '';
+    };
 
     window.submitAuth = async () => {
         const e = document.getElementById('authEmail').value.trim();
@@ -240,19 +324,23 @@
         const n = document.getElementById('regName').value.trim();
         try {
             if(authMode === 'reg') {
+                if(!n) return window.showToast('Никнейм обязателен!', true);
+                if(p.length < 6) return window.showToast('Пароль минимум 6 символов', true);
                 const res = await createUserWithEmailAndPassword(auth, e, p);
                 await updateProfile(res.user, { displayName: n });
+                window.showToast('Аккаунт успешно создан!');
             } else {
                 await signInWithEmailAndPassword(auth, e, p);
+                window.showToast('С возвращением!');
             }
             window.closeAuth();
+            if(window.innerWidth <= 768) window.toggleMenu();
         } catch(err) { window.showToast(err.message, true); }
     };
 
     window.doLogout = () => signOut(auth);
 
     async function safeUpload(file) {
-        // Пробуем ImgBB для фото
         if (file.type.startsWith('image/')) {
             try {
                 const fd = new FormData(); fd.append('image', file);
@@ -261,33 +349,47 @@
                 if(d.success) return d.data.url;
             } catch(e) {}
         }
-        // Запасной для фото и основной для видео - Catbox через прокси
         const fd2 = new FormData();
         fd2.append('reqtype', 'fileupload');
         fd2.append('fileToUpload', file);
         const res2 = await fetch('https://corsproxy.io/?https://catbox.moe/user/api.php', { method: 'POST', body: fd2 });
         if(res2.ok) return await res2.text();
+        
+        // Резервный сервер для видео
+        const res3 = await fetch('https://corsproxy.io/?https://litterbox.catbox.moe/resources/internals/api.php', { method: 'POST', body: fd2 });
+        if(res3.ok) return await res3.text();
+        
         throw new Error('Сервера перегружены');
     }
 
     window.upload = async () => {
         const files = document.getElementById('file').files;
-        if(!files.length) return;
-        document.getElementById('loader').style.display = 'flex';
-        for(let f of files) {
+        if(!files.length) return window.showToast('Сначала выбери файлы!', true);
+        
+        const loader = document.getElementById('loader');
+        const text = document.getElementById('loader-text');
+        loader.style.display = 'flex';
+        
+        let successCount = 0;
+        
+        for(let i=0; i<files.length; i++) {
+            const f = files[i];
             try {
+                text.innerText = `Грузим [${i+1}/${files.length}]...`;
                 const url = await safeUpload(f);
                 await push(ref(db, 'posts'), {
-                    url, isVid: f.type.includes('video'), uid: user.uid, author: user.displayName,
+                    url, isVid: f.type.includes('video'), uid: user.uid, author: user.displayName || 'Анон',
                     t1: document.getElementById('tag1').value.trim() || 'art',
                     t2: document.getElementById('tag2').value.trim() || '',
                     nsfw: document.getElementById('nsfw').checked,
                     time: Date.now()
                 });
-            } catch(e) { window.showToast(`Сбой: ` + e.message, true); }
+                successCount++;
+            } catch(e) { window.showToast(`Сбой файла ${f.name}: ` + e.message, true); }
         }
-        document.getElementById('loader').style.display = 'none';
+        loader.style.display = 'none';
         document.getElementById('file').value = '';
+        if (successCount > 0) window.showToast(`Успешно загружено: ${successCount} шт.`);
     };
 
     window.load = () => {
@@ -308,16 +410,26 @@
                 });
             });
 
-            posts.reverse().forEach(p => {
-                const q = document.getElementById('search').value.toLowerCase();
-                const tags = `${p.t1} ${p.t2 || ''}`.toLowerCase();
-                if(q && !tags.includes(q)) return;
+            let rendered = 0;
+            posts.reverse().forEach((p, index) => {
+                // ИСПРАВЛЕННЫЙ ПОИСК (поддержка нескольких слов)
+                const queryStr = document.getElementById('search').value.toLowerCase().trim();
+                const queries = queryStr.split(' ').filter(Boolean);
+                const postTagsStr = `${p.t1} ${p.t2 || ''}`.toLowerCase();
+                
+                // Проверяем, содержит ли пост ВСЕ слова из поиска
+                const matchesAll = queries.every(q => postTagsStr.includes(q));
+                if(queries.length > 0 && !matchesAll) return;
+                
                 if(ratingFilter === 'sfw' && p.nsfw) return;
                 if(ratingFilter === 'nsfw' && !p.nsfw) return;
 
+                rendered++;
                 const div = document.createElement('div');
                 div.className = 'post';
-                const likes = p.likes ? Object.keys(p.likes).length : 0;
+                div.style.animationDelay = `${index * 0.05}s`; // Плавное появление по очереди
+                
+                const likesCount = p.likes ? Object.keys(p.likes).length : 0;
                 const liked = user && p.likes && p.likes[user.uid] ? 'active' : '';
                 
                 let comms = '';
@@ -325,10 +437,19 @@
                     comms += `<div class="comment-item"><span class="c-author">${c.u}:</span> ${c.t}</div>`;
                 });
 
+                // АДМИНСКАЯ ЛОГИКА УДАЛЕНИЯ
+                const isAuthor = user && user.uid === p.uid;
+                let delBtnHtml = '';
+                if (isAuthor) {
+                    delBtnHtml = `<button class="btn-delete" onclick="window.del('${p.id}')">🗑 Удалить</button>`;
+                } else if (isAdmin) {
+                    delBtnHtml = `<button class="btn-delete admin-del" onclick="window.del('${p.id}')">🔨 Админ Удалить</button>`;
+                }
+
                 div.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author">👤 ${p.author}</span>
-                        ${user && user.uid === p.uid ? `<button class="btn-delete" onclick="window.del('${p.id}')">🗑 Удалить</button>` : '<span></span>'}
+                        <span class="post-author">👤 ${p.author || 'Анон'}</span>
+                        ${delBtnHtml}
                     </div>
                     <div class="media-wrap">
                         ${p.nsfw ? '<div class="nsfw-badge">NSFW</div>' : ''}
@@ -338,13 +459,15 @@
                         <span class="tag primary" onclick="window.applyTag('${p.t1}')">#${p.t1}</span>
                         ${(p.t2 || '').split(' ').map(t => t ? `<span class="tag" onclick="window.applyTag('${t}')">#${t}</span>` : '').join('')}
                     </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                        <button class="btn-like ${liked}" onclick="window.like('${p.id}')">❤ ${likes}</button>
+                    <div class="actions">
+                        <button class="btn-like ${liked}" id="likebtn-${p.id}" onclick="window.like('${p.id}')">
+                            <span class="heart-icon">❤</span> <span id="likecnt-${p.id}">${likesCount}</span>
+                        </button>
                     </div>
                     <div class="comments-area">
-                        <div class="comments-list">${comms || 'Нет комментов'}</div>
+                        <div class="comments-list">${comms || '<div style="color:var(--muted); text-align:center; font-style: italic;">Будь первым!</div>'}</div>
                         <div class="comment-input-wrap">
-                            <input type="text" id="i-${p.id}" placeholder="Твой коммент...">
+                            <input type="text" id="i-${p.id}" placeholder="Написать коммент..." onkeypress="if(event.key === 'Enter') window.comm('${p.id}')">
                             <button onclick="window.comm('${p.id}')">➤</button>
                         </div>
                     </div>
@@ -352,25 +475,42 @@
                 gal.appendChild(div);
                 if(p.isVid) setTimeout(() => fluidPlayer(`v-${p.id}`, {layoutControls:{primaryColor:"#ff3e3e",fillToContainer:true}}), 50);
             });
+
+            if(rendered === 0) gal.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 50px; font-size: 16px;">Ничего не найдено ¯\\_(ツ)_/¯</div>`;
         });
     };
 
+    // УМНЫЕ ПОДСКАЗКИ С МУЛЬТИТЕГАМИ
     document.getElementById('search').addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase().trim();
+        const val = e.target.value.toLowerCase();
         const box = document.getElementById('hints');
         box.innerHTML = '';
-        if (!val) { box.style.display = 'none'; window.load(); return; }
-        const matches = Object.keys(tagStats).filter(t => t.includes(val));
+        
+        if (!val.trim()) { box.style.display = 'none'; window.load(); return; }
+
+        // Берем только последнее слово, которое сейчас печатает пользователь
+        const parts = val.split(' ');
+        const currentWord = parts[parts.length - 1];
+
+        if(!currentWord) { box.style.display = 'none'; window.load(); return; }
+
+        const matches = Object.keys(tagStats).filter(t => t.includes(currentWord));
+        
         if (matches.length > 0) {
             matches.sort((a, b) => tagStats[b] - tagStats[a]);
-            matches.slice(0, 10).forEach(m => {
+            matches.slice(0, 8).forEach(m => {
                 const item = document.createElement('div');
                 item.className = 'hint-item';
-                item.innerHTML = `<span>#${m}</span> <span style="color:var(--muted)">${tagStats[m]}</span>`;
+                item.innerHTML = `<span>#${m}</span> <span style="color:var(--muted); font-weight:bold;">${tagStats[m]}</span>`;
                 item.onclick = () => {
-                    document.getElementById('search').value = m;
+                    // Заменяем только последнее слово на выбранный тег
+                    parts.pop();
+                    parts.push(m);
+                    document.getElementById('search').value = parts.join(' ') + ' '; // Добавляем пробел для следующего тега
                     box.style.display = 'none';
+                    if(window.innerWidth <= 768) window.toggleMenu(); 
                     window.load();
+                    document.getElementById('search').focus();
                 };
                 box.appendChild(item);
             });
@@ -379,25 +519,55 @@
         window.load();
     });
 
-    window.applyTag = (t) => { document.getElementById('search').value = t.toLowerCase(); window.load(); };
-    window.del = (id) => confirm('Удалить?') && remove(ref(db, `posts/${id}`));
+    window.applyTag = (t) => { 
+        document.getElementById('search').value = t.toLowerCase() + ' '; 
+        window.load(); 
+        document.getElementById('mainContent').scrollTo({top: 0, behavior: 'smooth'});
+    };
+    
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-wrap')) document.getElementById('hints').style.display = 'none';
+    });
+
+    window.del = (id) => confirm('Точно удаляем этот пост?') && remove(ref(db, `posts/${id}`));
+
+    // ЖЕЛЕЗОБЕТОННЫЕ ЛАЙКИ (через get вместо onValue)
     window.like = async (id) => {
-        if(!user) return window.showToast('Войди!', true);
-        const hasLiked = (await (update(ref(db), { [`posts/${id}/likes/${user.uid}`]: user ? true : null })));
-        // Переключение лайка
-        const lRef = ref(db, `posts/${id}/likes/${user.uid}`);
-        onValue(lRef, (s) => {
-            const v = s.exists() ? null : true;
-            update(ref(db), { [`posts/${id}/likes/${user.uid}`]: v });
-        }, {onlyOnce: true});
+        if(!user) return window.showToast('Нужно войти в аккаунт!', true);
+        const likeRef = ref(db, `posts/${id}/likes/${user.uid}`);
+        try {
+            const snapshot = await get(likeRef);
+            const updates = {};
+            updates[`posts/${id}/likes/${user.uid}`] = snapshot.exists() ? null : true;
+            await update(ref(db), updates);
+            
+            // Визуальная микро-анимация кнопки до того как прилетят данные с сервера
+            const btn = document.getElementById(`likebtn-${id}`);
+            if(btn) {
+                btn.classList.toggle('active');
+                const icon = btn.querySelector('.heart-icon');
+                if(icon) {
+                    icon.style.animation = 'none';
+                    setTimeout(() => icon.style.animation = 'heartBeat 0.4s ease forwards', 10);
+                }
+            }
+        } catch(err) { console.error(err); window.showToast('Ошибка при лайке', true); }
     };
+
     window.comm = async (id) => {
-        const t = document.getElementById(`i-${id}`).value;
-        if(!t || !user) return;
-        await push(ref(db, `posts/${id}/comments`), { u: user.displayName, t: t });
-        document.getElementById(`i-${id}`).value = '';
+        if(!user) return window.showToast('Нужно войти в аккаунт!', true);
+        const input = document.getElementById(`i-${id}`);
+        const t = input.value.trim();
+        if(!t) return;
+        
+        input.disabled = true;
+        try {
+            await push(ref(db, `posts/${id}/comments`), { u: user.displayName || 'Анон', t: t });
+            input.value = '';
+        } catch(e) { window.showToast('Ошибка: ' + e.message, true); }
+        input.disabled = false;
+        input.focus();
     };
-    document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrap')) document.getElementById('hints').style.display = 'none'; });
 
 </script>
 </body>
