@@ -72,20 +72,21 @@
         .btn-back { background: #161619; border: 1px solid #27272a; color: #fff; padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer; font-weight: bold; transition: 0.2s; display: inline-flex; align-items: center; width: max-content; margin-bottom: 25px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
         .btn-back:hover { background: #222226; transform: translateX(-5px); border-color: #3f3f46;}
 
-        /* Убрано агрессивное автозаполнение */
+        /* Убрано автозаполнение */
         input, textarea { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #0f0f11; color: white; font-size: 14px; transition: 0.3s; font-family: inherit; width: 100%;}
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(225,29,72,0.2); background: #161619;}
 
-        /* ПОДСКАЗКИ (@ И #) */
+        /* УПОМИНАНИЯ И ХИНТЫ */
         .user-mention { color: var(--accent); cursor: pointer; font-weight: 800; padding: 2px 6px; background: rgba(225,29,72,0.1); border-radius: 6px; transition: 0.2s; display: inline-block;}
         .user-mention:hover { background: rgba(225,29,72,0.2); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(225,29,72,0.3);}
         
-        .hints-box { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 20px 50px rgba(0,0,0,0.9); max-height: 250px; overflow-y: auto; display: none; animation: fadeIn 0.2s; min-width: 220px; }
+        /* Скроллируемые подсказки */
+        .hints-box { position: absolute; z-index: 9999; background: #161619; border: 1px solid #333; border-radius: var(--radius-sm); box-shadow: 0 20px 50px rgba(0,0,0,0.9); max-height: 280px; overflow-y: auto; display: none; animation: fadeIn 0.2s; min-width: 240px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;}
         .hint-item { padding: 12px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; color: #eee; transition: 0.2s; gap: 10px;}
         .hint-item:hover { background: #27272a; color: var(--accent); padding-left: 20px; }
         .hint-count { color: var(--muted); font-size: 10px; font-weight: 900; background: #000; padding: 3px 8px; border-radius: 6px; }
 
-        /* НАВИГАЦИЯ */
+        /* НАВИГАЦИЯ ВЬЮХ */
         .tabs-wrap { background: rgba(5, 5, 6, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 500; width: 100%; padding: 10px 0;}
         .app-tabs { display: flex; max-width: 900px; margin: 0 auto; gap: 15px; padding: 0 15px;}
         .app-tab { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); padding: 12px 0; font-size: 13px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.3s; border-radius: var(--radius-sm); text-align: center;}
@@ -121,16 +122,16 @@
         .pc-info { padding: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; background: var(--card); z-index: 2; border-top: 1px solid var(--border);}
         .nsfw-badge { position: absolute; top: 12px; left: 12px; background: rgba(225,29,72,0.95); color: white; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; backdrop-filter: blur(4px); letter-spacing: 0.5px;}
 
-        /* YOUTUBE ВИДЕО */
+        /* YOUTUBE ВИДЕО (ТОЛЬКО ГОРИЗОНТАЛЬНЫЕ) */
         .yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding-bottom: 50px; }
-        .yt-card { background: transparent; cursor: pointer; transition: 0.3s; animation: popIn 0.4s forwards; opacity: 0;}
-        .yt-card:hover .yt-thumb { border-color: #555; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.7);}
-        .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; border-radius: var(--radius); overflow: hidden; position: relative; border: 1px solid var(--border); transition: 0.3s; display: flex; justify-content: center; align-items: center; pointer-events: none;}
+        .yt-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: 0.3s; animation: popIn 0.4s forwards; opacity: 0; display: flex; flex-direction: column; overflow: hidden;}
+        .yt-card:hover { border-color: #555; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.7);}
+        .yt-thumb { width: 100%; aspect-ratio: 16/9; background: #0a0a0c; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); transition: 0.3s; display: flex; justify-content: center; align-items: center; pointer-events: none;}
         .yt-thumb video { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; opacity: 0; transition: 0.5s; }
         .yt-thumb .loaded { opacity: 1; }
         .vid-icon-big { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 5; pointer-events: none; backdrop-filter: blur(4px); transition: 0.3s;}
         .yt-card:hover .vid-icon-big { background: var(--accent); border-color: transparent; transform: translate(-50%, -50%) scale(1.1);}
-        .yt-info { padding: 16px 4px; display: flex; gap: 14px; align-items: flex-start; }
+        .yt-info { padding: 16px; display: flex; gap: 14px; align-items: flex-start; }
         .yt-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid #333; cursor: pointer; z-index: 2;}
         .yt-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;}
         .yt-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; cursor: pointer; z-index: 2;}
@@ -145,7 +146,7 @@
         .b-media img, .b-media video { width: auto; height: auto; max-width: 100%; max-height: 500px; object-fit: contain; opacity: 0; transition: 0.5s; }
         .b-media .loaded { opacity: 1; }
 
-        /* ШОРТСЫ */
+        /* ШОРТСЫ (ВЕРТИКАЛЬНЫЕ) */
         .shorts-feed { height: calc(100vh - 130px); overflow-y: scroll; scroll-snap-type: y mandatory; margin: -25px; scrollbar-width: none; background: #000; }
         .shorts-feed::-webkit-scrollbar { display: none; }
         .short-wrap { height: 100%; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; }
@@ -162,7 +163,7 @@
         .s-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(225,29,72,0.15); box-shadow: 0 0 20px rgba(225,29,72,0.4);}
         .s-count { position: absolute; bottom: -22px; font-size: 12px; color: var(--muted); width: 100%; text-align: center; font-weight: 900; }
 
-        /* ПРОФИЛЬ */
+        /* ПРОФИЛЬ И ПОСТ */
         .profile-header { background: var(--card); border-radius: var(--radius); padding: 40px; display: flex; gap: 30px; align-items: center; border: 1px solid var(--border); margin-bottom: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.4);}
         .p-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); background: #27272a; box-shadow: 0 0 25px rgba(0,0,0,0.6);}
         
@@ -170,7 +171,6 @@
         .profile-tabs-container .app-tab { flex: 0 1 auto; padding: 12px 25px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: rgba(255,255,255,0.03);}
         .profile-tabs-container .app-tab.active { background: rgba(225,29,72,0.1); border-color: var(--accent); }
         
-        /* POST VIEW */
         .pv-layout { display: flex; gap: 35px; flex-wrap: wrap; align-items: flex-start; margin-top: 10px;}
         .pv-main { flex: 3; min-width: 320px; display: flex; flex-direction: column; gap: 20px; }
         .pv-side { flex: 1; min-width: 320px; background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); height: fit-content; position: sticky; top: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);}
@@ -216,14 +216,14 @@
 <div id="loader"><div class="spinner"></div></div>
 <div id="toastBox" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none;"></div>
 
-<div id="globalMentions" class="hints-box" style="width:auto; min-width:220px; max-width:320px;"></div>
-<div id="searchHints" class="hints-box" style="width:auto; min-width:280px; max-width:400px; box-sizing:border-box;"></div>
+<div id="globalMentions" class="hints-box"></div>
+<div id="searchHints" class="hints-box"></div>
 
 <div id="authModal" class="modal-overlay">
     <div class="modal">
         <h2 style="text-align:center; margin:0; font-size:26px;" data-i18n="authTitle">fembooru</h2>
-        <input type="text" id="authName" placeholder="Никнейм" autocomplete="username">
-        <input type="password" id="authPass" placeholder="Пароль" autocomplete="current-password">
+        <input type="text" id="authName" placeholder="Никнейм" autocomplete="off" spellcheck="false" data-lpignore="true">
+        <input type="password" id="authPass" placeholder="Пароль" autocomplete="off" spellcheck="false" data-lpignore="true">
         <button class="btn-main" onclick="window.submitAuth()" data-i18n="btnEnter">Продолжить</button>
         <button onclick="window.closeModal('authModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Отмена</button>
     </div>
@@ -234,7 +234,7 @@
         <h2 style="margin:0; font-size:22px;" data-i18n="profSettings">Настройки</h2>
         <p style="font-size:12px; color:var(--muted); margin:0" data-i18n="profAva">Аватарка:</p>
         <input type="file" id="editAvaFile" accept="image/*">
-        <textarea id="editBio" placeholder="..." rows="3" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
+        <textarea id="editBio" placeholder="..." rows="3" autocomplete="off" spellcheck="false" data-lpignore="true"></textarea>
         <button class="btn-main" onclick="window.saveProfile()" data-i18n="btnSave">Сохранить</button>
         <button onclick="window.closeModal('editProfileModal')" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-weight:bold; padding:10px;" data-i18n="btnCancel">Закрыть</button>
     </div>
@@ -242,7 +242,7 @@
 
 <header class="top-nav">
     <div class="top-nav-left">
-        <img src="https://i.ibb.co/3sW3xQy/default-avatar.png" class="nav-avatar" id="navAvatar" onclick="window.safeOpenProfile('MY')">
+        <img src="https://i.ibb.co/3sW3xQy/default-avatar.png" class="nav-avatar" id="navAvatar" onclick="window.safeOpenProfile('MY')" onerror="this.src='https://i.ibb.co/3sW3xQy/default-avatar.png'">
         <div style="display:flex; align-items:center; gap:12px;">
             <h1 onclick="window.goHome()">fembooru</h1>
             <div class="ai-greeting-wrap">
@@ -280,7 +280,7 @@
         
         <h3 style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:12px; letter-spacing:1px;" data-i18n="searchTitle">Поиск тегов</h3>
         <div class="search-wrap" id="searchContainer">
-            <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
+            <input type="text" id="search" placeholder="..." style="width:100%" autocomplete="off" spellcheck="false" data-lpignore="true">
         </div>
     </aside>
 
@@ -299,10 +299,10 @@
                 <div id="upGal" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border); box-shadow:0 15px 40px rgba(0,0,0,0.4);">
                     <div style="display:flex; flex-direction:column; gap:15px;">
                         <input type="file" id="fGal" accept="image/*,video/*" multiple>
-                        <textarea id="txtGal" placeholder="Описание (если нужно)... @упоминания работают" rows="2" style="resize:vertical;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
+                        <textarea id="txtGal" placeholder="Описание... @упоминания" rows="2" style="resize:vertical;" autocomplete="off" spellcheck="false" data-lpignore="true"></textarea>
                         <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
-                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:160px" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
-                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:160px;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
+                            <input type="text" id="t1G" placeholder="Основной тэг" style="width:160px" autocomplete="off" spellcheck="false" data-lpignore="true">
+                            <input type="text" id="t2G" placeholder="Доп. тэги" style="flex:1; min-width:160px;" autocomplete="off" spellcheck="false" data-lpignore="true">
                             <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nGal"> NSFW</label>
                             <button class="btn-main" onclick="window.upload('gallery')" data-i18n="btnPost">Опубликовать</button>
                         </div>
@@ -313,7 +313,7 @@
 
             <div id="tab-content-board" class="tab-content">
                 <div id="upBoard" style="display:none; margin-bottom:25px; background:var(--card); padding:25px; border-radius:var(--radius); border:1px solid var(--border);">
-                    <textarea id="txtB" placeholder="О чем ты думаешь? @упоминания" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation"></textarea>
+                    <textarea id="txtB" placeholder="О чем думаешь? @упоминания" rows="3" style="width:100%; margin-bottom:15px; resize:vertical;" autocomplete="off" spellcheck="false" data-lpignore="true"></textarea>
                     <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
                         <input type="file" id="fBoard" accept="image/*,video/*" style="flex:1; min-width:200px;">
                         <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nBoard"> NSFW</label>
@@ -332,7 +332,7 @@
                 <div id="upShorts" style="display:none; padding:25px; background:var(--card); border-bottom:1px solid var(--border);">
                     <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center; max-width:900px; margin:0 auto;">
                         <input type="file" id="fShorts" accept="video/*" style="flex:1; min-width:200px;">
-                        <input type="text" id="txtS" placeholder="Описание к видео... @упоминания" style="flex:2; min-width:200px;" autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation">
+                        <input type="text" id="txtS" placeholder="Описание к видео... @упоминания" style="flex:2; min-width:200px;" autocomplete="off" spellcheck="false" data-lpignore="true">
                         <label style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:bold; cursor:pointer;"><input type="checkbox" id="nShorts"> NSFW</label>
                         <button class="btn-main" onclick="window.upload('shorts')" data-i18n="btnUpload">Залить</button>
                     </div>
@@ -344,7 +344,7 @@
         <div id="profileMode" class="view-layer" style="max-width: 1000px; margin: 0 auto; padding-top:20px;">
             <div class="btn-back" onclick="window.goHome()">← <span data-i18n="btnBack">В ленту</span></div>
             <div class="profile-header">
-                <img src="" id="pAva" class="p-avatar">
+                <img src="" id="pAva" class="p-avatar" onerror="this.src='https://i.ibb.co/3sW3xQy/default-avatar.png'">
                 <div style="flex:1">
                     <h2 id="pName" style="margin:0; font-size:32px; font-weight:900;">User</h2>
                     <p id="pBio" style="margin:12px 0; color:var(--muted); font-size:15px; white-space:pre-wrap; line-height:1.6;"></p>
@@ -362,7 +362,7 @@
             <div class="btn-back" onclick="window.closePost()">← <span data-i18n="btnBack">Назад</span></div>
             <div id="pvContainer"></div>
             
-            <h3 style="margin-top:50px; font-size:15px; font-weight:900; letter-spacing:1px; display:flex; align-items:center; gap:10px; text-transform:uppercase;" data-i18n="simPosts">✦ Похожие посты</h3>
+            <h3 style="margin-top:50px; font-size:15px; font-weight:900; letter-spacing:1px; display:flex; align-items:center; gap:10px; text-transform:uppercase;" data-i18n="simPosts">Похожие посты</h3>
             <div class="gallery" id="aiRecs" style="margin-top:20px"></div>
         </div>
     </main>
@@ -382,7 +382,6 @@
 
     try { window.torrentClient = new window.WebTorrent(); } catch(e){}
 
-    // ТРАНСЛЯТОР
     var dict = {
         ru: { tabGal: "Галерея", tabBoard: "Борда", tabVids: "Видео", tabShorts: "Шортсы", btnPost: "Опубликовать", btnUpload: "Залить", btnLogin: "Войти / Рега", btnLogout: "Выйти", btnBack: "Назад", btnEditProf: "Настроить", tabMy: "Загрузки", tabRep: "Репосты", simPosts: "Похожее", vidsTitle: "Все видео", filterTitle: "Лента", fAll: "Всё подряд", fSfw: "Безопасно", searchTitle: "Поиск тегов", authTitle: "Вход", btnEnter: "Поехали", btnCancel: "Отмена", profSettings: "Настройки", profAva: "Аватарка:", btnSave: "Сохранить", empty: "Тут пока пусто...", emptySearch: "Ничего не найдено ¯\\_(ツ)_/¯", del: "Удалить", comments: "Комментарии" },
         en: { tabGal: "Gallery", tabBoard: "Board", tabVids: "Videos", tabShorts: "Shorts", btnPost: "Post", btnUpload: "Upload", btnLogin: "Log In", btnLogout: "Log Out", btnBack: "Back", btnEditProf: "Edit Profile", tabMy: "Uploads", tabRep: "Reposts", simPosts: "Similar", vidsTitle: "All Videos", filterTitle: "Feed", fAll: "Everything", fSfw: "Safe", searchTitle: "Search Tags", authTitle: "Login", btnEnter: "Continue", btnCancel: "Cancel", profSettings: "Settings", profAva: "Avatar:", btnSave: "Save", empty: "It's empty here...", emptySearch: "Nothing found ¯\\_(ツ)_/¯", del: "Delete", comments: "Comments" },
@@ -406,14 +405,13 @@
 
     function getName(uid) { 
         if(uid && AppState.users[uid] && AppState.users[uid].name) return AppState.users[uid].name;
-        return ''; // Вернет пустую строку, чтобы потом подставить p.author из старого поста
+        return ''; 
     }
     function getAva(uid) { 
         if(uid && AppState.users[uid] && AppState.users[uid].avatar) return AppState.users[uid].avatar;
         return 'https://i.ibb.co/3sW3xQy/default-avatar.png'; 
     }
 
-    // АИ ХЕДЕР (GEMINI) - Мультиязычный
     function loadAiFact(lang) {
         var fallbacks = {
             ru: ["Оставайся милым :3", "fembooru loves you", "Твой уютный уголок", "Больше милоты в ленту", "Не забудь поставить лайк!"],
@@ -434,8 +432,8 @@
         } catch(e) {}
     }
 
-    // МЕНШОНЫ (@) И ТЕГИ (#) - ГЛОБАЛЬНЫЙ ФИКС
-    document.addEventListener('input', function(e) {
+    // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК ПОДСКАЗОК (@ И #) - РАБОТАЕТ ВЕЗДЕ
+    function handleGlobalHints(e) {
         var el = e.target;
         if(el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
             window.activeInput = el;
@@ -451,13 +449,16 @@
             mBox.style.display = 'none';
             sBox.style.display = 'none';
 
+            // Упоминания @
             if(lastWord.indexOf('@') === 0) {
                 var searchName = lastWord.substring(1).toLowerCase();
                 var uKeys = Object.keys(AppState.users);
                 var matches = [];
                 for(var i=0; i<uKeys.length; i++) {
                     var u = AppState.users[uKeys[i]];
-                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) { matches.push(u); }
+                    if(u && u.name && u.name.toLowerCase().indexOf(searchName) !== -1) {
+                        matches.push(u);
+                    }
                 }
                 
                 if(matches.length > 0) {
@@ -465,7 +466,7 @@
                     for(var j=0; j<matches.length; j++) {
                         (function(userMatch) {
                             var div = document.createElement('div'); div.className = 'hint-item';
-                            div.innerHTML = '<img src="'+(userMatch.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png')+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover"> <span style="font-weight:bold; font-size:14px;">'+userMatch.name+'</span>';
+                            div.innerHTML = '<img src="'+(userMatch.avatar||'https://i.ibb.co/3sW3xQy/default-avatar.png')+'" style="width:24px;height:24px;border-radius:50%;object-fit:cover" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'"> <span style="font-weight:bold; font-size:14px;">'+userMatch.name+'</span>';
                             div.onmousedown = function(ev) {
                                 ev.preventDefault();
                                 var newText = val.substring(0, pos - lastWord.length) + '@' + userMatch.name + ' ' + val.substring(pos);
@@ -480,40 +481,48 @@
                     mBox.style.display = 'block';
                 }
             } 
+            // Теги #
             else if ((el.id === 'search' || el.id === 't1G' || el.id === 't2G') && lastWord.length > 0) {
                 var tagSearch = lastWord.replace(/#/g, '').toLowerCase();
+                var tagKeys = Object.keys(AppState.tags);
+                var tagMatches = [];
+                
                 if(tagSearch) {
-                    var tagKeys = Object.keys(AppState.tags);
-                    var tagMatches = [];
                     for(var k=0; k<tagKeys.length; k++) {
                         if(tagKeys[k].indexOf(tagSearch) !== -1) tagMatches.push(tagKeys[k]);
                     }
-                    if(tagMatches.length > 0) {
-                        sBox.innerHTML = '';
-                        tagMatches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).forEach(function(tag) {
-                            var div = document.createElement('div'); div.className = 'hint-item';
-                            var prefix = el.id === 't1G' ? '' : '#';
-                            div.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
-                            div.onmousedown = function(ev) {
-                                ev.preventDefault();
-                                words[words.length-1] = prefix + tag; 
-                                window.activeInput.value = words.join(' ') + ' '; 
-                                sBox.style.display = 'none'; 
-                                if(el.id === 'search') window.renderCurrentTab();
-                                window.activeInput.focus();
-                            };
-                            sBox.appendChild(div);
-                        });
-                        var rect2 = el.getBoundingClientRect();
-                        sBox.style.top = (rect2.bottom + window.scrollY + 5) + 'px'; 
-                        sBox.style.left = rect2.left + 'px';
-                        sBox.style.display = 'block';
-                    }
+                } else {
+                    tagMatches = tagKeys; // Показать все если просто кликнули
+                }
+
+                if(tagMatches.length > 0) {
+                    sBox.innerHTML = '';
+                    tagMatches.sort(function(a,b) { return AppState.tags[b] - AppState.tags[a]; }).slice(0, 30).forEach(function(tag) {
+                        var div = document.createElement('div'); div.className = 'hint-item';
+                        var prefix = el.id === 't1G' ? '' : '#';
+                        div.innerHTML = '<span style="font-weight:bold; font-size:14px;">#'+tag+'</span> <span class="hint-count">'+AppState.tags[tag]+'</span>';
+                        div.onmousedown = function(ev) {
+                            ev.preventDefault();
+                            words[words.length-1] = prefix + tag; 
+                            window.activeInput.value = words.join(' ') + ' '; 
+                            sBox.style.display = 'none'; 
+                            if(el.id === 'search') window.renderCurrentTab();
+                            window.activeInput.focus();
+                        };
+                        sBox.appendChild(div);
+                    });
+                    var rect2 = el.getBoundingClientRect();
+                    sBox.style.top = (rect2.bottom + window.scrollY + 5) + 'px'; 
+                    sBox.style.left = rect2.left + 'px';
+                    sBox.style.display = 'block';
                 }
             }
             if(el.id === 'search') window.renderCurrentTab();
         }
-    });
+    }
+
+    document.addEventListener('input', handleGlobalHints);
+    document.addEventListener('focusin', handleGlobalHints);
     
     document.addEventListener('click', function(e) { 
         var mBox = document.getElementById('globalMentions');
@@ -534,11 +543,11 @@
         for(var i=0; i<uKeys.length; i++) {
             if((AppState.users[uKeys[i]].name||'').toLowerCase() === name.toLowerCase()) { target = uKeys[i]; break; }
         }
-        if(target) window.safeOpenProfile(target);
+        if(target) window.safeOpenProfile(target, name);
         else window.showToast('Пользователь не найден', true);
     };
 
-    // LAZY LOADING 5.0 (ОСВОБОЖДЕНИЕ ПАМЯТИ И РАДАР)
+    // LAZY LOADING 5.0 (ВЫГРУЗКА ПАМЯТИ)
     var lazyObs = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
             var medias = e.target.querySelectorAll('img, video');
@@ -603,7 +612,6 @@
         }
     };
 
-    // АВТОРИЗАЦИЯ
     onAuthStateChanged(auth, function(u) {
         AppState.user = u; AppState.isAdmin = u && u.email === "test@anon.ru";
         ['Gal', 'Board', 'Shorts'].forEach(function(i) { if(document.getElementById('up'+i)) document.getElementById('up'+i).style.display = u ? 'block' : 'none'; });
@@ -774,12 +782,12 @@
                 var div = document.createElement('div'); div.className = 'post-card'; div.style.animationDelay = (index*0.03)+'s';
                 var tType = p._type || dbTypeParam || 'gallery';
                 
-                // РАБОЧИЙ КЛИК ПО ПОСТУ
+                // Делегирование клика
                 div.onclick = function() { window.openPost(p.id, tType); };
                 
                 var mediaTag = p.isVid ? '<div class="vid-icon-big" style="width:40px;height:40px;font-size:14px;">▶</div><video data-src="'+p.url+'#t=0.1" preload="none" muted loop style="pointer-events:none;"></video>' : '<img data-src="'+p.url+'" loading="lazy" style="pointer-events:none;">';
                 var authorName = getName(p.uid) || p.author || 'Anon';
-                var authorTag = '<div class="pc-author-badge" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'"><span style="overflow:hidden; text-overflow:ellipsis; max-width:60px; white-space:nowrap;">'+authorName+'</span></div>';
+                var authorTag = '<div class="pc-author-badge" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')"><img src="'+getAva(p.uid)+'" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'"><span style="overflow:hidden; text-overflow:ellipsis; max-width:60px; white-space:nowrap;">'+authorName+'</span></div>';
 
                 div.innerHTML = (p.nsfw?'<div class="nsfw-badge">NSFW</div>':'') + authorTag +
                     '<div class="pc-media">'+mediaTag+'</div>' +
@@ -820,10 +828,10 @@
                         '<video data-src="'+p.url+'#t=0.1" data-magnet="'+(p.magnet||'')+'" preload="none" muted></video>' +
                     '</div>' +
                     '<div class="yt-info">' +
-                        '<img src="'+getAva(p.uid)+'" class="yt-avatar" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')">' +
+                        '<img src="'+getAva(p.uid)+'" class="yt-avatar" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')">' +
                         '<div class="yt-text">' +
                             '<div class="yt-title">'+(p.text || (p.t1 ? '#'+p.t1 : 'Видео без названия'))+'</div>' +
-                            '<div class="yt-meta"><span onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer">'+authorName+'</span> • <span>❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>' +
+                            '<div class="yt-meta"><span onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')" style="cursor:pointer">'+authorName+'</span> • <span>❤ '+(p.likes?Object.keys(p.likes).length:0)+'</span></div>' +
                         '</div>' +
                     '</div>';
                 el.appendChild(div);
@@ -840,9 +848,9 @@
                 var div = document.createElement('div'); div.className = 'board-post'; div.style.animationDelay = (index*0.05)+'s';
                 div.onclick = function() { window.openPost(p.id, 'board'); }; 
                 var authorName = getName(p.uid) || p.author || 'Anon';
-                div.innerHTML = '<div class="b-header" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')"><img src="'+getAva(p.uid)+'" class="b-avatar"> <div><span style="color:#fff">'+authorName+'</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">'+new Date(p.time).toLocaleString()+'</span></div></div>' +
+                div.innerHTML = '<div class="b-header" onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')"><img src="'+getAva(p.uid)+'" class="b-avatar" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'"> <div><span style="color:#fff">'+authorName+'</span><br><span style="font-size:11px;color:var(--muted);font-weight:normal;">'+new Date(p.time).toLocaleString()+'</span></div></div>' +
                     (p.text?'<div style="font-size:15px; white-space:pre-wrap; line-height:1.6;">'+window.parseMentions(p.text)+'</div>':'') + 
-                    (p.url?'<div class="b-media" style="pointer-events:none;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy">')+'</div>':'') +
+                    (p.url?'<div class="b-media" style="pointer-events:none;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" controls></video>':'<img data-src="'+p.url+'" loading="lazy" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'">')+'</div>':'') +
                     '<div class="action-row" style="margin-top:10px">' +
                         '<button class="btn-action '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="event.stopPropagation(); window.like(\''+p.id+'\',\'board\')">❤ '+(p.likes?Object.keys(p.likes).length:0)+'</button>' +
                         '<button class="btn-action" onclick="event.stopPropagation(); window.repost(\''+p.id+'\',\'board\')">🔄 Репост</button>' +
@@ -862,7 +870,7 @@
                 var div = document.createElement('div'); div.className = 'short-wrap';
                 var authorName = getName(p.uid) || p.author || 'Anon';
                 div.innerHTML = '<div class="short-ui"><div class="short-video" onclick="window.openPost(\''+p.id+'\',\'shorts\')"><div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" preload="none" loop playsinline style="pointer-events:none;"></video>' +
-                    '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px; pointer-events:auto;"><img src="'+getAva(p.uid)+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+authorName+'</b><p style="margin:0;font-size:15px;line-height:1.5; pointer-events:auto;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
+                    '<div class="short-info-overlay"><b onclick="event.stopPropagation(); window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')" style="cursor:pointer;font-size:18px;display:flex;align-items:center;gap:8px;margin-bottom:10px; pointer-events:auto;"><img src="'+getAva(p.uid)+'" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid #333;">@'+authorName+'</b><p style="margin:0;font-size:15px;line-height:1.5; pointer-events:auto;">'+window.parseMentions(p.text||'')+'</p></div></div>' +
                     '<div class="short-sidebar">' +
                         '<button class="s-btn '+(p.likes&&p.likes[AppState.user&&AppState.user.uid]?'active':'')+'" onclick="window.like(\''+p.id+'\',\'shorts\')">❤<span class="s-count">'+(p.likes?Object.keys(p.likes).length:0)+'</span></button>' +
                         '<button class="s-btn" onclick="window.repost(\''+p.id+'\',\'shorts\')">🔄</button>' +
@@ -876,14 +884,14 @@
     }
 
     // СИНХРОННЫЙ ПРОФИЛЬ
-    window.safeOpenProfile = function(uid) {
+    window.safeOpenProfile = function(uid, fallbackName) {
         if(uid === 'MY') { if(AppState.user) uid = AppState.user.uid; else return window.openAuth(); }
         window.pauseAllVideos();
         AppState.profUid = uid; 
         
-        var u = AppState.users[uid] || { name: 'Anon', avatar: 'https://i.ibb.co/3sW3xQy/default-avatar.png', bio: '' };
+        var u = AppState.users[uid] || { name: fallbackName || 'Anon', avatar: 'https://i.ibb.co/3sW3xQy/default-avatar.png', bio: '' };
         document.getElementById('pAva').src = u.avatar || "https://i.ibb.co/3sW3xQy/default-avatar.png";
-        document.getElementById('pName').innerText = u.name || 'Anon';
+        document.getElementById('pName').innerText = u.name || fallbackName || 'Anon';
         document.getElementById('pBio').innerHTML = window.parseMentions(u.bio || '');
         document.getElementById('pEditBtn').style.display = (AppState.user && AppState.user.uid === uid) ? 'flex' : 'none';
         
@@ -935,9 +943,9 @@
         renderGrid(items.sort(function(a,b){return b.time-a.time}), 'profFeed', 'gallery');
     }
 
-    // ПРОСМОТР ПОСТА И КОММЕНТАРИИ (ИСПРАВЛЕНА МАРШРУТИЗАЦИЯ)
+    // ИСПРАВЛЕННЫЙ ПРОСМОТР ПОСТА (МАРШРУТИЗАЦИЯ GALLERY -> POSTS)
     window.openPost = function(id, type) {
-        var dbType = (type === 'gallery' || type === 'posts') ? 'gallery' : type; // Интерфейс работает с 'gallery'
+        var dbType = (type === 'gallery' || type === 'posts') ? 'posts' : type; 
         if(!AppState.data[dbType]) return;
         var p = null;
         for(var i=0; i<AppState.data[dbType].length; i++) {
@@ -955,35 +963,33 @@
         var isLiked = p.likes && AppState.user && p.likes[AppState.user.uid];
         var likesCount = p.likes ? Object.keys(p.likes).length : 0;
         var canDel = AppState.isAdmin || (AppState.user && AppState.user.uid === p.uid);
-        
-        var realDbType = dbType === 'gallery' ? 'posts' : dbType; // Для сохранения лайков и комментов
 
         document.getElementById('pvContainer').innerHTML = '<div class="pv-layout">' +
             '<div class="pv-main">' +
-                (p.url ? '<div class="pv-media-box" style="animation: popIn 0.4s ease forwards;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" controls autoplay></video>':'<img src="'+p.url+'">')+'</div>' : '') +
+                (p.url ? '<div class="pv-media-box" style="animation: popIn 0.4s ease forwards;">'+(p.isVid?'<div class="src-badge"></div><video data-src="'+p.url+'" data-magnet="'+(p.magnet||'')+'" controls autoplay></video>':'<img src="'+p.url+'" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'">')+'</div>' : '') +
             '</div>' +
             '<div class="pv-side" style="animation: fadeIn 0.5s ease forwards;">' +
-                '<div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;cursor:pointer" onclick="window.safeOpenProfile(\''+p.uid+'\')">' +
-                    '<img src="'+getAva(p.uid)+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #333;">' +
+                '<div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;cursor:pointer" onclick="window.safeOpenProfile(\''+p.uid+'\', \''+authorName.replace(/'/g, "\\'")+'\')">' +
+                    '<img src="'+getAva(p.uid)+'" onerror="this.src=\'https://i.ibb.co/3sW3xQy/default-avatar.png\'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #333;">' +
                     '<div><b style="font-size:16px">'+authorName+'</b><br><span style="font-size:11px;color:var(--muted)">'+new Date(p.time).toLocaleString()+'</span></div>' +
                 '</div>' +
                 (p.text ? '<p style="font-size:15px;line-height:1.6;margin-bottom:20px;white-space:pre-wrap;">'+window.parseMentions(p.text)+'</p>' : '') +
                 '<div style="margin-bottom:25px">'+tagsHTML+'</div>' +
                 '<div class="action-row" style="flex-wrap:wrap; margin-bottom:25px;">' +
-                    '<button class="btn-action '+(isLiked?'active':'')+'" onclick="window.like(\''+id+'\',\''+realDbType+'\')">❤ Лайк ('+likesCount+')</button>' +
+                    '<button class="btn-action '+(isLiked?'active':'')+'" onclick="window.like(\''+id+'\',\''+dbType+'\')">❤ Лайк ('+likesCount+')</button>' +
                     '<button class="btn-action" onclick="window.repost(\''+id+'\',\''+(type==='posts'?'gallery':type)+'\')">🔄 Репост</button>' +
-                    (canDel ? '<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+realDbType+'\')">🗑</button>' : '') +
+                    (canDel ? '<button class="btn-action" style="color:var(--accent); flex:0.3" onclick="window.del(\''+p.id+'\',\''+dbType+'\')">🗑</button>' : '') +
                 '</div>' +
                 '<h4 style="margin-bottom:15px; font-size:13px; text-transform:uppercase; color:var(--muted);">'+window.t('comments')+'</h4>' +
                 '<div class="comm-list" id="commList"></div>' +
                 '<div style="display:flex; gap:10px;">' +
                     '<input type="text" id="cInp" placeholder="@упоминания..." autocomplete="nope" data-lpignore="true" spellcheck="false" role="presentation" style="flex:1;">' +
-                    '<button class="btn-main" onclick="window.addComm(\''+id+'\',\''+realDbType+'\')">➤</button>' +
+                    '<button class="btn-main" onclick="window.addComm(\''+id+'\',\''+dbType+'\')">➤</button>' +
                 '</div>' +
             '</div>' +
         '</div>';
         
-        onValue(ref(db, realDbType+'/'+id+'/comments'), function(s) {
+        onValue(ref(db, dbType+'/'+id+'/comments'), function(s) {
             var list = document.getElementById('commList'); if(!list) return;
             list.innerHTML = '';
             if(!s.exists()) { list.innerHTML = '<div style="color:var(--muted); font-size:13px; text-align:center; padding: 20px;">Пока пусто...</div>'; return; }
@@ -1005,7 +1011,7 @@
             setTimeout(function() { if(!media.src && !media.currentSrc) { media.src = p.url; var b = media.parentElement.querySelector('.src-badge'); if(b){b.className='src-badge cdn'; b.innerText='CDN'; b.style.display='block';} } }, 3500);
         }
 
-        if(dbType === 'gallery') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs', 'gallery');
+        if(dbType === 'posts') renderGrid(RecomEngine.getSimilar(p, dbType), 'aiRecs', 'gallery');
         else document.getElementById('aiRecs').innerHTML = '';
     };
 
