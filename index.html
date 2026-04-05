@@ -1,316 +1,666 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBooru</title>
+    <title>MyBooru • Art & Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* --- Стили для всего приложения --- */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
+        :root {
+            --bg: #f8f9fa;
+            --bg-dark: #121212;
+            --card: #ffffff;
+            --card-dark: #1e1e1e;
+            --text: #212529;
+            --text-dark: #e0e0e0;
+            --primary: #4361ee;
+            --primary-dark: #5a72e8;
+            --success: #4ade80;
+            --danger: #ef4444;
+            --border: #dee2e6;
+            --border-dark: #333333;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.17, 0.67, 0.88, 1.01);
         }
 
+        [data-theme="dark"] {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #e0e0e0;
+            --border: #333333;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0 }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        /* Header */
         header {
-            background-color: #333;
+            background: linear-gradient(135deg, var(--primary), #e5);
             color: white;
-            padding: 10px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky; /* Чтобы навигация была всегда сверху */
+            position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
-        #login-section input, #login-section button {
-            margin-right: 5px;
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo i {
+            color: #ffd166;
+       nav-actions {
+            display: flex;
+            gap: 12px;
         }
 
-        #user-info {
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+ }
+        .btn-primary:hover {
+            background: #f0f4ff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
-        #avatar {
+        .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
         }
 
+        /* Main */
         main {
-            padding: 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
 
-        .hidden {
-            display: none !important;
+        .search-bar {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 12px var(--shadow);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: transparent;
+            outline: none;
+            transition: var(--transition);
+        }
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        .search-bar button {
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .suggestions {
+            position: absolute;
+            background: var(--card);
+            border-radius: 8px;
+            box-shadow: 0 6px 16px var(--shadow);
+            width: 100%;
+            max-height: 20px;
+            overflow-y: auto;
+            margin-top: 4px;
+            z-index: 10;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .suggestion-item:hover {
+            background: #f1f3f8;
+        }
+        .suggestion-item i {
+            color: var(--primary);
+        }
+
+        /* Post Form */
+        .post-form {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 16px var(--shadow);
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+        .post-form:hover {
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
         }
-
-        .form-group input, .form-group textarea, .form-group select {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: transparent;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
         }
 
-        button {
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
             cursor: pointer;
-            padding: 8px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .upload-area p {
+            color: #6c757d;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .post {
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .post-card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+        .post-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 20px var(--shadow);
         }
 
         .post-header {
+            padding: 16px;
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
         }
-
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
         .post-author-avatar {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-
-        .post-author-name {
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            cursor: pointer; /* Сделаем имя кликабельным */
+            font-size: 0.8rem;
+            color: #555;
         }
-
+        .post-author-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .post-author-name {
+            font-weight: 600;
+            color: var(--text);
+        }
         .post-meta {
-            font-size: 0.9em;
-            color: #666;
             margin-left: auto;
-        }
-
-        .post-content {
-            margin-bottom: 10px;
-        }
-
-        .post-content p {
-            margin: 0 0 10px 0;
+            font-size: 0.85rem;
+            color: #6c757d;
         }
 
         .post-media {
-            max-width: 100%;
-            height: auto;
-            display: block; /* Убираем лишнее пространство под изображением */
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-content {
+            padding: 16px;
+        }
+        .post-desc {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
 
         .post-tags {
-            margin-top: 10px;
-            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
         }
-
         .tag {
-            display: inline-block;
-            background-color: #e9ecef;
-            color: #495057;
-            padding: 2px 6px;
-            margin-right: 5px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            text-decoration: none; /* Убираем подчеркивание */
-            cursor: pointer; /* Сделаем тег кликабельным */
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tag:hover {
+            background: rgba(67, 97, 238, 0.2);
         }
 
         .post-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            justify-content: space-between;
+            padding: 0 16px 16px;
+            border-top: 1px solid var(--border);
         }
-
-        .comment-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .comment {
-            margin-bottom: 10px;
-            padding: 5px;
-            background-color: #f8f9fa;
-            border-radius: 3px;
-        }
-
-        .comment-header {
+        .action-btn {
             display: flex;
             align-items: center;
-            font-size: 0.9em;
-            color: #666;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .action-btn:hover {
+            color: var(--primary);
+        }
+        .action-btn.active {
+            color: var(--primary);
+        }
+        .action-btn i {
+            font-size: 1.1rem;
         }
 
-        .comment-author-avatar {
-            width: 20px;
-            height: 20px;
+        /* Comments */
+        .comments-section {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .comment {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 10px;
+        }
+        .comment-avatar {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            object-fit: cover;
-            margin-right: 5px;
+            background: #ddd;
+            flex-shrink: 0;
         }
-
+        .comment-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .comment-body {
+            flex: 1;
+        }
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
         .comment-text {
-            margin-left: 5px;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        .comment-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 4px;
         }
 
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .comment-form textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            resize: none;
+        }
+        .comment-form button {
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* Profile */
         .profile-header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
         }
-
-        .profile-avatar-large {
-            width: 100px;
-            height: 100px;
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 20px;
+            margin-bottom: 20px;
+            border: 4px solid white;
+            box-shadow: 0 6px 16px var(--shadow);
         }
-
-        .profile-details h2 {
-            margin: 0;
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
-
         .profile-status {
             font-style: italic;
-            color: #666;
+            color: #6c757d;
+            margin-bottom: 16px;
+            max-width: 600px;
         }
-
         .profile-about {
-            margin-top: 10px;
+            max-width: 600px;
+            line-height: 1.6;
+            color: #495057;
         }
 
-        .tab-buttons {
+        .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
         }
-
-        .tab-button {
-            background-color: #e9ecef;
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f1f3f8;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
         }
-
-        .tab-button.active {
-            background-color: #007bff;
+        .tab-btn.active {
+            background: var(--primary);
             color: white;
         }
 
-        .post-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
         }
-
-        .search-bar {
+        .empty-state i {
+            font-size: 5rem;
             margin-bottom: 20px;
+            color: #adb5bd;
+        }
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
         }
 
-        .search-bar input {
-            width: calc(100% - 80px); /* Учитываем ширину кнопки */
-            padding: 10px;
-            box-sizing: border-box;
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
         }
 
-        .search-bar button {
-            width: 70px;
-            margin-left: 10px;
-            vertical-align: top; /* Выравнивание кнопки по верхнему краю */
-        }
-
-        .tag-suggestion {
-            background-color: #f8f9fa;
-            padding: 5px 10px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-        }
-
-        .tag-suggestion:hover {
-            background-color: #e9ecef;
-        }
-
-        .tag-suggestions-container {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-top: none;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 10;
-            display: none; /* Скрыто по умолчанию */
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
+            .search-bar {
+                flex-direction: column;
+            }
+            .post-form {
+                padding: 16px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
             header {
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 12px;
             }
-            .post-actions, .post-meta {
-                display: block; /* На мобилах элементы друг под другом */
-            }
-            .post-grid {
-                grid-template-columns: 1fr; /* На мобилах по одному посту */
-            }
-            .search-bar input, .search-bar button {
-                width: 100%;
-                margin-left: 0;
-                margin-top: 5px;
-            }
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
+            background-size: 200% 100%;
+            animation: skeleton 1.5s infinite;
+        }
+        @keyframes skeleton {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>MyBooru</h1>
-        <div id="user-info" class="hidden">
-            <img id="avatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+" alt="Avatar">
-            <span id="username-display"></span>
-            <button onclick="logout()">Выйти</button>
+        <div class="logo">
+            <i class="fas fa-paint-brush"></i>
+            <span>MyBooru</span>
         </div>
-        <div id="login-section">
-            <input type="text" id="username-input" placeholder="Логин">
-            <button onclick="handleLoginSignup()">Войти / Регистрация</button>
+        <div class="nav-actions">
+            <div id="login-section">
+                <input type="text" id="username-input" placeholder="Логин" autocomplete="off">
+                <button class="btn btn-primary" onclick="handleLoginSignup()">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+            </div>
+            <div id="user-info" class="hidden">
+                <div class="user-info">
+                    <div class="avatar" id="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="username-display">Аноним</span>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Выход
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main id="main-content">
-        <!-- Контент будет загружаться сюда динамически -->
+    <main id="app-content">
+        <!-- Динамический контент будет сюда -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="🔍 Искать по тегам (например: art, anime)..." autocomplete="off">
+            <button onclick="performSearch()">Найти</button>
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+
+        <div id="post-form" class="post-form hidden">
+            <h2><i class="fas fa-plus-circle"></i> Создать пост</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <>Описание</label>
+                    <textarea id="description" placeholder="Что происходит на изображении?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Теги (через запятую)</label>
+                    <input type="text" id="tags" placeholder="art, cute, anime, digital">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Медиа</label>
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Перетащите файл или нажмите для выбора</p>
+                    <input type="file" id="media-upload" accept="image/*,video/*" style="display:none;">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="uploadPost()">
+                <i class="fas fa-upload"></i> Загрузить пост
+            </button>
+        </div>
+
+        <div id="posts-container" class="posts-grid">
+            <!-- Посты будут здесь -->
+        </div>
+
+        <div id="loading" class="empty-state hidden">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h3>Загрузка...</h3>
+        </div>
     </main>
 
+    <footer>
+        <p>© 2026 MyBooru • Вдохновлено Danbooru, Rule34, Gelbooru</p>
+        <p>Используется Firebase, ImgBB и Catbox.moe (прокси)</p>
+    </footer>
+
     <script type="module">
-        // --- 1. Инициализация Firebase ---
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        // --- Firebase Initialization ---
+        import { initializeApp from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
         import { getDatabase, ref, push, set, get, child, onValue, query, orderByChild, equalTo, limitToLast, update } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
@@ -331,448 +681,561 @@
         let currentUser = null;
         let currentView = 'home'; // 'home', 'profile', 'post'
         let currentProfileUserId = null;
-        let currentSearchTag = null; // Для отслеживания активного поиска
+        let isSearching = false;
 
-        // --- 2. Аутентификация ---
+        // --- UI Helpers ---
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('posts-container').innerHTML = '';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            // Простой toast — можно заменить на библиотеку
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#4361ee'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-weight: 500;
+                z-index: 1000;
+                animation: fadeIn 0.3s, slideOut 0.3s 3s forwards;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        // --- Auth ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('avatar').src = user.photoURL || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+';
+                document.getElementById('avatar').innerHTML = `<img src="${user.photoURL || ''}" alt="Avatar">`;
                 document.getElementById('username-display').textContent = user.displayName || user.email.split('@')[0];
-                // Загрузка профиля после входа
+                document.getElementById('post-form').classList.remove('hidden');
                 loadProfile(user.uid);
             } else {
                 currentUser = null;
                 document.getElementById('login-section').classList.remove('hidden');
                 document.getElementById('user-info').classList.add('hidden');
-                showHomeView(); // Вернуться на главную при выходе
+                document.getElementById('post-form').classList.add('hidden');
+                showHome();
             }
         });
 
         async function handleLoginSignup() {
             const username = document.getElementById('username-input').value.trim();
             if (!username) {
-                alert('Введите логин.');
+                showToast('Введите логин', 'error');
                 return;
             }
 
             const email = `${username}@anon.ru`;
-            const password = 'defaultPassword123'; // В реальном приложении - более безопасно
+            const password = 'defaultPassword123';
 
             try {
-                // Пробуем войти
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                // Если успех, ничего делать не нужно, onAuthStateChanged сработает
+                showToast(`Добро пожаловать, ${username}!`, 'success');
             } catch (error) {
                 if (error.code === 'auth/user-not-found') {
-                    // Пользователя нет, создаем
                     try {
                         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                        // После регистрации сразу установим displayName
                         await updateProfile(userCredential.user, { displayName: username });
-                    } catch (createError) {
-                        console.error("Ошибка регистрации:", createError);
-                        alert('Ошибка регистрации: ' + createError.message);
+                        showToast(`Аккаунт создан! Добро пожаловать, ${username}!`, 'success');
+                    } catch (e) {
+                        showToast('Ошибка регистрации: ' + e.message, 'error');
                     }
                 } else {
-                    console.error("Ошибка входа:", error);
-                    alert('Ошибка входа: ' + error.message);
+                    showToast('Ошибка входа: ' + error.message, 'error');
                 }
             }
         }
 
         function logout() {
-            signOut(auth);
+            signOut(auth).then(() => {
+                showToast('Вы вышли', 'info');
+            });
         }
 
-        // --- 3. Управление профилем ---
+        // --- Profile ---
         function loadProfile(userId) {
-            currentProfileUserId = userId;
             const profileRef = ref(db, `profiles/${userId}`);
-            get(profileRef).then((snapshot) => {
-                const profileData = snapshot.val();
-                if (profileData) {
-                    document.getElementById('profile-avatar-large').src = profileData.avatarUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+';
-                    document.getElementById('profile-username').textContent = profileData.displayName || 'Anon';
-                    document.getElementById('profile-status').textContent = profileData.status || '';
-                    document.getElementById('profile-about').textContent = profileData.about || 'Нет информации.';
-                } else {
-                    // Если профиль не существует, создаем минимальный
-                    document.getElementById('profile-avatar-large').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+';
-                    document.getElementById('profile-username').textContent = 'Anon';
-                    document.getElementById('profile-status').textContent = '';
-                    document.getElementById('profile-about').textContent = 'Нет информации.';
-                }
-            }).catch(console.error);
+            get(profileRef).then(snapshot => {
+                const data = snapshot.val() || {};
+                document.getElementById('avatar').innerHTML = `<img src="${data.avatarUrl || ''}" alt="Avatar">`;
+                document.getElementById('username-display').textContent = data.displayName || userId.split('@')[0];
+            });
         }
 
-        // --- 4. Отображение представлений ---
-        function showHomeView() {
-            currentView = 'home';
-            currentSearchTag = null; // Сбросить тег поиска
-            document.getElementById('main-content').innerHTML = `
-                <div class="search-bar">
-                    <input type="text" id="tag-search-input" placeholder="Поиск по тегам...">
-                    <button onclick="handleTagSearch()">Найти</button>
-                    <div class="tag-suggestions-container" id="tag-suggestions-container"></div>
-                </div>
-                <div id="post-form-container">
-                    <h2>Создать пост</h2>
-                    <div class="form-group">
-                        <label for="description">Описание:</label>
-                        <textarea id="description" placeholder="Введите описание поста..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="tags">Теги (через запятую):</label>
-                        <input type="text" id="tags" placeholder="например: art, cute, anime">
-                    </div>
-                    <div class="form-group">
-                        <label for="media-upload">Медиа файл:</label>
-                        <input type="file" id="media-upload" accept="image/*,video/*">
-                    </div>
-                    <button onclick="uploadPost()">Загрузить пост</button>
-                </div>
-                <div id="posts-container"></div>
-            `;
-            if (currentUser) {
-                document.getElementById('post-form-container').classList.remove('hidden');
-            } else {
-                document.getElementById('post-form-container').classList.add('hidden');
+        // --- Search ---
+        const searchInput = document.getElementById('search-input');
+        const suggestionsEl = document.getElementById('suggestions');
+
+        searchInput.addEventListener('input', debounce(() => {
+            const q = searchInput.value.toLowerCase().trim();
+            if (q.length < 2) {
+                suggestionsEl.style.display = 'none';
+                return;
             }
 
-            // Обработчик ввода для поиска тегов
-            const searchInput = document.getElementById('tag-search-input');
-            searchInput.addEventListener('input', debounce(handleTagSuggestionInput, 300));
+            // Простая подсказка (в реальности — запрос к базе или предопределённый список)
+            const mockTags = ['art', 'anime', 'cute', 'digital', 'traditional', 'landscape', 'nsfw', 'safe'];
+            const filtered = mockTags.filter(t => t.startsWith(q)).slice(0, 5);
 
-            loadPosts(); // Загрузить все посты по умолчанию
+            if (filtered.length > 0) {
+                suggestionsEl.innerHTML = filtered.map(tag => 
+                    `<div class="suggestion-item" onclick="selectSuggestion('${tag}')">
+                     <i class="fas fa-hashtag"></i> #${tag}
+                     </div>`
+                ).join('');
+                suggestionsEl.style.display = 'block';
+            } else {
+                suggestionsEl.style.display = 'none';
+            }
+        }, 300));
+
+        function selectSuggestion(tag) {
+            searchInput.value = tag;
+            suggestionsEl.style.display = 'none';
+            performSearch();
         }
 
-        function showProfileView(userId) {
-            currentView = 'profile';
-            currentProfileUserId = userId;
-            document.getElementById('main-content').innerHTML = `
-                <div class="profile-header">
-                    <img id="profile-avatar-large" src="..." alt="Profile Avatar" class="profile-avatar-large">
-                    <div class="profile-details">
-                        <h2 id="profile-username">...</h2>
-                        <div class="profile-status" id="profile-status">...</div>
-                        <div class="profile-about" id="profile-about">...</div>
+        function performSearch() {
+            const q = searchInput.value.trim();
+            if (!q) {
+                showHome();
+                return;
+            }
+            isSearching = true;
+            showLoading();
+            loadPostsByTag(q);
+        }
+
+        // --- Posts ---
+        function showHome() {
+            currentView = 'home';
+            isSearching = false;
+            document.getElementById('app-content').innerHTML = `
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="🔍 Искать по тегам (например: art, anime)..." autocomplete="off">
+                    <button onclick="performSearch()">Найти</button>
+                    <div class="suggestions" id="suggestions"></div>
+                </div>
+                <div id="post-form" class="post-form ${currentUser ? '' : 'hidden'}">
+                    <h2><i class="fas fa-plus-circle"></i> Создать пост</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Описание</label>
+                            <textarea id="description" placeholder="Что происходит на изображении?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Теги (через запятую)</label>
+                            <input type="text" id="tags" placeholder="art, cute, anime, digital">
+                        </div>
                     </div>
+                    <div class="form-group">
+                        <label>Медиа</label>
+                        <div class="upload-area" id="upload-area">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Перетащите файл или нажмите для выбора</p>
+                            <input type="file" id="media-upload" accept="image/*,video/*" style="display:none;">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="uploadPost()">
+                        <i class="fas fa-upload"></i> Загрузить пост
+                    </button>
                 </div>
-                <div class="tab-buttons">
-                    <button class="tab-button active" data-tab="uploads">Загрузки</button>
-                    <button class="tab-button" data-tab="reposts">Репосты</button>
+                <div id="posts-container" class="posts-grid"></div>
+                <div id="loading" class="empty-state hidden">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>Загрузка...</h3>
                 </div>
-                <div id="profile-posts-container"></div>
             `;
-            // Логика переключения вкладок
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    loadProfilePosts(e.target.dataset.tab);
-                });
-            });
-            loadProfile(userId);
-            loadProfilePosts('uploads'); // Загрузить вкладку "Загрузки" по умолчанию
+            // Перепривязываем обработчики
+            document.getElementById('search-input').addEventListener('input', debounce(() => {
+                const q = document.getElementById('search-input').value().trim();
+                if (q.length < 2) {
+                    document.getElementById('suggestions').style.display = 'none';
+                    return;
+                }
+                const mockTags = ['art', 'anime', 'cute', 'digital', 'traditional', 'landscape', 'nsfw', 'safe'];
+                const filtered = mockTags.filter(t => t.startsWith(q)).slice(0, 5);
+                const sugg = document.getElementById('suggestions');
+                if (filtered.length > 0) {
+                    sugg.innerHTML = filtered.map(tag => 
+                        `<div class="suggestion-item" onclick="selectSuggestion('${tag}')">
+                         <i class="fas fa-hashtag"></i> #${tag}
+                         </div>`
+                    ).join('');
+                    sugg.style.display = 'block';
+                } else sugg.style.display = 'none';
+            }, 300));
+            document.getElementById('upload-area')
+                .addEventListener('click', () => document.getElementById('media-upload').click());
+            document.getElementById('media-upload')
+                .addEventListener('change', handleFileUpload);
+            loadPosts();
         }
 
-        function showPostView(postId) {
-            // Для упрощения, показываем подробности поста на той же главной странице
-ация отдельной страницы потребует изменения маршрутизации
-            alert(`Открытие поста ${postId} в детализированном виде. Эта функция требует доработки.`);
-        }
-
-        // --- 5. Загрузка контента ---
         function loadPosts(tag = null) {
-            const postsContainer = document.getElementById('posts-container');
-            let postsQuery;
+            showLoading();
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
 
+            let postsQuery;
             if (tag) {
-                // Загрузка постов по тегу
-                postsContainer.innerHTML = `<p>Поиск по тегу #${tag}...</p>`;
+                // Поиск по тегу
                 const tagRef = ref(db, `postsByTag/${tag}`);
-                get(tagRef).then(tagSnapshot => {
-                    if (tagSnapshot.exists()) {
-                        const postIds = Object.keys(tagSnapshot.val());
-                        postsContainer.innerHTML = ''; // Очистить сообщение "Поиск..."
-                        loadPostsByIds(postIds, postsContainer); // Загрузить посты по ID
+                get(tagRef).then(snapshot => {
+                    if (snapshot.exists()) {
+                        const postIds = Object.keys(snapshot.val());
+                        if (postIds.length === 0) {
+                            container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><h3>Постов с тегом #${tag} не найдено</h3></div>`;
+                            hideLoading();
+                            return;
+                        }
+                        loadPostsByIds(postIds, container);
                     } else {
-                        postsContainer.innerHTML = `<p>Постов с тегом #${tag} не найдено.</p>`;
+                        container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><h3>Постов с тегом #${tag} найдено</h3></div>`;
+                        hideLoading();
                     }
-                }).catch(error => {
-                    console.error("Ошибка поиска по тегу:", error);
-                    postsContainer.innerHTML = '<p>Ошибка при поиске.</p>';
+                }).catch(err => {
+                    console.error(err);
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Ошибка загрузки</h3><p>${err.message}</p></div>`;
+                    hideLoading();
                 });
             } else {
-                // Загрузка всех постов (или последних N)
-                postsContainer.innerHTML = '<p>Загрузка постов...</p>';
+                // Все посты
                 postsQuery = query(ref(db, 'posts/'), orderByChild('timestamp'), limitToLast(20));
                 onValue(postsQuery, (snapshot) => {
-                    postsContainer.innerHTML = ''; // Очистить перед загрузкой
-                    snapshot.forEach((childSnapshot) => {
-                        const postData = childSnapshot.val();
-                        const postKey = childSnapshot.key;
-                        renderPost(postData, postKey, postsContainer);
-                    });
-                }, { onlyOnce: true }); // onlyOnce для загрузки при открытии домашней страницы
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            const postData = childSnapshot.val();
+                            renderPostCard(postData, childSnapshot.key, container);
+                        });
+                    } else {
+                        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>Пока нет постов</h3><p>Создайте первый!</p></div>`;
+                    }
+                    hideLoading();
+                }, { onlyOnce: true });
             }
         }
 
-        function loadPostsByIds(postIds, container) {
-            postIds.forEach(async (postId) => {
-                const postDetailRef = ref(db, `posts/${postId}`);
-                const postDetailSnapshot = await get(postDetailRef);
-                if (postDetailSnapshot.exists()) {
-                    const postData = postDetailSnapshot.val();
-                    renderPost(postData, postId, container);
-                }
+        function loadPostsByIds(ids, container) {
+            let loaded = 0;
+            ids.forEach(id => {
+                const postRef = ref(db, `posts/${id}`);
+                get(postRef).then(snapshot => {
+                    if (snapshot.exists()) {
+                        const postData = snapshot.val();
+                        renderPostCard(postData, id, container);
+                    }
+                    loaded++;
+                    if (loaded === ids.length) hideLoading();
+                }).catch(() => {
+                    loaded++;
+                    if (loaded === ids.length) hideLoading();
+                });
             });
         }
 
-        function renderPost(postData, postKey, container) {
-            const postElement = document.createElement('div');
-            postElement.className = 'post';
-            postElement.innerHTML = `
+        function renderPostCard(postData, postId, container) {
+            const card = document.createElement('div');
+            card.className = 'post-card fade-in';
+            card.innerHTML = `
                 <div class="post-header">
-                    <img src="${postData.authorAvatar || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+'}" alt="Author Avatar" class="post-author-avatar" onclick="showProfileView('${postData.userId}')">
-                    <span class="post-author-name" onclick="showProfileView('${postData.userId}')">${postData.authorName}</span>
-                    <span class="post-meta">${new Date(postData.timestamp).toLocaleString()}</span>
+                    <div class="post-author" onclick="showProfile('${postData.userId}')">
+                        <div class="post-author-avatar">
+                            <img src="${postData.authorAvatar || ''}" alt="${postData.authorName}">
+                        </div>
+                        <span class="post-author-name">${postData.authorName}</span>
+                    </div>
+                    <span class="post-meta">${new Date(postData.timestamp).toLocaleDateString('ru')}</span>
                 </div>
+                <img src="${postData.mediaUrl || 'https://via.placeholder.com/300x240/e0e0e0/6c757d?text=No+Image'}" 
+                     alt="Post" class="post-media">
                 <div class="post-content">
-                    <p>${postData.description}</p>
-                    ${postData.mediaUrl ? `<img src="${postData.mediaUrl}" alt="Post Media" class="post-media">` : ''}
-                </div>
-                <div class="post-tags">
-                    ${postData.tags.map(tag => `<span class="tag" onclick="searchByTag('${tag}')">#${tag}</span>`).join(' ')}
+                    <p class="post-desc">${postData.description || '—'}</p>
+                    <div class="post-tags">
+                        ${postData.tags.map(t => `<span class="tag" onclick="searchByTag('${t}')">#${t}</span>`).join('')}
+                    </div>
                 </div>
                 <div class="post-actions">
-                    <button>❤️ ${postData.likes || 0}</button>
-                    <button>🔄 ${postData.reposts || 0}</button>
-                    <button onclick="showPostView('${postKey}')">💬 Комментарии</button>
+                    <button class="action-btn" title="Лайк">
+                        <i class="far fa-heart"></i> <span>${postData.likes || 0}</span>
+                    </button>
+                    <button class="action-btn" title="Репост">
+                        <i class="fas fa-retweet"></i> <span>${postData.reposts || 0}</span>
+                    </button>
+                    <button class="action-btn" title="Комментарии">
+                        <i class="fas fa-comment"></i> <span>${postData.commentCount || 0}</span>
+                    </button>
                 </div>
-                <div class="comment-section">
-                    <h4>Комментарии:</h4>
-                    <div id="comments-${postKey}"></div>
-                    ${currentUser ? `
-                        <div class="form-group">
-                            <textarea id="comment-input-${postKey}" placeholder="Написать комментарий..."></textarea>
-                            <button onclick="addComment('${postKey}', '${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">Отправить</button>
-                        </div>
-                    ` : '<p>Чтобы оставить комментарий, <a href="#" onclick="showHomeView()">войдите</a>.</p>'}
+                <div class="comments-section" id="comments-${postId}">
+                    <!-- Комментарии загружаются отдельно -->
                 </div>
+                ${currentUser ? `
+                <div class="comment-form">
+                    <textarea placeholder="Напишите комментарий..."></textarea>
+                    <button onclick="addComment('${postId}')">Отправить</button>
+                </div>
+                ` : ''}
             `;
-            container.appendChild(postElement);
-
-            // Загрузка комментариев для этого поста
-            loadComments(postKey);
+            container.appendChild(card);
+            loadComments(postId, `comments-${postId}`);
         }
 
-        function loadProfilePosts(tab) {
-            const postsContainer = document.getElementById('profile-posts-container');
-            postsContainer.innerHTML = '<p>Загрузка...</p>';
-            const path = tab === 'uploads' ? `userPosts/${currentProfileUserId}` : `userReposts/${currentProfileUserId}`;
-            const postsQuery = query(ref(db, path), orderByChild('timestamp'));
-
-            get(postsQuery).then((snapshot) => {
-                postsContainer.innerHTML = '<div class="post-grid">'; // Используем сетку
+        function loadComments(postId, targetId) {
+            const commentsRef = query(ref(db, `comments/${postId}`), orderByChild('timestamp'));
+            onValue(commentsRef, (snapshot) => {
+                const container = document.getElementById(targetId);
+                container.innerHTML = '';
                 if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        const postData = childSnapshot.val();
-                        const postElement = document.createElement('div');
-                        postElement.className = 'post';
-                        postElement.innerHTML = `
-                            <img src="${postData.mediaUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBNZWRpYTwvdGV4dD48L3N2Zz='}" alt="Post Media" class="post-media">
-                            <p>${postData.description}</p>
-                            <div class="post-tags">
-                                ${postData.tags.slice(0, 3).map(tag => `<span class="tag" onclick="searchByTag('${tag}')">#${tag}</span>`).join(' ')} <!-- Показываем первые 3 тега -->
+                    snapshot.forEach(c => {
+                        const data = c.val();
+                        const el = document.createElement('div');
+                        el.className = 'comment';
+                        el.innerHTML = `
+                            <div class="comment-avatar">
+                                <img src="${data.avatar || ''}" alt="${data.authorName}">
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-author">${data.authorName}</div>
+                                <div class="comment-text">${data}</div>
+                                <div class="comment-time">${new Date(data.timestamp).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' })}</div>
                             </div>
                         `;
-                        postElement.onclick = () => showPostView(childSnapshot.key);
-                        postsContainer.appendChild(postElement);
+                        container.appendChild(el);
                     });
-                } else {
-                    postsContainer.innerHTML = '<p>Пока нет постов.</p>';
                 }
-                postsContainer.innerHTML += '</div>';
-            }).catch(console.error);
+            }, { onlyOnce: true });
         }
 
-        function loadComments(postId) {
-            const commentsContainer = document.getElementById(`comments-${postId}`);
-            const commentsQuery = query(ref(db, `comments/${postId}/`), orderByChild('timestamp'));
-
-            onValue(commentsQuery, (snapshot) => {
-                commentsContainer.innerHTML = '';
-                snapshot.forEach((childSnapshot) => {
-                    const commentData = childSnapshot.val();
-                    const commentElement = document.createElement('div');
-                    commentElement.className = 'comment';
-                    commentElement.innerHTML = `
-                        <div class="comment-header">
-                            <img src="${commentData.avatar || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2U5ZWNmMiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BdmF0YXI8L3RleHQ+PC9zdmc+'}" alt="Commenter Avatar" class="comment-author-avatar" onclick="showProfileView('${commentData.userId}')">
-                            <span class="comment-text">
-                                <strong onclick="showProfileView('${commentData.userId}')" style="cursor: pointer;">${commentData.authorName}</strong>: ${commentData.text}
-                            </span>
-                        </div>
-                    `;
-                    commentsContainer.appendChild(commentElement);
-                });
-            });
-        }
-
-        // --- 6. Функции загрузки ---
-        async function uploadPost() {
+        async function addComment(postId) {
             if (!currentUser) {
-                alert("Сначала войдите в систему.");
+                showToast('Войдите, чтобы комментировать', 'error');
                 return;
             }
-
-            const description = document.getElementById('description').value;
-            const tagsInput = document.getElementById('tags').value;
-            const mediaFile = document.getElementById('media-upload').files[0];
-
-            if (!mediaFile) {
-                alert("Пожалуйста, выберите файл.");
-                return;
-            }
-
-            const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
-
-            // Загрузка файла на ImgBB
-            const formData = new FormData();
-            formData.append('image', mediaFile);
-            formData.append('key', '120a27bcbb28d3ffd9f03bc4b32bb54f');
-
-            try {
-                const response = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    const mediaUrl = data.data.url;
-                    const newPostRef = push(ref(db, 'posts/'));
-
-                    // Подготовим обновления для базы данных
-                    const updates = {};
-                    updates[`posts/${newPostRef.key}`] = {
-                        userId: currentUser.uid,
-                        authorName: currentUser.displayName || currentUser.email.split('@')[0],
-                        authorAvatar: currentUser.photoURL,
-                        description: description,
-                        tags: tags,
-                        mediaUrl: mediaUrl,
-                        timestamp: Date.now(),
-                        likes: 0,
-                        reposts: 0
-                    };
-
-                    // Обновим связи по тегам
-                    tags.forEach(tag => {
-                        updates[`postsByTag/${tag}/${newPostRef.key}`] = true;
-                    });
-
-                    // Обновим связи в профиле пользователя (загрузки)
-                    updates[`userPosts/${currentUser.uid}/${newPostRef.key}`] = {
-                        description: description,
-                        tags: tags,
-                        mediaUrl: mediaUrl,
-                        timestamp: Date.now()
-                    };
-
-                    await update(ref(db), updates);
-
-                    // Сброс формы
-                    document.getElementById('description').value = '';
-                    document.getElementById('tags').value = '';
-                    document.getElementById('media-upload').value = '';
-
-                    alert("Пост успешно загружен!");
-
-                    // Если был активен поиск, перезагрузить его результаты
-                    if (currentSearchTag) {
-                        loadPosts(currentSearchTag);
-                    } else {
-                        // Иначе обновить главную страницу
-                        showHomeView();
-                    }
-                } else {
-                    alert("Ошибка загрузки изображения: " + data.error.message);
-                }
-            } catch (error) {
-                console.error("Ошибка при загрузке:", error);
-                alert("Произошла ошибка при загрузке.");
-            }
-        }
-
-        async function addComment(postId, userId, authorName) {
-            if (!currentUser) {
-                alert("Сначала войдите в систему.");
-                return;
-            }
-
-            const commentText = document.getElementById(`comment-input-${postId}`).value.trim();
-            if (!commentText) return;
+            const textarea = document.querySelector(`#comments-${postId} + .comment-form textarea`);
+            const text = textarea.value.trim();
+            if (!text) return;
 
             const newCommentRef = push(ref(db, `comments/${postId}/`));
             await set(newCommentRef, {
-                userId: userId,
-                authorName: authorName,
+                userId: currentUser.uid,
+                authorName: currentUser.displayName || currentUser.email.split('@')[0],
                 avatar: currentUser.photoURL,
-                text: commentText,
+                text: text,
                 timestamp: Date.now()
             });
 
-            document.getElementById(`comment-input-${postId}`).value = '';
+            // Обновим счётчик комментариев в посте
+            const postRef = ref(db, `posts/${postId}`);
+            const postSnap = await get(postRef);
+            const postData = postSnap.val();
+            await update(postRef, {
+                commentCount: (postData.commentCount || 0) + 1
+            });
+
+            textarea.value = '';
+            showToast('Комментарий добавлен!', 'success');
         }
 
-        // --- 7. Поиск ---
-        function searchByTag(tag) {
-            currentSearchTag = tag;
-            loadPosts(tag);
+        // --- Upload ---
+        document.getElementById('upload-area').addEventListener('click', () => {
+            document.getElementById('media-upload').click();
+        });
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('upload-area').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Загрузка...`;
+            uploadToImgBB(file);
         }
 
-        function handleTagSearch() {
-            const tag = document.getElementById('tag-search-input').value.trim();
-            if (tag) {
-                searchByTag(tag);
-            } else {
-                // Если поле пустое, вернуть к обычному просмотру
-                currentSearchTag = null;
-                loadPosts();
-            }
-        }
+        async function uploadToImgBB(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('key', '120a27bcbb28d3ffd9f03bc4b32bb54f');
 
-        function handleTagSuggestionInput() {
-            const input = document.getElementById('tag-search-input').value.toLowerCase().trim();
-            const suggestionsContainer = document.getElementById('tag-suggestions-container');
-            if (input.length > 0) {
-                // Простая эмуляция поиска тегов (в реальности это был бы запрос к базе данных или предопределённый список)
-                const mockTags = ['art', 'cute', 'anime', 'landscape', 'photo', 'digital', 'traditional'];
-                const filteredSuggestions = mockTags.filter(tag => tag.startsWith(input)).slice(0, 5);
-
-                if (filteredSuggestions.length > 0) {
-                    suggestionsContainer.innerHTML = filteredSuggestions.map(tag => `<div class="tag-suggestion" onclick="selectSuggestion('${tag}')">${tag}</div>`).join('');
-                    suggestionsContainer.style.display = 'block';
+            try {
+                const res = await fetch('https://api.imgbb.com/1/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const url = data.data.url;
+                    document.getElementById('upload-area').innerHTML = `
+                        <i class="fas fa-check-circle" style="color:#4ade80;"></i>
+                        <p>Готово! Кликните, чтобы изменить.</p>
+                    `;
+                    document.getElementById('media-url').value = url;
                 } else {
-                    suggestionsContainer.style.display = 'none';
+                    throw new Error(data.error.message);
                 }
-            } else {
-                suggestionsContainer.style.display = 'none';
+            } catch (err) {
+                document.getElementById('upload-area').innerHTML = `
+                    <i class="fas fa-exclamation-circle" style="color:#ef4444;"></i>
+                    <p>Ошибка: ${err.message}</p>
+                `;
+                showToast('Ошибка загрузки изображения', 'error');
             }
         }
 
-        function selectSuggestion(tag) {
-            document.getElementById('tag-search-input').value = tag;
-            document.getElementById('tag-suggestions-container').style.display = 'none';
-            handleTagSearch(); // Выполнить поиск по выбранному тегу
+        async function uploadPost() {
+            if (!currentUser) {
+                showToast('Войдите для загрузки', 'error');
+                return;
+            }
+
+            const desc = document.getElementById('description').value.trim();
+            const tagsStr = document.getElementById('tags').value.trim();
+            const mediaUrl = document.getElementById('media-url')?.value || '';
+
+            if (!desc && !mediaUrl) {
+                showToast('Укажите описание или выберите файл', 'error');
+                return;
+            }
+
+            const tags = tagsStr.split(',').map(t => t.trim()).filter(t => t);
+
+            showLoading();
+            try {
+                const newPostRef = push(ref(db, 'posts/'));
+                const postId = newPostRef.key;
+
+                // Подготовка данных
+                const postData = {
+                    userId: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email.split('@')[0],
+                    authorAvatar: currentUser.photoURL,
+                    description: desc,
+                    tags: tags,
+                    mediaUrl: mediaUrl,
+                    timestamp: Date.now(),
+                    likes: 0,
+                    reposts: 0,
+                    commentCount: 0
+                };
+
+                // Обновления
+                const updates = {};
+                updates[`posts/${postId}`] = postData;
+                tags(tag => {
+                    updates[`postsByTag/${tag}/${postId}`] = true;
+                });
+                updates[`userPosts/${currentUser.uid}/${postId}`] = {
+                    description: desc,
+                    tags: tags,
+                    mediaUrl: mediaUrl,
+                    timestamp: Date.now()
+                };
+
+                await update(ref(db), updates);
+                showToast('Пост успешно загружен!', 'success');
+
+                // Сброс формы
+                document.getElementById('description').value = '';
+                document.getElementById('tags').value = '';
+                document.getElementById('upload-area').innerHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Перетащите файл или нажмите для выбора</p>
+                `;
+                document.getElementById('media-url').remove();
+
+                // Обновить ленту
+                if (isSearching) {
+                    loadPosts(currentSearchTag);
+                } else {
+                    showHome();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Ошибка загрузки: ' + err.message, 'error');
+                hideLoading();
+            }
         }
 
-        // --- 8. Вспомогательные функции ---
+        // --- Navigation ---
+        function showProfile(userId) {
+            currentView = 'profile';
+            currentProfileUserId = userId;
+            showLoading();
+            document.getElementById('app-content').innerHTML = `
+                <div class="profile-header">
+                    <img src="" alt="Avatar" class="profile-avatar" id="profile-avatar">
+                    <h2 class="profile-name" id="profile-name">Загрузка...</h2>
+                    <div class="profile-status" id="profile-status"></div>
+                    <div class="profile-about" id="profile-about"></div>
+                </div>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="uploads">Загрузки</button>
+                    <button class="tab-btn" data-tab="reposts">Репосты</button>
+                </div>
+                <div id="profile-posts" class="posts-grid"></div>
+                <div id="loading-profile" class="empty-state hidden">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>Загрузка профиля...</h3>
+                </div>
+            `;
+
+            // Загрузка профиля
+            get(ref(db, `profiles/${userId}`)).then(snapshot => {
+                const data = snapshot.val() || {};
+                document.getElementById('profile-avatar').src = data.avatarUrl || 'https://via.placeholder.com/120/e0e0e0/6c757d?text=Аватар';
+                document.getElementById('profile-name').textContent = data.displayName || 'Аноним';
+                document.getElementById('profile-status').textContent = data.status || '';
+                document.getElementById('profile-about').textContent = data.about || 'Нет информации.';
+                loadProfilePosts('uploads');
+            }).catch(() => {
+                document.getElementById('profile-name').textContent = 'Профиль не найден';
+                hideLoading();
+            });
+        }
+
+        function loadProfilePosts(tab) {
+            const container = document.getElementById('profile-posts');
+            container.innerHTML = '';
+            const path = tab === 'uploads' ? `userPosts/${currentProfileUserId}` : `userReposts/${currentProfileUserId}`;
+            get(ref(db, path)).then(snapshot => {
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        const card = document.createElement('div');
+                        card.className = 'post-card';
+                        card.innerHTML = `
+                            <img src="${data.mediaUrl || 'https://via.placeholder.com/300x240/e0e0e0/6c757d?" class="post-media">
+                            <div class="post-content">
+                                <p class="post-desc">${data.description || '—'}</p>
+                                <div class="post-tags">
+                                    ${data.tags.slice(0, 3).map(t => `<span class="tag">#${t}</span>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><h3>Пока нет постов</h3></div>`;
+                }
+            });
+        }
+
+        // --- Utility ---
+        function searchByTag(tag) {
+            document.getElementById('search-input').value = tag;
+            performSearch();
+        }
+
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -785,24 +1248,25 @@
             };
         }
 
-        // --- 9. Инициализация приложения ---
-        window.onload = function() {
-            showHomeView();
+        // --- Init ---
+        window.onload = () => {
+            showHome();
+            // Привязка обработчиков после рендеринга
+            document.getElementById('upload-area').addEventListener('click', () => {
+                document.getElementById('media-upload').click();
+            });
+            document.getElementById('media-upload').addEventListener('change', handleFileUpload);
         };
 
-        // --- Глобальные функции для HTML ---
+        // Глобальные функции для HTML
         window.handleLoginSignup = handleLoginSignup;
         window.logout = logout;
-        window.showProfileView = showProfileView;
-        window.showHomeView = showHomeView;
-        window.showPostView = showPostView;
+        window.showProfile = showProfile;
+        window.performSearch = performSearch;
+        window.selectSuggestion = selectSuggestion;
+        window.searchByTag = searchByTag;
         window.uploadPost = uploadPost;
         window.addComment = addComment;
-        window.searchByTag = searchByTag;
-        window.handleTagSearch = handleTagSearch;
-        window.selectSuggestion = selectSuggestion;
-
     </script>
 </body>
 </html>
-```
