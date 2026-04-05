@@ -1,0 +1,56 @@
+{
+  "rules": {
+    "users": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth !== null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['username','email','createdAt'])"
+      }
+    },
+    "usernames": {
+      ".read": true,
+      "$username": {
+        ".write": "auth !== null && (!data.exists() || data.val() === auth.uid)"
+      }
+    },
+    "posts": {
+      ".read": true,
+      ".indexOn": ["createdAt", "uid"],
+      "$postId": {
+        ".write": "auth !== null && (!data.exists() || data.child('uid').val() === auth.uid)",
+        "likeCount":   { ".write": "auth !== null" },
+        "repostCount": { ".write": "auth !== null" },
+        "commentCount":{ ".write": "auth !== null" }
+      }
+    },
+    "comments": {
+      ".read": true,
+      "$postId": {
+        ".indexOn": ["createdAt"],
+        "$commentId": {
+          ".write": "auth !== null && (!data.exists() || data.child('uid').val() === auth.uid)"
+        }
+      }
+    },
+    "likes": {
+      ".read": true,
+      "$postId": {
+        "$uid": {
+          ".write": "auth !== null && auth.uid === $uid"
+        }
+      }
+    },
+    "reposts": {
+      ".read": true,
+      "$uid": {
+        ".indexOn": ["createdAt"],
+        ".write": "auth !== null && auth.uid === $uid"
+      }
+    },
+    "tags": {
+      ".read": true,
+      ".write": "auth !== null",
+      ".indexOn": ["count"]
+    }
+  }
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booru — Войти</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-layout">
+  <div class="auth-card">
+    <div class="auth-logo">Boo<span>ru</span></div>
+    <div class="auth-subtitle">Добро пожаловать</div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login" onclick="switchTab('login')">Войти</div>
+      <div class="auth-tab" data-tab="register" onclick="switchTab('register')">Регистрация</div>
+    </div>
+
+    <div id="auth-error" class="auth-error"></div>
+
+    <!-- Login form -->
+    <div id="login-form">
+      <div class="form-group">
+        <label class="form-label">Логин</label>
+        <input type="text" id="login-username" placeholder="например: cooluser" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button id="login-btn" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()">
+        Войти
+      </button>
+      <p style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">
+        Нет аккаунта? <a href="#" onclick="switchTab('register')">Зарегистрироваться</a>
+      </p>
+    </div>
+
+    <!-- Register form -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Логин <span style="color:var(--text3)">(3-20 символов, a-z, 0-9, _)</span></label>
+        <input type="text" id="reg-username" placeholder="myusername" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input type="password" id="reg-password" placeholder="минимум 6 символов" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Повторите пароль</label>
+        <input type="password" id="reg-password2" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <button id="reg-btn" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doRegister()">
+        Создать аккаунт
+      </button>
+      <p style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">
+        Уже есть аккаунт? <a href="#" onclick="switchTab('login')">Войти</a>
+      </p>
+    </div>
+
+    <p style="text-align:center;margin-top:20px;font-size:11px;color:var(--text3)">
+      Логин автоматически превращается в аккаунт<br>
+      <code style="color:var(--accent-h);font-size:11px">логин@anon.ru</code> под капотом
+    </p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="js/app.js"></script>
+<script src="js/login-page.js"></script>
+</body>
+</html>

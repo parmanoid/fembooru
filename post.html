@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booru — Пост</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="logo" href="index.html">Boo<span>ru</span></a>
+  <div class="nav-search">
+    <input type="text" placeholder="Поиск по тегам…" onclick="location.href='index.html'" readonly style="cursor:pointer">
+    <span class="search-icon">🔍</span>
+  </div>
+  <div class="nav-actions" id="nav-actions">
+    <a href="login.html" class="btn btn-ghost">Войти</a>
+  </div>
+</nav>
+
+<div class="post-page-layout">
+
+  <!-- Left: Tags Sidebar -->
+  <aside class="post-tags-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Теги</div>
+      <div id="post-tags-list">
+        <div class="loading-spinner" style="padding:8px"><div class="spinner" style="width:18px;height:18px;border-width:2px"></div></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sidebar-section">
+      <div class="sidebar-nav">
+        <a href="index.html">← Лента</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Center: Post Content -->
+  <main class="post-main" id="post-container">
+    <!-- Author row -->
+    <div class="post-card-author" style="margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <img id="post-author-avatar" class="post-card-avatar" src="" alt="" style="width:32px;height:32px">
+      <a id="post-author-link" href="#" style="font-weight:600;color:var(--accent-h)"></a>
+      <span id="post-time" style="color:var(--text3);font-size:12px;margin-left:auto"></span>
+      <button id="delete-btn" class="btn btn-danger" style="display:none;font-size:12px;padding:4px 10px" onclick="deletePost()">🗑 Удалить</button>
+    </div>
+
+    <!-- Title -->
+    <h1 class="post-title" id="post-title"></h1>
+
+    <!-- Description -->
+    <div class="post-description" id="post-description" style="display:none"></div>
+
+    <!-- Media -->
+    <div class="post-media-wrap">
+      <div id="post-media">
+        <div class="loading-spinner" style="padding:60px"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right: Actions + Comments -->
+  <aside class="post-right-sidebar">
+    <!-- Actions -->
+    <div class="post-actions">
+      <button id="like-btn" class="post-action-btn" onclick="doLike()">
+        <span class="action-icon">♡</span>
+        <span>Лайк</span>
+        <span class="count" id="like-count">0</span>
+      </button>
+
+      <button id="repost-btn" class="post-action-btn" onclick="doRepost()">
+        <span>🔁</span>
+        <span>Репост</span>
+        <span class="count" id="repost-count">0</span>
+      </button>
+
+      <button class="post-action-btn" onclick="doShare()">
+        <span>📤</span>
+        <span>Поделиться</span>
+      </button>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Comments -->
+    <div class="comments-section">
+      <div class="comments-title">
+        💬 Комментарии <span id="comment-count">0</span>
+      </div>
+
+      <div id="comment-list" class="comment-list"></div>
+
+      <!-- Comment Input -->
+      <div id="comment-form" class="comment-input-area" style="display:none">
+        <textarea id="comment-textarea" placeholder="Напишите комментарий…" rows="2"></textarea>
+        <button class="comment-send-btn" onclick="submitComment()">Отправить</button>
+      </div>
+
+      <div id="comment-login-hint" style="color:var(--text3);font-size:13px;text-align:center;padding:8px">
+        <a href="login.html">Войдите</a>, чтобы оставить комментарий
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+// Show delete button for own posts
+document.addEventListener('DOMContentLoaded', () => {
+  // Check after post loads
+  setTimeout(() => {
+    const user = typeof getCurrentUser !== 'undefined' ? getCurrentUser() : null;
+    // Handled in post-page.js via onAuthChange
+  }, 100);
+});
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="js/app.js"></script>
+<script src="js/post-page.js"></script>
+
+<script>
+// Show/hide delete button based on auth
+onAuthChange((user) => {
+  const btn = document.getElementById('delete-btn');
+  if (!btn) return;
+  // currentPost is set in post-page.js
+  setTimeout(() => {
+    if (user && window.currentPost && user.uid === window.currentPost.uid) {
+      btn.style.display = '';
+    } else {
+      btn.style.display = 'none';
+    }
+  }, 500);
+});
+</script>
+</body>
+</html>
